@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetTitlePostProcessor</defName>
+    <defClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetTitlePawnPostProcessor</defClass>
+    <label>set title</label>
+    <description>Set pawn title on assignment.</description>
+  </Def>
+</Defs>

@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_LearnRateFitness</defName>
+    <defClass>Lomzie.AutomaticWorkAssignment.PawnFitness.LearnRatePawnFitness</defClass>
+    <label>learning rate</label>
+    <description>Pawn learning rate for related skills.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_SkillLevelFitness</defName>
+    <defClass>Lomzie.AutomaticWorkAssignment.PawnFitness.SkillLevelPawnFitness</defClass>
+    <label>skill level</label>
+    <description>Sum of skill level for related skills.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_StatPawnFitness</defName>
+    <defClass>Lomzie.AutomaticWorkAssignment.PawnFitness.StatPawnFitness</defClass>
+    <label>stat</label>
+    <description>The value of the given stat.</description>
+  </Def>
+</Defs>

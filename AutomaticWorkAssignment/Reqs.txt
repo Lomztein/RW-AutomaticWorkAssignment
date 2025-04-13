@@ -1,0 +1,27 @@
+﻿Requirements marked by a check sign (✓) are met.
+
+Must-haves (MVP)
+ - Define a list of work roles, each with their own priorities, minimum and desired number of workers, min and max skills, and so on.
+ - Pawns are assigned by the lowest amount of currently assigned full-time roles. Consider allowing for roles to have a time requirement range from 0 to 100 percent of the pawns working hour.
+ - Pawns can be assigned any or three different roles. Roles have a target number of full time workers, and a target number of backup workers.
+ - Roles can define a Title, which pawns given that role will be given.
+ - Role assignment should be resolved automatically once per day or something, and should not hang the game for a significant amount of time. A button for manually resolving should also be available.
+ - Roles should be able to be marked as critical, and critical roles should then be transferred to another pawn should the holder of the role be unable to perform. ei downed.
+ - Must support serialization of settings, with exporting and importing.
+ - Roles/groups must report their satisfaction rate, and alert the user if below a certain threshold. Critical roles give red warning, yellow if temporarily moved.
+ - Roles must be extensible by outside patches, including condition, fitness, and assignment post processes.
+
+Should-haves
+ - Aforementioned lists support composite lists, and allow nesting.
+ - Roles can be designated as part time, and a part time role will de-priotitize a pawn for selection of a full time role less.
+ - Roles have a list of conditions, such as skill range, stat condition, whatever.
+ - Roles have a list of prioritizations, such as skill level, learning rate, expertise, stat.
+ - Roles can count as other roles, such that when determining the amount of Pawns to assign for the other roles, the current number of assigned pawns to the current role is included.
+ - Roles could be allowed to be grouped together, though as a purely visual thing on the UI.
+ - Toggle between replacing existing work tab, or as a seperate tab.
+ - Should be able to toggle between automatic prioritization settings (Learning rate, then skill level), and manual.
+
+Could-haves
+ - Support for badges could be cool.
+ - Support for prioritizing based on Vanilla Skills Expanded expertise.
+ - Working hours could be managed as well.
