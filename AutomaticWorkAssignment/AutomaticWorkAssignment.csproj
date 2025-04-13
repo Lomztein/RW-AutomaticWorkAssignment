@@ -23,6 +23,10 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Source\UI\PawnFitness\" />
+  </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)\1.5\Assemblies\AutomaticWorkAssignment.dll&quot; /y&#xD;&#xA;$(SolutionDir)copy.bat AutomaticWorkAssignment &quot;C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods&quot;" />
   </Target>

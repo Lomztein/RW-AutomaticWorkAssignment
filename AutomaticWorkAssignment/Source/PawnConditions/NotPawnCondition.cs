@@ -1,19 +1,18 @@
-﻿using Lomzie.AutomaticWorkAssignment;
-using Lomzie.AutomaticWorkAssignment.PawnConditions;
+﻿using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
-    public class NotPawnCondition : NestedPawnCondition
+    public class NotPawnCondition : NestedPawnSetting, IPawnCondition
     {
         public override string Label => "Not";
         public override string Description => "Inverts the nested condition.";
 
-        public override bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
+        public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
-            if (InnerCondition != null)
+            if (InnerSetting != null && InnerSetting is IPawnCondition condition)
             {
-                return InnerCondition.IsValid(pawn, specification, request);
+                return !condition.IsValid(pawn, specification, request);
             }
             return true;
         }

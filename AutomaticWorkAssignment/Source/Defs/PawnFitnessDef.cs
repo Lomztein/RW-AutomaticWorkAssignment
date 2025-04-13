@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Lomzie.AutomaticWorkAssignment.Defs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.Defs
 {
-    public class PawnFitnessDef : Def
+    public class PawnFitnessDef : PawnSettingDef
     {
-        public Type defClass;
     }
 }

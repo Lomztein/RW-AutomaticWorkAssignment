@@ -2,20 +2,32 @@
 <Defs>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_LearnRateFitness</defName>
-    <defClass>Lomzie.AutomaticWorkAssignment.PawnFitness.LearnRatePawnFitness</defClass>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.LearnRatePawnFitness</settingClass>
     <label>learning rate</label>
     <description>Pawn learning rate for related skills.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_SkillLevelFitness</defName>
-    <defClass>Lomzie.AutomaticWorkAssignment.PawnFitness.SkillLevelPawnFitness</defClass>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.SkillLevelPawnFitness</settingClass>
     <label>skill level</label>
     <description>Sum of skill level for related skills.</description>
-  </Def>
+</Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_StatPawnFitness</defName>
-    <defClass>Lomzie.AutomaticWorkAssignment.PawnFitness.StatPawnFitness</defClass>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.StatPawnFitness</settingClass>
     <label>stat</label>
     <description>The value of the given stat.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_ConditionPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ConditionPawnFitness</settingClass>
+    <label>condition</label>
+    <description>Priorize pawns with the given condition.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_InvertPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.InvertPawnFitness</settingClass>
+    <label>invert</label>
+    <description>Invert the fitness, so that positive becomes negative.</description>
   </Def>
 </Defs>

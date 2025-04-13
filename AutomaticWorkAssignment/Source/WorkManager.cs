@@ -30,9 +30,8 @@ namespace Lomzie.AutomaticWorkAssignment
         private int _lastCachePawnsTick;
         private readonly int _cachePawnsThreshold = 300;
         private IEnumerable<Pawn> _cachedPawns;
-        private int _cachedPawnCount;
 
-        private bool IsPawnCacheDirty => GenTicks.TicksGame > _lastCachePawnsTick + _cachePawnsThreshold;
+        private bool IsPawnCacheDirty => GenTicks.TicksGame > _lastCachePawnsTick + _cachePawnsThreshold || _cachedPawns == null;
 
         public WorkManager(Game game)
         {
@@ -56,7 +55,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public void ResolveWorkAssignments ()
         {
-            var pawns = GetAllPawns().ToList();
+            var pawns = GetAllAssignablePawns().ToList();
             ResolveWorkCoroutine(new ResolveWorkRequest() { Pawns = pawns, Map = GetCurrentMap(), WorkManager = this });
         }
 
@@ -67,8 +66,9 @@ namespace Lomzie.AutomaticWorkAssignment
 
         private void CachePawns ()
         {
-            _cachedPawns = GetAllMaps().SelectMany(x => x.mapPawns.FreeColonists);
-            _cachedPawnCount = _cachedPawns.Count();
+            _cachedPawns = GetAllMaps()
+                .SelectMany(x => x.mapPawns.FreeColonistsAndPrisoners)
+                .Where(x => x != null && (x.IsFreeNonSlaveColonist || x.IsSlaveOfColony));
             _lastCachePawnsTick = GenTicks.TicksGame;
         }
 
@@ -79,12 +79,18 @@ namespace Lomzie.AutomaticWorkAssignment
             return _cachedPawns.Where(x => x != null);
         }
 
-        public int GetPawnCount()
+        public IEnumerable<Pawn> GetAllAssignablePawns()
         {
             if (IsPawnCacheDirty)
                 CachePawns();
-            return _cachedPawnCount;
+            return _cachedPawns.Where(x => x != null && CanBeAssigned(x));
         }
+
+        public int GetPawnCount()
+            => GetAllPawns().Count();
+
+        public int GetAssignablePawnCount()
+            => GetAllAssignablePawns().Count();
 
         public void ResolveWorkCoroutine(ResolveWorkRequest req)
         {
@@ -107,10 +113,16 @@ namespace Lomzie.AutomaticWorkAssignment
             }
         }
 
-        private bool CanBeAssignedTo(Pawn pawn, WorkSpecification workSpecification)
+        public bool CanBeAssignedTo(Pawn pawn, WorkSpecification workSpecification)
+        {
+            if (!CanBeAssigned(pawn)) return false;
+            if (IsAssignedTo(pawn, workSpecification)) return false;
+            return true;
+        }
+
+        public bool CanBeAssigned(Pawn pawn)
         {
             if (pawn == null) return false;
-            if (IsAssignedTo(pawn, workSpecification)) return false;
             if (ExcludePawns.Contains(pawn)) return false;
             if (pawn.DeadOrDowned) return false;
             return true;
@@ -201,16 +213,20 @@ namespace Lomzie.AutomaticWorkAssignment
                     for (int i = 0; i < spec.Priorities.OrderedPriorities.Count; i++)
                     {
                         WorkTypeDef curDef = spec.Priorities.OrderedPriorities[i];
-                        if (curDef.naturalPriority > lastNatural)
-                            prioritization++;
-                        lastNatural = curDef.naturalPriority;
+                        int currentPriority = pawn.workSettings.GetPriority(curDef);
 
-                        if (!pawn.WorkTypeIsDisabled(curDef))
+                        if (currentPriority == 0)
                         {
-                            pawn.workSettings?.SetPriority(curDef, prioritization);
+                            if (curDef.naturalPriority > lastNatural)
+                                prioritization++;
+                            lastNatural = curDef.naturalPriority;
+
+                            if (!pawn.WorkTypeIsDisabled(curDef))
+                            {
+                                pawn.workSettings?.SetPriority(curDef, prioritization);
+                            }
                         }
                     }
-
                 }
             }
         }
@@ -289,7 +305,7 @@ namespace Lomzie.AutomaticWorkAssignment
         public override void ExposeData ()
         {
             Scribe_Collections.Look(ref WorkList, "workSpecifications", LookMode.Deep);
-            Scribe_Collections.Look(ref ExcludePawns, "excludePawns", LookMode.Value);
+            Scribe_Collections.Look(ref ExcludePawns, "excludePawns", LookMode.Reference);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {

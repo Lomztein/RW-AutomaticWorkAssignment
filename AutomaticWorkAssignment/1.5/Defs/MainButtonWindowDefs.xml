@@ -5,6 +5,9 @@
     <label>Work Manager</label>
     <description>Set up work specifications to be automatically assigned to colonists.</description>
     <tabWindowClass>Lomzie.AutomaticWorkAssignment.UI.WorkManagerWindow</tabWindowClass>
+    <closesWorldView>true</closesWorldView>
+    <minimized>True</minimized>
     <order>11</order>
+    <iconPath>UI/AutomaticWorkAssignment/MainTabWindow_Icon</iconPath>
   </MainButtonDef>
 </Defs>

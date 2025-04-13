@@ -3,7 +3,6 @@ using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
-using Lomzie.AutomaticWorkAssignment.UI.PawnFitness;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -11,16 +10,15 @@ using System.Linq;
 using System.Xml.Linq;
 using UnityEngine;
 using Verse;
+using Verse.Noise;
 
 namespace Lomzie.AutomaticWorkAssignment.UI
 {
     // Don't look at this code. I'm terrible at writing UI.
-    // TODO: Clean this mess up.w
 
     public class WorkManagerWindow : MainTabWindow
     {
         private WorkManager _workManager;
-        private Map _currentMap;
 
         // Overall layout
         private const float ListSectionPart = 0.15f;
@@ -42,7 +40,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         // Advanced section layout
         private const float NewFunctionButtonSize = 32;
-        private const float MoveDeleteButtonSize = 24;
+        private const float SettingsLabelSize = 24;
 
         private WorkSpecification _current;
 
@@ -52,7 +50,6 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         {
             base.PreOpen();
             _workManager = Current.Game.GetComponent<WorkManager>();
-            _currentMap = Find.CurrentMap;
 
             var workList = DefDatabase<WorkTypeDef>.AllDefs.ToList();
             workList.SortBy(x => x.naturalPriority);
@@ -176,7 +173,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         private void OpenExcludePawnsWindow()
         {
-            Log.Message("Not implemented yet!");
+            if (!Find.WindowStack.IsOpen<ExcludeColonistsWindow>())
+            {
+                Find.WindowStack.Add(new ExcludeColonistsWindow());
+            }
         }
 
         private void OpenImportFromSaveWindow()
@@ -414,65 +414,17 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private void DoFitnessContents(Rect sectionRect)
         {
             DoHeader(sectionRect, "Fitness");
-
             sectionRect = Utils.GetSubRectFraction(sectionRect, new Vector2(0, 0.1f), Vector2.one);
 
-            var fitnessFunctions = _current.Fitness;
-
-            var height = _fitnessListHeight;
-            var scrollView = new Rect(0f, 0f, sectionRect.width, height);
-            if (height > sectionRect.height)
-                scrollView.width -= ListScrollbarWidth;
-
-            Widgets.BeginScrollView(sectionRect, ref _fitnessListPosition, scrollView);
-            var scrollContent = scrollView;
-
-            Widgets.BeginGroup(scrollContent);
-            var cur = Vector2.zero;
-            var i = 0;
-
-            foreach (IPawnFitness fitness in fitnessFunctions)
-            {
-                Rect moveDeleteButtonsRect = new Rect(0f, cur.y, sectionRect.width, MoveDeleteButtonSize);
-                moveDeleteButtonsRect = Utils.GetSubRectFraction(moveDeleteButtonsRect, new Vector2(0.6f, 0f), Vector2.one);
-                DoAdvancedSectionMoveDeleteButtons(moveDeleteButtonsRect, x => _current.MoveFitness(fitness, x), () => _current.DeleteFitness(fitness));
-
-                float rowHeight = PawnFitnessUIHandlers.Handle(new Vector2(MarginSize / 2f, cur.y), sectionRect.width - MarginSize / 2f, fitness);
-
-                var row = new Rect(0f, cur.y, sectionRect.width, rowHeight);
-                Widgets.DrawHighlightIfMouseover(row);
-
-                if (i++ % 2 == 1) Widgets.DrawAltRect(row);
-
-                cur.y += rowHeight;
-            }
-
-            // row for new function.
-            var newRect = new Rect(0f, cur.y, sectionRect.width, NewFunctionButtonSize);
-            Widgets.DrawHighlightIfMouseover(newRect);
-            if (i % 2 == 1) Widgets.DrawAltRect(newRect);
-
-            Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(newRect, new GUIContent("Add new fitness function"));
-            Text.Anchor = TextAnchor.UpperLeft;
-
-            WorkTypeDef workDef = new WorkTypeDef();
-
-            if (Widgets.ButtonInvisible(newRect))
-            {
-                IEnumerable<PawnFitnessDef> defs = DefDatabase<PawnFitnessDef>.AllDefs;
-                FloatMenuUtility.MakeMenu(defs, x => x.label, x => () => _current.Fitness.Add((IPawnFitness)Activator.CreateInstance(x.defClass)));
-            }
-
-            cur.y += NewFunctionButtonSize;
-            _fitnessListHeight = cur.y;
-
-            Text.Anchor = TextAnchor.UpperLeft;
-            GUI.EndGroup();
-            Widgets.EndScrollView();
+            DoPawnSettingList(sectionRect, typeof(PawnFitnessDef), "Add fitness function", ref _fitnessListHeight, ref _fitnessListPosition,
+                () => _current.Fitness,
+                (x) => _current.Fitness.Add(x as IPawnFitness),
+                (setting, movement) => _current.MoveFitness(setting as IPawnFitness, movement),
+                (setting) => _current.DeleteFitness(setting as IPawnFitness)
+                );
         }
 
-        private void DoAdvancedSectionMoveDeleteButtons (Rect inRect, Action<int> onMovement, Action onDelete)
+        private static void DoAdvancedSectionMoveDeleteButtons (Rect inRect, Action<int> onMovement, Action onDelete)
         {
             Rect moveUpRect = Utils.GetSubRectFraction(inRect, Vector2.zero, new Vector2(0.33f, 1f));
             Rect moveDownRect = Utils.GetSubRectFraction(inRect, new Vector2(0.33f, 0f), new Vector2(0.66f, 1f));
@@ -498,66 +450,90 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private void DoConditionsContents(Rect sectionRect)
         {
             DoHeader(sectionRect, "Conditions");
-
             sectionRect = Utils.GetSubRectFraction(sectionRect, new Vector2(0, 0.1f), Vector2.one);
 
-            var conditionPredicates = _current.Conditions;
+            DoPawnSettingList(sectionRect, typeof(PawnConditionDef), "Add new condition", ref _conditionListHeight, ref _conditionListPosition,
+                () => _current.Conditions,
+                (x) => _current.Conditions.Add(x as IPawnCondition),
+                null,
+                (setting) => _current.DeleteCondition(setting as IPawnCondition)
+                );
+        }
 
-            var height = _conditionListHeight;
-            var scrollView = new Rect(0f, 0f, sectionRect.width, height);
-            if (height > sectionRect.height)
+        public static void DoPawnSettingList(Rect inRect, Type settingDefType, string newSettingLabel, ref float listHeight, ref Vector2 listPosition, Func<IEnumerable<IPawnSetting>> settingGetter, Action<IPawnSetting> onNewSetting, Action<IPawnSetting, int> onMoveSetting, Action<IPawnSetting> onDeleteSetting)
+        {
+            var settings = settingGetter();
+
+            var height = listHeight;
+            var scrollView = new Rect(0f, 0f, inRect.width, height);
+            if (height > inRect.height)
                 scrollView.width -= ListScrollbarWidth;
 
-            Widgets.BeginScrollView(sectionRect, ref _conditionListPosition, scrollView);
+            Widgets.BeginScrollView(inRect, ref listPosition, scrollView);
             var scrollContent = scrollView;
 
             Widgets.BeginGroup(scrollContent);
             var cur = Vector2.zero;
             var i = 0;
 
-            foreach (IPawnCondition condition in conditionPredicates)
+            foreach (IPawnSetting setting in settings)
             {
-                // TODO: Move drawing of label out here instead of individual handlers.
-                Rect moveDeleteButtonsRect = new Rect(0f, cur.y, sectionRect.width, MoveDeleteButtonSize);
-                moveDeleteButtonsRect = Utils.GetSubRectFraction(moveDeleteButtonsRect, new Vector2(0.6f, 0f), Vector2.one);
-                DoAdvancedSectionMoveDeleteButtons(moveDeleteButtonsRect, null, () => _current.DeleteCondition(condition));
+                float x = MarginSize / 2f;
+                float width = scrollView.width - MarginSize / 2;
 
-                float rowHeight = PawnConditionUIHandlers.Handle(new Vector2(MarginSize / 2f, cur.y), sectionRect.width - MarginSize / 2f, condition);
+                Rect labelRect = new Rect(x, cur.y, width, SettingsLabelSize);
 
-                var row = new Rect(0f, cur.y, sectionRect.width, rowHeight);
+                Text.Anchor = TextAnchor.MiddleLeft;
+                Widgets.Label(labelRect, setting.Label);
+                Text.Anchor = TextAnchor.UpperLeft;
+
+                Action<int> onMove = null;
+                Action onDelete = null;
+
+                if (onMoveSetting != null)
+                    onMove = (m) => onMoveSetting(setting, m);
+                if (onDeleteSetting != null)
+                    onDelete = () => onDeleteSetting(setting);
+
+                Rect buttonsRect = Utils.GetSubRectFraction(labelRect, new Vector2(0.6f, 0f), Vector2.one);
+                DoAdvancedSectionMoveDeleteButtons(buttonsRect, onMove, onDelete);
+
+                float rowHeight = PawnSettingUIHandlers.Handle(new Vector2(x, cur.y + labelRect.height), width, setting);
+
+                var row = new Rect(0, cur.y, inRect.width, rowHeight + labelRect.height);
                 Widgets.DrawHighlightIfMouseover(row);
 
                 if (i++ % 2 == 1) Widgets.DrawAltRect(row);
 
-                cur.y += rowHeight;
+                cur.y += labelRect.height + rowHeight;
             }
 
             // row for new function.
-            var newRect = new Rect(0f, cur.y, sectionRect.width, NewFunctionButtonSize);
+            var newRect = new Rect(0f, cur.y, inRect.width, NewFunctionButtonSize);
             Widgets.DrawHighlightIfMouseover(newRect);
             if (i % 2 == 1) Widgets.DrawAltRect(newRect);
 
             Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(newRect, new GUIContent("Add new condition"));
+            Widgets.Label(newRect, new GUIContent(newSettingLabel));
             Text.Anchor = TextAnchor.UpperLeft;
 
             WorkTypeDef workDef = new WorkTypeDef();
 
             if (Widgets.ButtonInvisible(newRect))
             {
-                IEnumerable<PawnConditionDef> defs = DefDatabase<PawnConditionDef>.AllDefs;
-                FloatMenuUtility.MakeMenu(defs, x => x.label, x => () => _current.Conditions.Add((IPawnCondition)Activator.CreateInstance(x.defClass)));
+                var defs = GenDefDatabase.GetAllDefsInDatabaseForDef(settingDefType).Cast<PawnSettingDef>();
+                FloatMenuUtility.MakeMenu(defs, x => x.label, x => () => onNewSetting((IPawnSetting)Activator.CreateInstance(x.settingClass)));
             }
 
             cur.y += NewFunctionButtonSize;
-            _conditionListHeight = cur.y;
+            listHeight = cur.y;
 
             Text.Anchor = TextAnchor.UpperLeft;
             GUI.EndGroup();
             Widgets.EndScrollView();
         }
 
-        private int GetMovementAmount(int sign)
+        private static int GetMovementAmount(int sign)
             => Input.GetKey(KeyCode.LeftShift) ? sign * 1000 : sign;
 
         private float _postProcessorListHeight;
@@ -565,63 +541,14 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private void DoPostProcessContents(Rect sectionRect)
         {
             DoHeader(sectionRect, "On Assignment");
-
             sectionRect = Utils.GetSubRectFraction(sectionRect, new Vector2(0, 0.1f), Vector2.one);
 
-            var postProcessors = _current.PostProcessors;
-
-            var height = _postProcessorListHeight;
-            var scrollView = new Rect(0f, 0f, sectionRect.width, height);
-            if (height > sectionRect.height)
-                scrollView.width -= ListScrollbarWidth;
-
-            Widgets.BeginScrollView(sectionRect, ref _postProcessorListPosition, scrollView);
-            var scrollContent = scrollView;
-
-            Widgets.BeginGroup(scrollContent);
-            var cur = Vector2.zero;
-            var i = 0;
-
-            foreach (IPawnPostProcessor postProcessor in postProcessors)
-            {
-                // TODO: Move drawing of label out here instead of individual handlers.
-                Rect moveDeleteButtonsRect = new Rect(0f, cur.y, sectionRect.width, MoveDeleteButtonSize);
-                moveDeleteButtonsRect = Utils.GetSubRectFraction(moveDeleteButtonsRect, new Vector2(0.6f, 0f), Vector2.one);
-                DoAdvancedSectionMoveDeleteButtons(moveDeleteButtonsRect, null, () => _current.DeletePostProcess(postProcessor));
-
-                float rowHeight = PawnPostProcessorUIHandlers.Handle(new Vector2(MarginSize / 2f, cur.y), sectionRect.width - MarginSize / 2f, postProcessor);
-
-                var row = new Rect(0f, cur.y, sectionRect.width, rowHeight);
-                Widgets.DrawHighlightIfMouseover(row);
-
-                if (i++ % 2 == 1) Widgets.DrawAltRect(row);
-
-                cur.y += rowHeight;
-            }
-
-            // row for new function.
-            var newRect = new Rect(0f, cur.y, sectionRect.width, NewFunctionButtonSize);
-            Widgets.DrawHighlightIfMouseover(newRect);
-            if (i % 2 == 1) Widgets.DrawAltRect(newRect);
-
-            Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(newRect, new GUIContent("Add on assignment task"));
-            Text.Anchor = TextAnchor.UpperLeft;
-
-            WorkTypeDef workDef = new WorkTypeDef();
-
-            if (Widgets.ButtonInvisible(newRect))
-            {
-                IEnumerable<PawnPostProcessorDef> defs = DefDatabase<PawnPostProcessorDef>.AllDefs;
-                FloatMenuUtility.MakeMenu(defs, x => x.label, x => () => _current.PostProcessors.Add((IPawnPostProcessor)Activator.CreateInstance(x.defClass)));
-            }
-
-            cur.y += NewFunctionButtonSize;
-            _postProcessorListHeight = cur.y;
-
-            Text.Anchor = TextAnchor.UpperLeft;
-            GUI.EndGroup();
-            Widgets.EndScrollView();
+            DoPawnSettingList(sectionRect, typeof(PawnPostProcessorDef), "Add new on assignment task", ref _postProcessorListHeight, ref _postProcessorListPosition,
+                () => _current.PostProcessors,
+                (x) => _current.PostProcessors.Add(x as IPawnPostProcessor),
+                null,
+                (setting) => _current.DeletePostProcess(setting as IPawnPostProcessor)
+                );
         }
 
         // TODO: Move handling of each type into own class.
@@ -637,7 +564,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             if (pawnAmount is IntPawnAmount intPawnAmount)
             {
                 _pawnAmountBuffer = intPawnAmount.Value.ToString();
-                Widgets.TextFieldNumeric<int>(amountRect, ref intPawnAmount.Value, ref _pawnAmountBuffer);
+                Widgets.TextFieldNumeric(amountRect, ref intPawnAmount.Value, ref _pawnAmountBuffer);
             }
             if (pawnAmount is PercentagePawnAmount percentagePawnAmount)
             {

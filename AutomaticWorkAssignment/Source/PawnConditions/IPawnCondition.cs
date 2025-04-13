@@ -10,11 +10,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
     /// <summary>
     /// Defines a condition that must be met for a pawn to be assigned work.
     /// </summary>
-    public interface IPawnCondition : IExposable
+    public interface IPawnCondition : IPawnSetting
     {
-        string Label { get; }
-        string Description { get; }
-
         bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request);
     }
 }

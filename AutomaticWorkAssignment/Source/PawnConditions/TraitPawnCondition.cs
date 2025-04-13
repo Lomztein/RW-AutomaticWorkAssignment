@@ -8,19 +8,19 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
-    public class LifeStagePawnCondition : IPawnCondition
+    public class TraitPawnCondition : IPawnCondition
     {
-        public string Label => "Life stage";
-        public string Description => "Check if the pawn is a given life stage.";
+        public string Label => "Trait";
+        public string Description => "Check if pawn has a given trait.";
 
-        public LifeStageDef LifeStageDef;
+        public TraitDef TraitDef;
 
         public void ExposeData()
         {
-            Scribe_Defs.Look(ref LifeStageDef, "lifeStage");
+            Scribe_Defs.Look(ref TraitDef, "traitDef");
         }
 
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
-            => LifeStageDef == null || pawn.ageTracker?.CurLifeStage == LifeStageDef;
+            => pawn.story?.traits?.HasTrait(TraitDef) ?? false;
     }
 }

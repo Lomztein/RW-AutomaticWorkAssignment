@@ -10,11 +10,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
     /// <summary>
     /// Represents a pawns fitness for a role. Higher fitness = better match.
     /// </summary>
-    public interface IPawnFitness : IExposable
+    public interface IPawnFitness : IPawnSetting
     {
-        string Label { get; }
-        string Description { get; }
-
         float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request);
     }
 }

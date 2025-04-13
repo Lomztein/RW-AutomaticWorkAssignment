@@ -2,8 +2,38 @@
 <Defs>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_SetTitlePostProcessor</defName>
-    <defClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetTitlePawnPostProcessor</defClass>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetTitlePawnPostProcessor</settingClass>
     <label>set title</label>
     <description>Set pawn title on assignment.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetApparelPolicyPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetApparelPolicyPawnPostProcessor</settingClass>
+    <label>set apparel policy</label>
+    <description>Set pawn apparel policy on assignment.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetFoodPolicyPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetFoodPolicyPawnPostProcessor</settingClass>
+    <label>set food policy</label>
+    <description>Set pawn food policy on assignment.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetDrugPolicyPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetDrugPolicyPawnPostProcessor</settingClass>
+    <label>set drug policy</label>
+    <description>Set pawn drug policy on assignment.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetReadingPolicyPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetReadingPolicyPawnPostProcessor</settingClass>
+    <label>set reading policy</label>
+    <description>Set pawn reading policy on assignment.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetAllowedAreaPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetAllowedAreaPawnPostProcessor</settingClass>
+    <label>set allowed area</label>
+    <description>Set pawn allowed area on assignment.</description>
   </Def>
 </Defs>

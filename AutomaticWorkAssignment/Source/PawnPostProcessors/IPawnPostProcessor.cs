@@ -7,11 +7,8 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 {
-    public interface IPawnPostProcessor : IExposable
+    public interface IPawnPostProcessor : IPawnSetting
     {
-        string Label { get; }
-        string Description { get; }
-
         void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request);
     }
 }

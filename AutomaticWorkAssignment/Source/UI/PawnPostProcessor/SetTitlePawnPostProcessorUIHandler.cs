@@ -1,25 +1,19 @@
 ﻿using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
 {
-    public class SetTitlePawnPostProcessorUIHandler : PawnPostProcessorUIHandler<SetTitlePawnPostProcessor>
+    public class SetTitlePawnPostProcessorUIHandler : PawnSettingUIHandler<SetTitlePawnPostProcessor>
     {
         private float _inputFieldSize = 24;
-        private string _buffer;
 
-        public override float Handle(Vector2 position, float width, IPawnPostProcessor pawnPostProcessor)
+        protected override float Handle(Vector2 position, float width, SetTitlePawnPostProcessor pawnPostProcessor)
         {
-            SetTitlePawnPostProcessor titlePostProcessor = (SetTitlePawnPostProcessor)pawnPostProcessor;
-
-            float y = base.Handle(position, width, pawnPostProcessor);
             Rect inputRect = new Rect(position, new Vector2(width, _inputFieldSize));
-            inputRect.y += y;
-
-            titlePostProcessor.Title = Widgets.TextField(inputRect, titlePostProcessor.Title);
-            y += inputRect.height;
-            return y;
+            pawnPostProcessor.Title = Widgets.TextField(inputRect, pawnPostProcessor.Title);
+            return inputRect.height;
         }
     }
 }
