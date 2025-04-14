@@ -55,8 +55,13 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public void ResolveWorkAssignments ()
         {
+            ResolveWorkCoroutine(MakeDefaultRequest());
+        }
+
+        public ResolveWorkRequest MakeDefaultRequest ()
+        {
             var pawns = GetAllAssignablePawns().ToList();
-            ResolveWorkCoroutine(new ResolveWorkRequest() { Pawns = pawns, Map = GetCurrentMap(), WorkManager = this });
+            return new ResolveWorkRequest() { Pawns = pawns, Map = GetCurrentMap(), WorkManager = this };
         }
 
         public IEnumerable<Map> GetAllMaps ()
@@ -97,6 +102,15 @@ namespace Lomzie.AutomaticWorkAssignment
             ResolveAssignments(req);
             ResolvePriorities(req);
             PostProcessAssignments(req);
+        }
+
+        public WorkAssignment GetAssignmentTo(Pawn pawn, WorkSpecification spec)
+        {
+            if (PawnAssignments.TryGetValue(pawn, out var assignments))
+            {
+                return assignments.FirstOrDefault(x => x.Specification == spec);
+            }
+            return null;
         }
 
         private void PostProcessAssignments(ResolveWorkRequest req)
@@ -150,8 +164,7 @@ namespace Lomzie.AutomaticWorkAssignment
                 int targetAssigned = current.GetTargetWorkers();
                 int remaining = targetAssigned - currentAssigned;
 
-
-                int toAssign = remaining;
+                int toAssign = current.IsIncremental ? Mathf.Min(1, remaining) : remaining;
                 float maxTargetCommitment = (1f - current.Commitment);
 
                 for (int c = 0; c < maxCommitment; c++) // Max commitment level increases if no pawns with enough available commitment was found.
@@ -194,7 +207,7 @@ namespace Lomzie.AutomaticWorkAssignment
             }
         }
 
-        private void ResolvePawnPriorities(Pawn pawn)
+        public void ResolvePawnPriorities(Pawn pawn)
         {
             foreach (var def in DefDatabase<WorkTypeDef>.AllDefs)
             {
@@ -267,6 +280,13 @@ namespace Lomzie.AutomaticWorkAssignment
             return 0f;
         }
 
+        public bool IsWorkSpecificationMinimallySatisfied(WorkSpecification spec)
+        {
+            int numAssigned = GetCountAssignedTo(spec);
+            int target = spec.MinWorkers.GetCount();
+            return numAssigned >= target;
+        }
+
         public bool IsWorkSpecificationSatisfied(WorkSpecification spec)
         {
             int numAssigned = GetCountAssignedTo(spec);
@@ -295,11 +315,15 @@ namespace Lomzie.AutomaticWorkAssignment
                 PawnAssignments[pawn].Clear();
         }
 
-        public void AssignWorkToPawn(WorkSpecification spec, Pawn pawn, int index = -1)
+        public WorkAssignment AssignWorkToPawn(WorkSpecification spec, Pawn pawn, int index = -1)
         {
             if (!PawnAssignments.ContainsKey(pawn))
                 PawnAssignments.Add(pawn, new List<WorkAssignment>());
-            PawnAssignments[pawn].Add(new WorkAssignment(spec, pawn));
+            if (index == -1) index = PawnAssignments[pawn].Count;
+
+            WorkAssignment assignment = new WorkAssignment(spec, pawn, index, spec.IsCritical);
+            PawnAssignments[pawn].Insert(index, assignment);
+            return assignment;
         }
 
         public override void ExposeData ()
@@ -348,122 +372,6 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             yield return new WaitForEndOfFrame();
             WorkList.Remove(spec); ;
-        }
-
-        private List<WorkSpecification> GenerateTestWorkSpecifications ()
-        {
-            // Researcher
-            WorkSpecification researcher = new WorkSpecification();
-            researcher.Name = "Researcher";
-            researcher.TargetWorkers = new IntPawnAmount() { Value = 3 };
-            researcher.Commitment = 1f;
-            researcher.Fitness.Add(new LearnRatePawnFitness());
-            researcher.Fitness.Add(new SkillLevelPawnFitness());
-            researcher.PostProcessors.Add(new SetTitlePawnPostProcessor());
-            researcher.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Research);
-            researcher.Priorities.OrderedPriorities.Add(WorkTypeDefOf.DarkStudy);
-            Log.Message("Researcher!");
-
-            // Doctor
-            WorkSpecification doctorAssignment = new WorkSpecification();
-            doctorAssignment.Name = "Doctor";
-            doctorAssignment.TargetWorkers = new PercentagePawnAmount() { Percentage = 1f };
-            doctorAssignment.IsCritical = true;
-            doctorAssignment.MinWorkers = new IntPawnAmount() { Value = 2 };
-            doctorAssignment.Commitment = 0f;
-            doctorAssignment.Conditions.Add(new SkillLevelPawnCondition() { MinLevel = 10, SkillDef = SkillDefOf.Medicine });
-            doctorAssignment.Fitness.Add(new LearnRatePawnFitness());
-            doctorAssignment.PostProcessors.Add(new SetTitlePawnPostProcessor());
-            doctorAssignment.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Doctor);
-            Log.Message("Doctor!");
-
-            // Socialite
-            WorkSpecification socialAssignment = new WorkSpecification();
-            socialAssignment.Name = "Socialite";
-            socialAssignment.TargetWorkers = new IntPawnAmount() { Value = 2 };
-            socialAssignment.IsCritical = true;
-            socialAssignment.Commitment = 0.5f;
-            socialAssignment.Fitness.Add(new LearnRatePawnFitness());
-            socialAssignment.Fitness.Add(new SkillLevelPawnFitness());
-            socialAssignment.PostProcessors.Add(new SetTitlePawnPostProcessor());
-            socialAssignment.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Childcare);
-            socialAssignment.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Warden);
-            socialAssignment.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Warden);
-            Log.Message("Socialite!");
-
-            // Builder
-            WorkSpecification builder = new WorkSpecification();
-            builder.Name = "Builder";
-            builder.TargetWorkers = new IntPawnAmount() { Value = 2 };
-            builder.IsCritical = true;
-            builder.Commitment = 0.5f;
-            builder.Fitness.Add(new LearnRatePawnFitness());
-            builder.Fitness.Add(new SkillLevelPawnFitness());
-            builder.PostProcessors.Add(new SetTitlePawnPostProcessor());
-            builder.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Construction);
-            builder.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Construction);
-            builder.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Construction);
-            builder.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Construction);
-            Log.Message("Builder!");
-
-            // Farmhand
-            WorkSpecification farmhand = new WorkSpecification();
-            farmhand.Name = "Farmhand";
-            farmhand.TargetWorkers = new PercentagePawnAmount() { Percentage = 0.2f };
-            farmhand.IsCritical = true;
-            farmhand.Commitment = 1f;
-            farmhand.Fitness.Add(new LearnRatePawnFitness());
-            farmhand.Fitness.Add(new SkillLevelPawnFitness());
-            farmhand.PostProcessors.Add(new SetTitlePawnPostProcessor());
-            farmhand.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Growing);
-            farmhand.Priorities.OrderedPriorities.Add(WorkTypeDefOf.PlantCutting);
-            farmhand.Priorities.OrderedPriorities.Add(WorkTypeDefOf.PlantCutting);
-            farmhand.Priorities.OrderedPriorities.Add(WorkTypeDefOf.PlantCutting);
-            farmhand.Priorities.OrderedPriorities.Add(WorkTypeDefOf.PlantCutting);
-            Log.Message("Farmhand!");
-
-            // Artisan
-            WorkSpecification artisan = new WorkSpecification();
-            artisan.Name = "Artisan";
-            artisan.TargetWorkers = new IntPawnAmount() { Value = 3 };
-            artisan.Commitment = 1f;
-            artisan.Fitness.Add(new LearnRatePawnFitness());
-            artisan.Fitness.Add(new SkillLevelPawnFitness());
-            artisan.PostProcessors.Add(new SetTitlePawnPostProcessor());
-            artisan.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Smithing);
-            artisan.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Crafting);
-            artisan.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Crafting);
-            artisan.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Crafting);
-            artisan.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Crafting);
-            artisan.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Crafting);
-            Log.Message("Artisan!");
-
-            // Miner
-            WorkSpecification miner = new WorkSpecification();
-            miner.Name = "Miner";
-            miner.TargetWorkers = new IntPawnAmount() { Value = 1 };
-            miner.Commitment = 0.5f;
-            miner.Fitness.Add(new LearnRatePawnFitness());
-            miner.Fitness.Add(new SkillLevelPawnFitness());
-            miner.PostProcessors.Add(new SetTitlePawnPostProcessor());
-            miner.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Mining);
-            miner.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Mining);
-            miner.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Mining);
-            miner.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Mining);
-            miner.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Mining);
-            miner.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Mining);
-            miner.Priorities.OrderedPriorities.Add(WorkTypeDefOf.Mining);
-            Log.Message("Miner!");
-
-            return new List<WorkSpecification>() {
-                doctorAssignment,
-                researcher,
-                socialAssignment,
-                farmhand,
-                builder,
-                miner,
-                artisan
-            };
         }
     }
 }

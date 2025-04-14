@@ -33,7 +33,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
             AllowMoveSettings = allowMoveSetting;
         }
 
-        protected float Handle(Vector2 position, float width, CompositePawnSetting pawnSetting)
+        protected virtual float Handle(Vector2 position, float width, CompositePawnSetting pawnSetting)
         {
             float y = 0f;
             Vector2 innerPosition = position;
@@ -47,7 +47,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
 
                 WorkManagerWindow.DoPawnSettingList(sectionRect, typeof(D), NewSettingLabel, ref listData.Height, ref listData.Position,
                     () => pawnSetting.InnerSettings,
-                    (x) => Find.Root.StartCoroutine(DelayedAdd(pawnSetting, x)),
+                    GetNewSettingAction(pawnSetting),
                     GetMoveAction(pawnSetting),
                     (x) => Find.Root.StartCoroutine(DelayedDelete(pawnSetting, x)));
 
@@ -55,6 +55,13 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
             }
 
             return y;
+        }
+
+        private Action<IPawnSetting> GetNewSettingAction (CompositePawnSetting pawnSetting)
+        {
+            if (pawnSetting.InnerSettings.Count != pawnSetting.MaxSettings)
+                return (x) => Find.Root.StartCoroutine(DelayedAdd(pawnSetting, x));
+            return null;
         }
 
         private Action<IPawnSetting, int> GetMoveAction(CompositePawnSetting pawnSetting)

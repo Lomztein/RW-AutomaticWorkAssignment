@@ -1,4 +1,5 @@
-﻿using AutomaticWorkAssignment.UI;
+﻿using AutomaticWorkAssignment.Source.UI.PawnFitness;
+using AutomaticWorkAssignment.UI;
 using AutomaticWorkAssignment.UI.Generic;
 using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
@@ -34,10 +35,16 @@ namespace Lomzie.AutomaticWorkAssignment
 
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<InvertPawnFitness, PawnFitnessDef>());
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<ConditionPawnFitness, PawnConditionDef>());
+            PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<CountPawnFitness, PawnConditionDef>("Add condition", false));
+            PawnSettingUIHandlers.AddHandler(new ConstantPawnFitnessUIHandler());
+
+            PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<AggregatePawnFitness, PawnFitnessDef>("Add function", false));
+            PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<AveragePawnFitness, PawnFitnessDef>("Add function", false));
 
             // Initialize condition UI handlers.
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<SlavePawnCondition>());
             PawnSettingUIHandlers.AddHandler(new SkillLevelPawnConditionUIHandler());
+            PawnSettingUIHandlers.AddHandler(new CompareFitnessPawnConditionUIHandler("Add operand", true));
 
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<HediffPawnCondition, HediffDef>(
                 () => DefDatabase<HediffDef>.AllDefs, x => x.label, x => x?.HediffDef?.label ?? "Select condition", (c, s) => c.HediffDef = s));
@@ -47,8 +54,11 @@ namespace Lomzie.AutomaticWorkAssignment
                 () => WorkManager.Instance.GetAllAssignablePawns(), x => x.Name.ToString(), x => x?.Pawn?.Name.ToString() ?? "Select pawn", (c, s) => c.Pawn = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<TraitPawnCondition, TraitDef>(
                 () => DefDatabase<TraitDef>.AllDefs, x => x.label ?? x.degreeDatas?.FirstOrDefault()?.label, x => x?.TraitDef?.label ?? x.TraitDef?.degreeDatas?.FirstOrDefault()?.label ?? "Select trait", (c, s) => c.TraitDef = s));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<WeaponClassPawnCondition, WeaponClassDef>(
+                () => DefDatabase<WeaponClassDef>.AllDefs, x => x.label, x => x.WeaponClassDef?.label ?? "Select class", (c, s) => c.WeaponClassDef = s));
 
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<AnyPawnCondition, PawnConditionDef>("Add condition", false));
+            PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<AllPawnCondition, PawnConditionDef>("Add condition", false));
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<NotPawnCondition, PawnConditionDef>());
 
             // Biotech only
@@ -76,7 +86,7 @@ namespace Lomzie.AutomaticWorkAssignment
                 () => Current.Game.readingPolicyDatabase.AllReadingPolicies, (x) => x.label, (x) => x?.Policy?.label ?? "Select policy", (pp, po) => pp.Policy = po));
 
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SetAllowedAreaPawnPostProcessor, Area>(
-                () => new List<Area>() { null }.Concat(Current.Game.CurrentMap.areaManager.AllAreas).Where(x => x?.AssignableAsAllowed() ?? true), (x) => x.Label ?? "Everywhere", (x) => x?.AllowedArea?.Label ?? "Everywhere", (pp, po) => pp.AllowedArea = po));
+                () => new List<Area>() { null }.Concat(Current.Game.CurrentMap.areaManager.AllAreas).Where(x => x?.AssignableAsAllowed() ?? true), (x) => x?.Label ?? "Everywhere", (x) => x?.AllowedArea?.Label ?? "Everywhere", (pp, po) => pp.AllowedArea = po));
         }
     }
 }

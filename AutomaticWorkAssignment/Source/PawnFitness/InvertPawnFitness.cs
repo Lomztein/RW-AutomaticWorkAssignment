@@ -9,6 +9,12 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
         public override string Description => "Invert the fitness, so that positive becomes negative.";
 
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
-            => -((IPawnFitness)InnerSetting).CalcFitness(pawn, specification, request);
+        {
+            if (InnerSetting != null && InnerSetting is IPawnFitness innerFitness)
+            {
+                return -innerFitness.CalcFitness(pawn, specification, request);
+            }
+            return 0f;
+        }
     }
 }

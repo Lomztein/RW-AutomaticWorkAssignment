@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_LifeStageCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.DevelopmentalStagePawnCondition</settingClass>
+    <label>life stage</label>
+    <description>Assign to pawn with the given life stage.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_GeneCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.GenePawnCondition</settingClass>
+    <label>has gene</label>
+    <description>Assign to pawns with the given gene.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_IsXenotypeCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.XenotypePawnCondition</settingClass>
+    <label>is xenotype</label>
+    <description>Assign to pawns with the given xenotype.</description>
+  </Def>
+</Defs>

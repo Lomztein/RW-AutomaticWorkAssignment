@@ -34,20 +34,18 @@ namespace Lomzie.AutomaticWorkAssignment
 
             // Find applicable pawns.
             var applicable = GetApplicablePawns(allPawns, request);
-            int count = applicable.Count();
+            int _applicableCount = applicable.Count();
             int minCount = MinWorkers.GetCount();
-            if (count < minCount)
+            if (_applicableCount < minCount)
             {
-                int missing = minCount - count;
-                var allArr = allPawns.ToArray();
-                Array.Sort(allArr, comparer);
+                int missing = minCount - _applicableCount;
+                var substitutesSorted = allPawns.Where(x => !applicable.Contains(x)).ToArray();
+                Array.Sort(substitutesSorted, comparer);
 
-                List<Pawn> extendedList = new List<Pawn>(applicable);
-                for (int i = 0; i < missing; i++)
-                {
-                    if (allArr.Length >= i)
-                        extendedList.Add(allArr[i]);
-                }
+                Log.Message($"Min threshold not reached: {missing}");
+
+                var toSubstitute = substitutesSorted.ToList().GetRange(0, Mathf.Min(missing, substitutesSorted.Length));
+                return Enumerable.Concat(applicable, toSubstitute).ToArray();
             }
 
             // Sort by fitness.

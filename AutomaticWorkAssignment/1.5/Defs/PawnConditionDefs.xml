@@ -19,24 +19,6 @@
     <description>Assign to pawns with the given health condition.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
-    <defName>Lomzie_LifeStageCondition</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.DevelopmentalStagePawnCondition</settingClass>
-    <label>life stage</label>
-    <description>Assign to pawn with the given life stage.</description>
-  </Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
-    <defName>Lomzie_GeneCondition</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.GenePawnCondition</settingClass>
-    <label>has gene</label>
-    <description>Assign to pawns with the given gene.</description>
-  </Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
-    <defName>Lomzie_IsSlave</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.SlavePawnCondition</settingClass>
-    <label>is slave</label>
-    <description>Assign to slave pawns.</description>
-  </Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_IsSpecificPawn</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.SpecificPawnCondition</settingClass>
     <label>is specific pawn</label>
@@ -49,10 +31,16 @@
     <description>Assign to pawns with the given trait.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
-    <defName>Lomzie_IsXenotypeCondition</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.XenotypePawnCondition</settingClass>
-    <label>is xenotype</label>
-    <description>Assign to pawns with the given xenotype.</description>
+    <defName>Lomzie_WeaponClassPawnCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.WeaponClassPawnCondition</settingClass>
+    <label>weapon class</label>
+    <description>Assign to pawns with a weapon of the given class.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_CompareFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.CompareFitnessPawnCondition</settingClass>
+    <label>compare fitness</label>
+    <description>Compare two different fitness values.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_NotCondition</defName>
@@ -65,5 +53,11 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.AnyPawnCondition</settingClass>
     <label>any</label>
     <description>Check any internal condition.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_AllCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.AllPawnCondition</settingClass>
+    <label>all</label>
+    <description>Check all internal condition.</description>
   </Def>
 </Defs>

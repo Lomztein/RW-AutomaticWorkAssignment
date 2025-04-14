@@ -19,6 +19,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
     public class WorkManagerWindow : MainTabWindow
     {
         private WorkManager _workManager;
+        public static WorkManagerWindow Instance;
 
         // Overall layout
         private const float ListSectionPart = 0.15f;
@@ -54,6 +55,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             var workList = DefDatabase<WorkTypeDef>.AllDefs.ToList();
             workList.SortBy(x => x.naturalPriority);
             _workTypeDefsSorted = workList.ToArray();
+
+            Instance = this;
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -208,7 +211,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             return 0;
         }
 
-        private void SetCurrent(WorkSpecification current)
+        public void SetCurrent(WorkSpecification current)
         {
             _current = current;
         }
@@ -484,7 +487,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 Rect labelRect = new Rect(x, cur.y, width, SettingsLabelSize);
 
                 Text.Anchor = TextAnchor.MiddleLeft;
-                Widgets.Label(labelRect, setting.Label);
+                Widgets.Label(labelRect, Instance.GetSettingLabel(setting));
                 Text.Anchor = TextAnchor.UpperLeft;
 
                 Action<int> onMove = null;
@@ -502,36 +505,59 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
                 var row = new Rect(0, cur.y, inRect.width, rowHeight + labelRect.height);
                 Widgets.DrawHighlightIfMouseover(row);
+                TooltipHandler.TipRegion(row, setting.Description);
 
                 if (i++ % 2 == 1) Widgets.DrawAltRect(row);
 
                 cur.y += labelRect.height + rowHeight;
             }
 
-            // row for new function.
-            var newRect = new Rect(0f, cur.y, inRect.width, NewFunctionButtonSize);
-            Widgets.DrawHighlightIfMouseover(newRect);
-            if (i % 2 == 1) Widgets.DrawAltRect(newRect);
-
-            Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(newRect, new GUIContent(newSettingLabel));
-            Text.Anchor = TextAnchor.UpperLeft;
-
-            WorkTypeDef workDef = new WorkTypeDef();
-
-            if (Widgets.ButtonInvisible(newRect))
+            if (onNewSetting != null)
             {
-                var defs = GenDefDatabase.GetAllDefsInDatabaseForDef(settingDefType).Cast<PawnSettingDef>();
-                FloatMenuUtility.MakeMenu(defs, x => x.label, x => () => onNewSetting((IPawnSetting)Activator.CreateInstance(x.settingClass)));
+                // row for new function.
+                var newRect = new Rect(0f, cur.y, inRect.width, NewFunctionButtonSize);
+                Widgets.DrawHighlightIfMouseover(newRect);
+                if (i % 2 == 1) Widgets.DrawAltRect(newRect);
+
+                Text.Anchor = TextAnchor.MiddleCenter;
+                Widgets.Label(newRect, new GUIContent(newSettingLabel));
+                Text.Anchor = TextAnchor.UpperLeft;
+
+                if (Widgets.ButtonInvisible(newRect))
+                {
+                    var defs = GenDefDatabase.GetAllDefsInDatabaseForDef(settingDefType).Cast<PawnSettingDef>();
+                    FloatMenuUtility.MakeMenu(defs, x => x.label, x => () => onNewSetting((IPawnSetting)Activator.CreateInstance(x.settingClass)));
+                }
+
+                cur.y += NewFunctionButtonSize;
             }
 
-            cur.y += NewFunctionButtonSize;
             listHeight = cur.y;
 
             Text.Anchor = TextAnchor.UpperLeft;
             GUI.EndGroup();
             Widgets.EndScrollView();
         }
+
+        private string GetSettingLabel(IPawnSetting setting)
+        {
+            if (Find.Selector.NumSelected == 1 && Find.Selector.AnyPawnSelected)
+            {
+                Pawn selectedPawn = Find.Selector.SelectedPawns.First();
+                return $"{setting.Label}: {GetSettingLabelValue(setting, Instance._current, selectedPawn)}";
+            }
+            return setting.Label;
+        }
+
+        private string GetSettingLabelValue(IPawnSetting setting, WorkSpecification spec, Pawn pawn)
+        {
+            ResolveWorkRequest req = WorkManager.Instance.MakeDefaultRequest();
+
+            if (setting is IPawnCondition cond) return cond.IsValid(pawn, spec, req).ToString();
+            if (setting is IPawnFitness fit) return fit.CalcFitness(pawn, spec, req).ToString();
+            return string.Empty;
+        }
+
 
         private static int GetMovementAmount(int sign)
             => Input.GetKey(KeyCode.LeftShift) ? sign * 1000 : sign;
@@ -568,8 +594,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             }
             if (pawnAmount is PercentagePawnAmount percentagePawnAmount)
             {
-                _pawnAmountBuffer = percentagePawnAmount.Percentage.ToString();
-                Widgets.TextFieldNumeric(amountRect, ref percentagePawnAmount.Percentage, ref _pawnAmountBuffer, 0f, 1f);
+                _pawnAmountBuffer = (percentagePawnAmount.Percentage * 100f).ToString();
+                Widgets.TextFieldNumeric(amountRect, ref percentagePawnAmount.Percentage, ref _pawnAmountBuffer, 0f, 100f);
+                percentagePawnAmount.Percentage = float.Parse(_pawnAmountBuffer) / 100f;
             }
 
             var pawnAmountDefs = DefDatabase<PawnAmountDef>.AllDefsListForReading;

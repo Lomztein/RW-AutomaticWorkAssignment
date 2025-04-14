@@ -1,15 +1,12 @@
 ﻿ - General -
- Implement critical work spec system.
- Implement incremental work assignments.
  Implement import/export work specifications.
+ Rework WorkManager to be per-map (with pocket maps), so that multiple colonies can be supported.
+ JobDefs that aren't included in any work specs shouldn't be zero'd when priorities are resolved.
+ Language support, everything is hardcoded :(
 
  - Bugs - 
 
- - Fitness -
- Aggregates (min, max, sum, product, average)
-
  - Conditions -
- Weapon type
  All
  Exactly one
  
@@ -17,3 +14,4 @@
  Set schedule
  (MOD) Set badge
  (MOD) Set loadout (both CE and compositable loadouts)
+ (MOD) Vanilla Skills expanded version of passionsasd

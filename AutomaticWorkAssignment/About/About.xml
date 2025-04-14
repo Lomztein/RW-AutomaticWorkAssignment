@@ -2,13 +2,78 @@
 <ModMetaData>
   <name>Automatic Work Assignment</name>
   <author>Lomzie</author>
-  <url/>
-  <description>WIP.</description>
+  <url>https://github.com/Lomztein/RW-AutomaticWorkAssignment</url>
+  <description>Why hello there! Are you someone just like me who hates doing manual work, but love spending sagnificantly longer automating the same work? Then this might just be the mod for you!
+    
+    This mod adds a new Work Manager tab, that allows you to specify a number of work specifications to be automatically assigned to your colonists. Each work specification has its own fully customizable fitness functions used to prioritize who is assigned to it, as well as the conditions that must be met for assignment. You can even choose to have certain actions performed when the work is assigned to a pawn! The ultiamte goal of this, is to be able to fully automate the work assignments of all your pawns, with no need to exclude any. Though, you can still do so if you really need to.
+    
+    You'll find this tab right next to where you usually find your work tab. When you open it, you'll see a window composed of four major sections:
+    
+     - Work Specification List - 
+    
+    Here you see a list of work specifications. The order of these determines which will be assigned to colonists first. You can, of course, reorder them as you please.
+    
+    At the buttom of this list there are four buttons.
+     * G: Resolve pawn assignments now.
+     * A / M: Automatically resolve assignments each day.
+     * E: Exclude certain pawns from assignments.
+     * I: Not yet implemented, no promises but I'd like for this to allow you to import and export configurations.
+    
+     - Basics / Priorities - 
+  
+    The top half of this section is where you can change the basic information of the work specification. The options are as follows.
+     * Name: Just a label, doesn't have any impact other than organization.
+     * Min (workers): The minimum number workers. If not enough workers that meet the condition are available to meet this threshold, then conditions will be ignored until enough workers has been assigned.
+     * Target (workers): The target number of workers, or how many pawns should be assigned to this work.
+     * Critical: Pawns with critical work that are downed, will immidiately be substituted by someone else.
+     * Incremental: Designates the work specification to be incrementally assigned to pawns, over multiple iterations. Useful for less critical works.
+     * Commitment: Estimate of how much of time is commited to this work, used to avoid over-comitting highly talented pawns.
+     
+    The buttom half of this section is the priorities. Add the jobs you wish done for this work to this list, ordered by priority.
+    
+     - Fitness -
+    
+    Here you define the fitness functions to be used to prioritize which pawns will be assigned to work. This cascades, so that functions further down the list act as 'tie breakers' for functions further up the list.
+    
+    For example, if you have the 'Learning rate' function at the top, and 'Skill level' below that, it will prioritize all pawns with the highest learning rate first, and of those it will prioritize those with highest skill level.
+    
+     - Conditions -
+    
+    This defines a set of conditions that must be met for a pawn to be assigned to the work, such as minimum or maximum skill levels, certain genes, passions.
+    
+    If you have any mod that allows your colonists to train, this can be used to automatically assign pawns with passions, and below a set skill level, to train that skill.
+    
+     - On Assignment - 
+
+    This allows you to execute certain actions when a pawn is assigned the work, such as restricting apparel, drugs, or areas.
+
+    ---
+
+    If this is all way more complicated than what you need, I can easily recommend any of these mods as alternatives.
+    * https://steamcommunity.com/sharedfiles/filedetails/?id=3453406362
+    * https://steamcommunity.com/sharedfiles/filedetails/?id=1598406574
+
+    ---
+
+    The current library of fitness functions, conditions, and on-assignment tasks are just what I've been able to come up with during development. More can added at request, or if you're feeling up for it, by other mods. The system is designed to be easily extensible. To implement a new fitness function, you just create a new class that implements the IPawnFitness interface, create a PawnSettingDef, and provide a PawnSettingUIHandler object. Check out the source code if you're feeling brave. (Fair warning, it was written largely over a weekend binge, enter at your own risk.)
+
+    I plan to extend the library over time, including integrating features from other mods, such as setting Combat Extended loadouts.
+
+    There is still a lot of room for improvements, in particular regarding quality-of-life features and maybe some actual proper icons.
+
+    You can't currently use this with multiple colonies, as the automation is global. I plan to change this later down the line.
+
+    There shouldn't be any mod incompatabilities.
+
+    Source: https://github.com/Lomztein/RW-AutomaticWorkAssignment
+  </description>
   <supportedVersions>
     <li>1.5</li>
   </supportedVersions>
   <packageId>Lomzie.AutomaticWorkAssignment</packageId>
   <loadAfter>
     <li>Ludeon.RimWorld</li>
+    <li>Ludeon.RimWorld.Ideology</li>
+    <li>Ludeon.RimWorld.Biotech</li>
   </loadAfter>
 </ModMetaData>

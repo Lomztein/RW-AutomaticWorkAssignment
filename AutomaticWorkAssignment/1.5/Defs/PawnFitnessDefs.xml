@@ -30,4 +30,46 @@
     <label>invert</label>
     <description>Invert the fitness, so that positive becomes negative.</description>
   </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_ConstantPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ConstantPawnFitness</settingClass>
+    <label>constant</label>
+    <description>Constant fitness value.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_SumPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.SumPawnFitness</settingClass>
+    <label>sum</label>
+    <description>Sum nested fitness functions.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_ProductPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ProductPawnFitness</settingClass>
+    <label>multiply</label>
+    <description>Multiply nested fitness functions.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_MinPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.MinPawnFitness</settingClass>
+    <label>min</label>
+    <description>Min nested fitness functions.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_MaxPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.MaxPawnFitness</settingClass>
+    <label>max</label>
+    <description>Max nested fitness functions.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_AveragePawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.AveragePawnFitness</settingClass>
+    <label>average</label>
+    <description>Average of nested fitness functions.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_CountPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CountPawnFitness</settingClass>
+    <label>count</label>
+    <description>Count passed pawn conditions.</description>
+  </Def>
 </Defs>

@@ -17,15 +17,17 @@ namespace AutomaticWorkAssignment.UI.Generic
         private readonly Func<E, string> _optionLabelGetter;
         private readonly Func<T, string> _labelGetter;
         private readonly Action<T, E> _onSelected;
+        private readonly Func<E, Texture2D> _iconGetter;
 
         private readonly float _pickButtonSize = 32;
 
-        public PickerPawnSettingUIHandler(Func<IEnumerable<E>> optionGetter, Func<E, string> optionLabelGetter, Func<T, string> labelGetter, Action<T, E> onSelected)
+        public PickerPawnSettingUIHandler(Func<IEnumerable<E>> optionGetter, Func<E, string> optionLabelGetter, Func<T, string> labelGetter, Action<T, E> onSelected, Func<E, Texture2D> iconGetter = null)
         {
             _optionGetter = optionGetter;
             _optionLabelGetter = optionLabelGetter;
             _labelGetter = labelGetter;
             _onSelected = onSelected;
+            _iconGetter = iconGetter;
         }
 
         protected override float Handle(Vector2 position, float width, T pawnSetting)
@@ -37,11 +39,26 @@ namespace AutomaticWorkAssignment.UI.Generic
 
             if (Widgets.ButtonText(buttonRect, _labelGetter(pawnSetting)))
             {
-                FloatMenuUtility.MakeMenu(_optionGetter(), _optionLabelGetter, x => () => _onSelected(pawnSetting, x));
+                var options = GetFloatMenuOptions(pawnSetting).ToList();
+                Find.WindowStack.Add(new FloatMenu(options));
             }
 
             y += buttonRect.height;
             return y;
+        }
+
+        private IEnumerable<FloatMenuOption> GetFloatMenuOptions(T pawnSetting)
+        {
+            var options = _optionGetter();
+            foreach (var option in options)
+            {
+                yield return new FloatMenuOption(
+                    _optionLabelGetter(option),
+                    () => _onSelected(pawnSetting, option),
+                    _iconGetter == null ? null : _iconGetter(option),
+                    Color.white
+                    );
+            }
         }
     }
 }
