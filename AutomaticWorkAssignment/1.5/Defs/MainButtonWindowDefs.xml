@@ -8,6 +8,6 @@
     <closesWorldView>true</closesWorldView>
     <minimized>True</minimized>
     <order>11</order>
-    <iconPath>UI/AutomaticWorkAssignment/MainTabWindow_Icon</iconPath>
+    <iconPath>UI/AutomaticWorkAssignment/WorkManagerTab</iconPath>
   </MainButtonDef>
 </Defs>

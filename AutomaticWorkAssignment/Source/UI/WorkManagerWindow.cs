@@ -47,6 +47,13 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         private WorkTypeDef[] _workTypeDefsSorted;
 
+        private Texture2D _resolveNowIcon = ContentFinder<Texture2D>.Get("UI/AutomaticWorkAssignment/ResolveNow");
+        private Texture2D _autoResolveOnIcon = ContentFinder<Texture2D>.Get("UI/AutomaticWorkAssignment/AutoResolveOn");
+        private Texture2D _autoResolveOffIcon = ContentFinder<Texture2D>.Get("UI/AutomaticWorkAssignment/AutoResolveOff");
+        private Texture2D _excludePawnsIcon = ContentFinder<Texture2D>.Get("UI/AutomaticWorkAssignment/ExcludePawns");
+        private Texture2D _openImportExportIcon = ContentFinder<Texture2D>.Get("UI/AutomaticWorkAssignment/OpenImportExport");
+        private Vector2 _iconImageSize = new Vector2(24f, 24f);
+
         public override void PreOpen()
         {
             base.PreOpen();
@@ -159,19 +166,19 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Rect excludePawnsButtonRect = Utils.GetSubRectFraction(buttomsRect, new Vector2(0.5f, 0f), new Vector2(0.75f, 1f));
             Rect importFromSaveButtonRect = Utils.GetSubRectFraction(buttomsRect, new Vector2(0.75f, 0f), new Vector2(1f, 1f));
 
-            if (Widgets.ButtonText(resolveNowButtonRect, "G"))
+            if (Widgets.ButtonImageWithBG(resolveNowButtonRect, _resolveNowIcon, _iconImageSize))
                 _workManager.ResolveWorkAssignments();
-            if (Widgets.ButtonText(autoResolveButtonRect, _workManager.RefreshEachDay ? "A" : "M"))
+            if (Widgets.ButtonImageWithBG(autoResolveButtonRect, _workManager.RefreshEachDay ? _autoResolveOnIcon : _autoResolveOffIcon, _iconImageSize))
                 _workManager.RefreshEachDay = !_workManager.RefreshEachDay;
-            if (Widgets.ButtonText(excludePawnsButtonRect, "E"))
+            if (Widgets.ButtonImageWithBG(excludePawnsButtonRect, _excludePawnsIcon, _iconImageSize))
                 OpenExcludePawnsWindow();
-            if (Widgets.ButtonText(importFromSaveButtonRect, "I"))
+            if (Widgets.ButtonImageWithBG(importFromSaveButtonRect, _openImportExportIcon, _iconImageSize))
                 OpenImportFromSaveWindow();
 
-            TooltipHandler.TipRegion(resolveNowButtonRect, "Resolve assignments now.");
+            TooltipHandler.TipRegion(resolveNowButtonRect, "Resolve assignments now");
             TooltipHandler.TipRegion(autoResolveButtonRect, $"Auto-resolve: {_workManager.RefreshEachDay}");
-            TooltipHandler.TipRegion(excludePawnsButtonRect, "Exclude pawns. (Not yet implemented)");
-            TooltipHandler.TipRegion(importFromSaveButtonRect, "Import from save. (Not yet implemented)");
+            TooltipHandler.TipRegion(excludePawnsButtonRect, "Exclude pawns");
+            TooltipHandler.TipRegion(importFromSaveButtonRect, "Import from save (Not yet implemented)");
         }
 
         private void OpenExcludePawnsWindow()
@@ -292,7 +299,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Rect sliderLabelRect = Utils.GetSubRectFraction(commitmentRects.contentRect, Vector2.zero, new Vector2(1f, 0.5f));
             Rect sliderRect = Utils.GetSubRectFraction(commitmentRects.contentRect, new Vector2(0f, 0.5f), Vector2.one);
             Widgets.Label(sliderLabelRect, _current.Commitment.ToStringPercent());
-            Widgets.HorizontalSlider(sliderRect, ref _current.Commitment, new FloatRange(0f, 1f), roundTo: 0.25f);
+            _current.Commitment = Widgets.HorizontalSlider(sliderRect, _current.Commitment, 0f, 1f, roundTo: 0.25f, leftAlignedLabel: null, rightAlignedLabel: null);
             Text.Anchor = TextAnchor.UpperLeft;
         }
 

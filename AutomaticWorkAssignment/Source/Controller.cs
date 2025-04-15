@@ -51,7 +51,7 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<PassionPawnCondition, SkillDef>(
                 () => DefDatabase<SkillDef>.AllDefs, x => x.label, x => x?.SkillDef?.label ?? "Select skill", (c, s) => c.SkillDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SpecificPawnCondition, Pawn>(
-                () => WorkManager.Instance.GetAllAssignablePawns(), x => x.Name.ToString(), x => x?.Pawn?.Name.ToString() ?? "Select pawn", (c, s) => c.Pawn = s));
+                () => WorkManager.Instance.GetAllEverAssignablePawns(), x => x.Name.ToString(), x => x?.Pawn?.Name.ToString() ?? "Select pawn", (c, s) => c.Pawn = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<TraitPawnCondition, TraitDef>(
                 () => DefDatabase<TraitDef>.AllDefs, x => x.label ?? x.degreeDatas?.FirstOrDefault()?.label, x => x?.TraitDef?.label ?? x.TraitDef?.degreeDatas?.FirstOrDefault()?.label ?? "Select trait", (c, s) => c.TraitDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<WeaponClassPawnCondition, WeaponClassDef>(

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
+using RimWorld;
 
 namespace Lomzie.AutomaticWorkAssignment
 {
@@ -28,10 +29,19 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public PawnWorkPriorities Priorities = PawnWorkPriorities.CreateEmpty(); // The actual work priorities to be assigned.
 
-        public Pawn[] GetApplicablePawnsSorted(IEnumerable<Pawn> allPawns, ResolveWorkRequest request)
+        public Pawn[] GetApplicableOrMinimalPawnsSorted(IEnumerable<Pawn> allPawns, ResolveWorkRequest request)
         {
             PawnFitnessComparer comparer = new PawnFitnessComparer(Fitness, this, request);
 
+            // Sort by fitness.
+            var arr = GetApplicableOrMinimalPawns(allPawns, request).ToArray();
+            Array.Sort(arr, comparer);
+
+            return arr;
+        }
+
+        public IEnumerable<Pawn> GetApplicableOrMinimalPawns(IEnumerable<Pawn> allPawns, ResolveWorkRequest request)
+        {
             // Find applicable pawns.
             var applicable = GetApplicablePawns(allPawns, request);
             int _applicableCount = applicable.Count();
@@ -40,6 +50,8 @@ namespace Lomzie.AutomaticWorkAssignment
             {
                 int missing = minCount - _applicableCount;
                 var substitutesSorted = allPawns.Where(x => !applicable.Contains(x)).ToArray();
+
+                PawnFitnessComparer comparer = new PawnFitnessComparer(Fitness, this, request);
                 Array.Sort(substitutesSorted, comparer);
 
                 Log.Message($"Min threshold not reached: {missing}");
@@ -48,14 +60,10 @@ namespace Lomzie.AutomaticWorkAssignment
                 return Enumerable.Concat(applicable, toSubstitute).ToArray();
             }
 
-            // Sort by fitness.
-            var arr = applicable.ToArray();
-            Array.Sort(arr, comparer);
-
-            return arr;
+            return applicable;
         }
 
-        private IEnumerable<Pawn> GetApplicablePawns(IEnumerable<Pawn> allPawns, ResolveWorkRequest request)
+        public IEnumerable<Pawn> GetApplicablePawns(IEnumerable<Pawn> allPawns, ResolveWorkRequest request)
         {
             foreach (Pawn pawn in allPawns)
             {

@@ -10,7 +10,9 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
     {
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
-            return InnerSettings.Select(x => (x as IPawnFitness).CalcFitness(pawn, specification, request)).Aggregate(Aggregate);
+            if (InnerSettings.Count > 0)
+                return InnerSettings.Select(x => (x as IPawnFitness).CalcFitness(pawn, specification, request)).Aggregate(Aggregate);
+            return 0f;
         }
 
         public abstract float Aggregate(float accumulate, float source);
@@ -65,7 +67,9 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
-            return InnerSettings.Select(x => (x as IPawnFitness).CalcFitness(pawn, specification, request)).Average();
+            if (InnerSettings.Count > 0)
+                return InnerSettings.Select(x => (x as IPawnFitness).CalcFitness(pawn, specification, request)).Average();
+            return 0f;
         }
     }
 

@@ -7,8 +7,6 @@
  - Bugs - 
 
  - Conditions -
- All
- Exactly one
  
  - Post Processors -
  Set schedule

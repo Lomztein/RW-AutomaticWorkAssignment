@@ -11,6 +11,7 @@ using UnityEngine;
 using Verse;
 using System.Drawing;
 using Verse.Noise;
+using Verse.AI;
 
 namespace Lomzie.AutomaticWorkAssignment
 {
@@ -22,6 +23,7 @@ namespace Lomzie.AutomaticWorkAssignment
         public List<Pawn> ExcludePawns = new List<Pawn>();
 
         public bool RefreshEachDay = true;
+        public static float MaxMentalBreakHours = 0.5f;
 
         public Dictionary<Pawn, List<WorkAssignment>> PawnAssignments = new Dictionary<Pawn, List<WorkAssignment>>();
 
@@ -60,7 +62,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public ResolveWorkRequest MakeDefaultRequest ()
         {
-            var pawns = GetAllAssignablePawns().ToList();
+            var pawns = GetAllAssignableNowPawns().ToList();
             return new ResolveWorkRequest() { Pawns = pawns, Map = GetCurrentMap(), WorkManager = this };
         }
 
@@ -84,18 +86,25 @@ namespace Lomzie.AutomaticWorkAssignment
             return _cachedPawns.Where(x => x != null);
         }
 
-        public IEnumerable<Pawn> GetAllAssignablePawns()
+        public IEnumerable<Pawn> GetAllAssignableNowPawns()
         {
             if (IsPawnCacheDirty)
                 CachePawns();
-            return _cachedPawns.Where(x => x != null && CanBeAssigned(x));
+            return _cachedPawns.Where(x => x != null && CanBeAssignedNow(x));
+        }
+
+        public IEnumerable<Pawn> GetAllEverAssignablePawns()
+        {
+            if (IsPawnCacheDirty)
+                CachePawns();
+            return _cachedPawns.Where(x => x != null && CanEverBeAssigned(x));
         }
 
         public int GetPawnCount()
             => GetAllPawns().Count();
 
         public int GetAssignablePawnCount()
-            => GetAllAssignablePawns().Count();
+            => GetAllAssignableNowPawns().Count();
 
         public void ResolveWorkCoroutine(ResolveWorkRequest req)
         {
@@ -127,18 +136,42 @@ namespace Lomzie.AutomaticWorkAssignment
             }
         }
 
+        public static bool IsTemporarilyUnavailable(Pawn pawn)
+        {
+            return pawn != null && (IsMentalStateBlocking(pawn) || pawn.Downed);
+        }
+
+        private static bool IsMentalStateBlocking(Pawn pawn)
+        {
+            if (pawn != null && pawn.MentalStateDef != null)
+            {
+                Log.Message(pawn.MentalStateDef.maxTicksBeforeRecovery);
+                if (pawn.MentalStateDef.maxTicksBeforeRecovery > GenDate.TicksPerHour * MaxMentalBreakHours) return true;
+                if (pawn.MentalStateDef.IsExtreme) return true;
+                if (pawn.MentalStateDef.IsAggro) return true;
+            }
+            return false;
+        }
+
         public bool CanBeAssignedTo(Pawn pawn, WorkSpecification workSpecification)
         {
-            if (!CanBeAssigned(pawn)) return false;
+            if (!CanBeAssignedNow(pawn)) return false;
             if (IsAssignedTo(pawn, workSpecification)) return false;
             return true;
         }
 
-        public bool CanBeAssigned(Pawn pawn)
+        public bool CanBeAssignedNow(Pawn pawn)
+        {
+            if (!CanEverBeAssigned(pawn)) return false;
+            if (IsTemporarilyUnavailable(pawn)) return false;
+            return true;
+        }
+
+        public bool CanEverBeAssigned(Pawn pawn)
         {
             if (pawn == null) return false;
+            if (pawn.Dead) return false;
             if (ExcludePawns.Contains(pawn)) return false;
-            if (pawn.DeadOrDowned) return false;
             return true;
         }
 
@@ -157,7 +190,7 @@ namespace Lomzie.AutomaticWorkAssignment
             {
                 // Go over each work specification, find best fits, and assign work accordingly.
                 WorkSpecification current = assignmentList[specIndex];
-                IEnumerable<Pawn> matchesSorted = current.GetApplicablePawnsSorted(req.Pawns, req);
+                IEnumerable<Pawn> matchesSorted = current.GetApplicableOrMinimalPawnsSorted(req.Pawns, req);
                 matchesSorted = matchesSorted.Where(x => CanBeAssignedTo(x, current));
 
                 int currentAssigned = GetCountAssignedTo(current);
@@ -195,7 +228,15 @@ namespace Lomzie.AutomaticWorkAssignment
 
                 int postAssignmentCount = GetCountAssignedTo(current);
                 if (targetAssigned <= postAssignmentCount)
+                {
                     assignmentList.Remove(current); // Job is satisfied.
+                }
+                else if (assignmentList.Count > 0)
+                {
+                    var spec = assignmentList[0];
+                    assignmentList.RemoveAt(0);
+                    assignmentList.Add(spec);
+                }
             }
         }
 
@@ -263,7 +304,6 @@ namespace Lomzie.AutomaticWorkAssignment
             }
         }
 
-
         public bool IsAssignedTo(Pawn pawn, WorkSpecification spec)
         {
             if (PawnAssignments.TryGetValue(pawn, out var assignedTo))
@@ -280,11 +320,12 @@ namespace Lomzie.AutomaticWorkAssignment
             return 0f;
         }
 
-        public bool IsWorkSpecificationMinimallySatisfied(WorkSpecification spec)
+        public bool CanWorkSpecificationBeMinimallySatisfiedWithApplicablePawns(WorkSpecification spec)
         {
-            int numAssigned = GetCountAssignedTo(spec);
+            ResolveWorkRequest req = MakeDefaultRequest();
+            int numApplicable = spec.GetApplicablePawns(req.Pawns, req).Count();
             int target = spec.MinWorkers.GetCount();
-            return numAssigned >= target;
+            return numApplicable >= target;
         }
 
         public bool IsWorkSpecificationSatisfied(WorkSpecification spec)
@@ -298,10 +339,6 @@ namespace Lomzie.AutomaticWorkAssignment
                 return true;
             }
             return false;
-        }
-
-        public void TransferAssignment(Pawn from, Pawn to, WorkAssignment assignment)
-        {
         }
 
         public void ClearAllAssignments()
@@ -340,6 +377,10 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public void RemoveAssignmentFromPawn(WorkAssignment assignment, Pawn pawn)
         {
+            if (PawnAssignments.TryGetValue(pawn, out var list))
+            {
+                list.Remove(assignment);
+            }
         }
 
         public WorkSpecification CreateNewWorkSpecification()

@@ -19,7 +19,7 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
 
         public int GetCount()
         {
-            int colonistCount = WorkManager.Instance.GetAllAssignablePawns().Count();
+            int colonistCount = WorkManager.Instance.GetAllAssignableNowPawns().Count();
             return (int)(colonistCount * Percentage);
         }
     }

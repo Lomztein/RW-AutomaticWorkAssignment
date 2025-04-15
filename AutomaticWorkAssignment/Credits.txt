@@ -1,0 +1,6 @@
+Main tab icon: 'Gear hammer' by Lorc @ https://game-icons.net/1x1/lorc/gear-hammer.html
+Auto resolve on: 'Play button' by Huard13007 @ https://game-icons.net/1x1/guard13007/play-button.html
+Auto resolve off: 'Pause button' by Huard13007 @ https://game-icons.net/1x1/guard13007/pause-button.html
+Exclude pawns icon: 'Person' (modified) by Delapouite @ https://game-icons.net/1x1/delapouite/person.html
+Resolve now icon: 'Check mark' by Delapouite @ https://game-icons.net/1x1/delapouite/check-mark.html
+Import / export icon: 'Open folder' by Delapouite @ https://game-icons.net/1x1/delapouite/open-folder.html

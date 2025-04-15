@@ -38,13 +38,13 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             foreach (WorkSpecification workSpec in WorkManager.Instance.WorkList)
             {
-                if (workSpec.IsCritical && WorkManager.Instance.IsWorkSpecificationMinimallySatisfied(workSpec))
+                if (workSpec.IsCritical && IsBelowMinimalAfter(workSpec, -1))
                 {
                     var pawnsAssignedTo = WorkManager.Instance.GetPawnsAssignedTo(workSpec);
                     foreach (var pawn in pawnsAssignedTo)
                     {
                         WorkAssignment critical = WorkManager.Instance.GetAssignmentTo(pawn, workSpec);
-                        if (IsUnableToWork(pawn) && !critical.IsSubstituted)
+                        if (!WorkManager.Instance.CanBeAssignedNow(pawn) && !critical.IsSubstituted)
                         {
                             Pawn substitute = FindSubstituteFor(critical);
                             if (substitute != null)
@@ -58,15 +58,18 @@ namespace Lomzie.AutomaticWorkAssignment
             }
         }
 
-        private bool IsUnableToWork(Pawn pawn)
+        private bool IsBelowMinimalAfter(WorkSpecification spec, int change)
         {
-            return pawn != null && (pawn.InMentalState || pawn.DeadOrDowned);
+            int numAssigned = WorkManager.Instance.GetCountAssignedTo(spec);
+            numAssigned += change;
+            int target = spec.MinWorkers.GetCount();
+            return numAssigned < target;
         }
 
         private Pawn FindSubstituteFor(WorkAssignment critical)
         {
             ResolveWorkRequest request = WorkManager.Instance.MakeDefaultRequest();
-            return critical.Specification.GetApplicablePawnsSorted(request.Pawns, request).FirstOrDefault();
+            return critical.Specification.GetApplicableOrMinimalPawnsSorted(request.Pawns, request).FirstOrDefault();
         }
 
         private IEnumerator MakeSubstitution(Pawn original, Pawn substitute, WorkAssignment forAssignment)

@@ -21,6 +21,6 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         }
 
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
-            => pawn.skills.skills.Find(x => SkillDef?.defName == x.def.defName).passion != Passion.None;
+            => pawn.skills.skills.Find(x => SkillDef?.defName == x.def.defName)?.passion != Passion.None;
     }
 }
