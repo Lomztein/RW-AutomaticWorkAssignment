@@ -1,5 +1,4 @@
-﻿using AutomaticWorkAssignment.Source.UI.PawnFitness;
-using AutomaticWorkAssignment.UI;
+﻿using AutomaticWorkAssignment.UI;
 using AutomaticWorkAssignment.UI.Generic;
 using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
@@ -8,27 +7,47 @@ using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using Lomzie.AutomaticWorkAssignment.UI;
 using Lomzie.AutomaticWorkAssignment.UI.Generic;
 using Lomzie.AutomaticWorkAssignment.UI.PawnConditions;
+using Lomzie.AutomaticWorkAssignment.UI.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor;
 using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment
 {
-    public class Controller : Mod
+    public class AutomaticWorkAssignmentMod : Mod
     {
-        public Controller(ModContentPack content) : base(content)
+        public static AutomaticWorkAssignmentSettings Settings;
+
+        public AutomaticWorkAssignmentMod(ModContentPack content) : base(content)
         {
+            Settings = GetSettings<AutomaticWorkAssignmentSettings>();
             Initialize();
         }
 
         private void Initialize()
         {
+            InitializePawnSettingUIHandlers();
+        }
+
+        public override void DoSettingsWindowContents(Rect inRect)
+        {
+            base.DoSettingsWindowContents(inRect);
+            Settings.DoWindow(inRect);
+        }
+
+        public override string SettingsCategory()
+            => "Automatic Work Assignment";
+
+        private void InitializePawnSettingUIHandlers ()
+        {
             // Initialize fitness UI handlers.
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<LearnRatePawnFitness>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<SkillLevelPawnFitness>());
+            PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<PassionCountPawnFitness>());
 
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<StatPawnFitness, StatDef>(
                 () => DefDatabase<StatDef>.AllDefs, x => x.label, x => x?.StatDef?.label ?? "Select stat", (c, s) => c.StatDef = s));

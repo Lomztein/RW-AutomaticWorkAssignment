@@ -7,10 +7,12 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 {
     public static class PawnSettingUIHandlers
     {
-        private static readonly List<IPawnSettingUIHandler> _handlers = new List<IPawnSettingUIHandler>();
+        private static List<IPawnSettingUIHandler> _handlers;
 
         public static void AddHandler(IPawnSettingUIHandler handler)
         {
+            if (_handlers == null)
+                _handlers = new List<IPawnSettingUIHandler>();
             _handlers.Add(handler);
         }
 

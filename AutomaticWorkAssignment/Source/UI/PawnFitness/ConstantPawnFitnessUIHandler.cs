@@ -1,14 +1,8 @@
 ﻿using Lomzie.AutomaticWorkAssignment.PawnFitness;
-using Lomzie.AutomaticWorkAssignment.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
-namespace AutomaticWorkAssignment.Source.UI.PawnFitness
+namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
 {
     public class ConstantPawnFitnessUIHandler : PawnSettingUIHandler<ConstantPawnFitness>
     {

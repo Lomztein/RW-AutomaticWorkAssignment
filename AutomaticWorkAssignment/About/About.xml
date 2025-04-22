@@ -100,9 +100,20 @@
     <li>1.5</li>
   </supportedVersions>
   <packageId>Lomzie.AutomaticWorkAssignment</packageId>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+      <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=2009463077</steamWorkshopUrl>
+    </li>
+  </modDependencies>
   <loadAfter>
     <li>Ludeon.RimWorld</li>
     <li>Ludeon.RimWorld.Ideology</li>
     <li>Ludeon.RimWorld.Biotech</li>
+    <li>brrainz.harmony</li>
+    <li>VouLT.BetterPawnControl</li>
+    <li>saucypigeon.pawnbadge</li>
   </loadAfter>
 </ModMetaData>

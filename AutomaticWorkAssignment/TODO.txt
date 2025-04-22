@@ -1,8 +1,8 @@
 ﻿ - General -
  Implement import/export work specifications.
  Rework WorkManager to be per-map (with pocket maps), so that multiple colonies can be supported.
- JobDefs that aren't included in any work specs shouldn't be zero'd when priorities are resolved.
  Language support, everything is hardcoded :(
+ Group system for work specs, for organization and for interweaving of assignments. Will replace current incremental feature.
 
  - Bugs - 
 
@@ -10,6 +10,5 @@
  
  - Post Processors -
  Set schedule
- (MOD) Set badge
  (MOD) Set loadout (both CE and compositable loadouts)
  (MOD) Vanilla Skills expanded version of passionsasd

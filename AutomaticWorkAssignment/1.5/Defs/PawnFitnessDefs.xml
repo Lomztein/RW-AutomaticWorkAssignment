@@ -19,6 +19,12 @@
     <description>The value of the given stat.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_PassionCountPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.PassionCountPawnFitness</settingClass>
+    <label>passion count</label>
+    <description>Count of skills with passion.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_ConditionPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ConditionPawnFitness</settingClass>
     <label>condition</label>

@@ -5,6 +5,10 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutomaticWorkAssignment", "AutomaticWorkAssignment\AutomaticWorkAssignment.csproj", "{7D4F9C05-C7C3-4B99-90F4-9B0A6C477F42}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Patch_BetterPawnControl", "Patch_BetterPawnControl\Patch_BetterPawnControl.csproj", "{CBD10C5F-A3B4-4F5B-9A70-6DDDB4B870CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patch_PawnBadge", "PawnBadgePatch\Patch_PawnBadge.csproj", "{BFC078B5-9CF1-47E4-BFCF-52788A8BFA0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{7D4F9C05-C7C3-4B99-90F4-9B0A6C477F42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D4F9C05-C7C3-4B99-90F4-9B0A6C477F42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D4F9C05-C7C3-4B99-90F4-9B0A6C477F42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBD10C5F-A3B4-4F5B-9A70-6DDDB4B870CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBD10C5F-A3B4-4F5B-9A70-6DDDB4B870CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBD10C5F-A3B4-4F5B-9A70-6DDDB4B870CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBD10C5F-A3B4-4F5B-9A70-6DDDB4B870CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFC078B5-9CF1-47E4-BFCF-52788A8BFA0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFC078B5-9CF1-47E4-BFCF-52788A8BFA0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFC078B5-9CF1-47E4-BFCF-52788A8BFA0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFC078B5-9CF1-47E4-BFCF-52788A8BFA0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

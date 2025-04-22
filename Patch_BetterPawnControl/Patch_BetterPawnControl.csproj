@@ -6,11 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AutomaticWorkAssignment\AutomaticWorkAssignment.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="BetterPawnControl">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\1541460369\v1.5\Assemblies\BetterPawnControl.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\..\..\Documents\GitHub\RimWorld-Minimods\Source-DLLs\1.5\UnityEngine.CoreModule.dll</HintPath>
@@ -26,12 +33,8 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="1.5\Mods\PawnBadge\Assemblies\" />
-  </ItemGroup>
-
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)\1.5\Assemblies\AutomaticWorkAssignment.dll&quot; /y&#xD;&#xA;$(SolutionDir)copy.bat AutomaticWorkAssignment &quot;C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods&quot;" />
+    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)\AutomaticWorkAssignment\1.5\Mods\BetterPawnControl\Assemblies\Patch_BetterPawnControl.dll&quot;" />
   </Target>
 
 </Project>

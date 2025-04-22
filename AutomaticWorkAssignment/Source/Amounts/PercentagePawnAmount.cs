@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using UnityEngine;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.Amounts
@@ -20,7 +21,7 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
         public int GetCount()
         {
             int colonistCount = WorkManager.Instance.GetAllAssignableNowPawns().Count();
-            return (int)(colonistCount * Percentage);
+            return Mathf.RoundToInt(colonistCount * Percentage);
         }
     }
 }

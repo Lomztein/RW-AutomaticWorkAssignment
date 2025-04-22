@@ -9,7 +9,7 @@ namespace Lomzie.AutomaticWorkAssignment
 {
     public static class Utils
     {
-        public static (Rect labelRect, Rect contentRect) GetLabeledContentWithFixedLabelSize(Rect inRect, int labelSize)
+        public static (Rect labelRect, Rect contentRect) GetLabeledContentWithFixedLabelSize(Rect inRect, float labelSize)
         {
             Rect labelRect = new Rect(inRect);
             labelRect.width = labelSize;

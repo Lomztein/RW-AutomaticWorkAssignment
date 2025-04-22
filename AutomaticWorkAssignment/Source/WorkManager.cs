@@ -22,8 +22,7 @@ namespace Lomzie.AutomaticWorkAssignment
         public List<WorkSpecification> WorkList = new List<WorkSpecification>();
         public List<Pawn> ExcludePawns = new List<Pawn>();
 
-        public bool RefreshEachDay = true;
-        public static float MaxMentalBreakHours = 0.5f;
+        public bool RefreshEachDay = false;
 
         public Dictionary<Pawn, List<WorkAssignment>> PawnAssignments = new Dictionary<Pawn, List<WorkAssignment>>();
 
@@ -32,8 +31,12 @@ namespace Lomzie.AutomaticWorkAssignment
         private int _lastCachePawnsTick;
         private readonly int _cachePawnsThreshold = 300;
         private IEnumerable<Pawn> _cachedPawns;
-
+        private List<WorkTypeDef> _unmanagedWorkTypes;
         private bool IsPawnCacheDirty => GenTicks.TicksGame > _lastCachePawnsTick + _cachePawnsThreshold || _cachedPawns == null;
+
+        public static int MaxCommitment => AutomaticWorkAssignmentSettings.MaxCommitment;
+        public static float MaxMentalBreakHours => AutomaticWorkAssignmentSettings.MentalBreakHourThreshold;
+        public static bool IgnoreUnmanagedWorkTypes => AutomaticWorkAssignmentSettings.IgnoreUnmanagedWorkTypes;
 
         public WorkManager(Game game)
         {
@@ -180,8 +183,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
         private void ResolveAssignments (ResolveWorkRequest req)
         {
-            int specIndex = 0;
-            int maxCommitment = 25;
+            int maxCommitment = Mathf.Clamp(1, MaxCommitment, 25);
 
             ClearAllAssignments();
             List<WorkSpecification> assignmentList = new List<WorkSpecification>(WorkList);
@@ -189,7 +191,7 @@ namespace Lomzie.AutomaticWorkAssignment
             while (assignmentList.Count > 0)
             {
                 // Go over each work specification, find best fits, and assign work accordingly.
-                WorkSpecification current = assignmentList[specIndex];
+                WorkSpecification current = assignmentList[0];
                 IEnumerable<Pawn> matchesSorted = current.GetApplicableOrMinimalPawnsSorted(req.Pawns, req);
                 matchesSorted = matchesSorted.Where(x => CanBeAssignedTo(x, current));
 
@@ -197,62 +199,116 @@ namespace Lomzie.AutomaticWorkAssignment
                 int targetAssigned = current.GetTargetWorkers();
                 int remaining = targetAssigned - currentAssigned;
 
+                // If incremenetal, assign one pawn per while iteration.
                 int toAssign = current.IsIncremental ? Mathf.Min(1, remaining) : remaining;
+                // Only assign the amount of available workers.
+                int canAssign = matchesSorted.Count();
+                toAssign = Mathf.Min(toAssign, canAssign);
+
                 float maxTargetCommitment = (1f - current.Commitment);
 
-                for (int c = 0; c < maxCommitment; c++) // Max commitment level increases if no pawns with enough available commitment was found.
+                if (canAssign != 0)
                 {
-                    Queue<Pawn> commitable = new Queue<Pawn>(matchesSorted.Where(x => GetPawnCommitment(x) < maxTargetCommitment + c).ToList());
-
-                    int i = 0;
-                    for (i = 0; i < toAssign; i++)
+                    // Max commitment level increases if no pawns with enough available commitment was found.
+                    for (int c = 0; c < maxCommitment; c++) 
                     {
-                        if (commitable.Count == 0)
+                        Queue<Pawn> commitable = new Queue<Pawn>(matchesSorted.Where(x => GetPawnCommitment(x) < maxTargetCommitment + c).ToList());
+
+                        int i = 0;
+                        int assigned = 0;
+                        for (i = 0; i < toAssign; i++)
+                        {
+                            if (commitable.Count == 0)
+                                break;
+
+                            AssignWorkToPawn(current, commitable.Dequeue());
+                            assigned++;
+                        }
+                        toAssign -= assigned;
+
+                        if (c >= maxCommitment - 1)
+                        {
+                            // Not able to find a suitable commitable worker.
+                            assignmentList.Remove(current);
+                        }
+
+                        if (toAssign == 0)
+                        {
+                            // Completed the for-loop, all assignents have been made, so we can move on.
                             break;
-
-                        AssignWorkToPawn(current, commitable.Dequeue());
-                        toAssign--;
+                        }
                     }
-
-                    if (c == maxCommitment - 1)
-                    {
-                        assignmentList.Remove(current); // Not able to find a suitable worker.
-                    }
-
-                    if (i >= toAssign)
-                    {
-                        // Completed the for-loop, all assignents have been made, so we can move on.
-                        break;
-                    }
+                }
+                else
+                {
+                    // There are no more applicable workers for this work, remove it from the list.
+                    assignmentList.Remove(current);
                 }
 
                 int postAssignmentCount = GetCountAssignedTo(current);
                 if (targetAssigned <= postAssignmentCount)
                 {
                     assignmentList.Remove(current); // Job is satisfied.
+                    if (targetAssigned < postAssignmentCount)
+                        Log.Warning($"{current.Name} has been over-assigned!");
                 }
+                // Work spec is not fully satisfied, move to end of list and try again next iteration.
                 else if (assignmentList.Count > 0)
                 {
-                    var spec = assignmentList[0];
-                    assignmentList.RemoveAt(0);
-                    assignmentList.Add(spec);
+                    // Only move the actual current spec to the back of the list, in case we accidentally removed it earlier.
+                    if (assignmentList.Remove(current))
+                    {
+                        assignmentList.Add(current);
+                    }
                 }
             }
         }
 
         private void ResolvePriorities(ResolveWorkRequest req)
         {
+            _unmanagedWorkTypes = GetUnmanagedWorkTypes();
             foreach (var pawn in req.Pawns)
             {
                 ResolvePawnPriorities(pawn);
             }
         }
 
+        private List<WorkTypeDef> GetUnmanagedWorkTypes ()
+        {
+            List<WorkTypeDef> all = new List<WorkTypeDef>(DefDatabase<WorkTypeDef>.AllDefs);
+            foreach (var spec in  WorkList)
+            {
+                List<WorkTypeDef> toRemove = new List<WorkTypeDef>();
+                foreach (WorkTypeDef def in all)
+                {
+                    if (spec.Priorities.OrderedPriorities.Contains(def))
+                        toRemove.Add(def);
+                }
+                foreach (WorkTypeDef def in toRemove)
+                {
+                    all.Remove(def);
+                }
+            }
+            return all;
+        }
+
+        private bool ShouldIgnoreWorkType(WorkTypeDef workTypeDef)
+        {
+            if (IgnoreUnmanagedWorkTypes)
+            {
+                return _unmanagedWorkTypes.Contains(workTypeDef);
+            }
+            return false;
+        }
+
         public void ResolvePawnPriorities(Pawn pawn)
         {
             foreach (var def in DefDatabase<WorkTypeDef>.AllDefs)
             {
-                pawn.workSettings?.SetPriority(def, 0);
+                if (!ShouldIgnoreWorkType(def))
+                {
+                    pawn.workSettings?.SetPriority(def, 0);
+                }
             }
 
             if (PawnAssignments.TryGetValue(pawn, out List<WorkAssignment> assignments))
@@ -365,6 +421,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public override void ExposeData ()
         {
+            Scribe_Values.Look(ref RefreshEachDay, "refreshEachDay", false);
             Scribe_Collections.Look(ref WorkList, "workSpecifications", LookMode.Deep);
             Scribe_Collections.Look(ref ExcludePawns, "excludePawns", LookMode.Reference);
 

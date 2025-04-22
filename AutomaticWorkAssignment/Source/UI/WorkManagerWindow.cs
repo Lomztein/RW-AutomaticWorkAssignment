@@ -6,6 +6,7 @@ using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 using UnityEngine;
@@ -38,6 +39,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         // Main section layout
         private const float ConditionsFitnessSectionPart = 0.2f;
         private const float PriotityListElementWidth = 32;
+        private const float RequireFullCapabilitySize = 24;
 
         // Advanced section layout
         private const float NewFunctionButtonSize = 32;
@@ -52,6 +54,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private Texture2D _autoResolveOffIcon = ContentFinder<Texture2D>.Get("UI/AutomaticWorkAssignment/AutoResolveOff");
         private Texture2D _excludePawnsIcon = ContentFinder<Texture2D>.Get("UI/AutomaticWorkAssignment/ExcludePawns");
         private Texture2D _openImportExportIcon = ContentFinder<Texture2D>.Get("UI/AutomaticWorkAssignment/OpenImportExport");
+
+        private Texture2D _toggleOnIcon = ContentFinder<Texture2D>.Get("UI/Widgets/CheckOn");
+        private Texture2D _toggleOffIcon = ContentFinder<Texture2D>.Get("UI/Widgets/CheckOff");
+
         private Vector2 _iconImageSize = new Vector2(24f, 24f);
 
         public override void PreOpen()
@@ -178,7 +184,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             TooltipHandler.TipRegion(resolveNowButtonRect, "Resolve assignments now");
             TooltipHandler.TipRegion(autoResolveButtonRect, $"Auto-resolve: {_workManager.RefreshEachDay}");
             TooltipHandler.TipRegion(excludePawnsButtonRect, "Exclude pawns");
-            TooltipHandler.TipRegion(importFromSaveButtonRect, "Import from save (Not yet implemented)");
+            TooltipHandler.TipRegion(importFromSaveButtonRect, "Save / load");
         }
 
         private void OpenExcludePawnsWindow()
@@ -191,7 +197,11 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         private void OpenImportFromSaveWindow()
         {
-            Log.Message("Not implemented yet!");
+            FloatMenuOption save = new FloatMenuOption("Save", () => Find.WindowStack.Add(new Dialog_SaveConfigFileList()));
+            FloatMenuOption load = new FloatMenuOption("Load", () => Find.WindowStack.Add(new Dialog_LoadConfigFileList()));
+            FloatMenuOption import = new FloatMenuOption("Import", () => Find.WindowStack.Add(new Dialog_ImportConfigFileList()));
+            FloatMenuOption openFolder = new FloatMenuOption("Open folder", () => Process.Start(IO.GetConfigDirectory().FullName));
+            Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>() { save, load, import, openFolder }));
         }
 
         private int DoVerticalRearrangeButtons(Rect inRect)
@@ -243,7 +253,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private void DoBasicInfoContents(Rect sectionRect)
         {
             Rect firstRow = Utils.GetSubRectFraction(sectionRect, Vector2.zero, new Vector2(0.5f, 1f));
-            int labelWidth = (int)(firstRow.width / 3f);
+            int labelWidth = (int)(firstRow.width / 4f);
             Text.Anchor = TextAnchor.MiddleLeft;
 
             // Name
@@ -292,7 +302,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             // Commitment
             Rect commitmentRect = Utils.GetSubRectFraction(secondRow, new Vector3(0f, 0.66f), new Vector2(1f, 1f));
             commitmentRect = Utils.ShrinkByMargin(commitmentRect, MarginSize);
-            var commitmentRects = Utils.GetLabeledContentWithFixedLabelSize(commitmentRect, labelWidth);
+            var commitmentRects = Utils.GetLabeledContentWithFixedLabelSize(commitmentRect, labelWidth * 2);
             Widgets.Label(commitmentRects.labelRect, "Commitment");
 
             Text.Anchor = TextAnchor.UpperCenter;
@@ -381,6 +391,17 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Text.Anchor = TextAnchor.UpperLeft;
             GUI.EndGroup();
             Widgets.EndScrollView();
+
+            Text.Anchor = TextAnchor.MiddleRight;
+            Rect requireCapabilityRect = Utils.GetSubRectFraction(sectionRect, new Vector2(0.5f, 0f), new Vector2(1f, 0.1f));
+            requireCapabilityRect.height = RequireFullCapabilitySize;
+            (Rect labelRect, Rect buttonRect) = Utils.GetLabeledContentWithFixedLabelSize(requireCapabilityRect, requireCapabilityRect.width - RequireFullCapabilitySize);
+            labelRect.width -= MarginSize;
+            Widgets.Label(labelRect, "Require full capability");
+            if (Widgets.ButtonImage(buttonRect, _current.RequireFullPawnCapability ? _toggleOnIcon : _toggleOffIcon))
+                _current.RequireFullPawnCapability = !_current.RequireFullPawnCapability;
+            Text.Anchor = TextAnchor.UpperLeft;
+            TooltipHandler.TipRegion(requireCapabilityRect, "Require that pawn is capable of all work for assignment?");
         }
 
         private void DrawPriority(Rect inRect, PawnWorkPriorities priorities, WorkTypeDef workDef)
@@ -598,12 +619,30 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             {
                 _pawnAmountBuffer = intPawnAmount.Value.ToString();
                 Widgets.TextFieldNumeric(amountRect, ref intPawnAmount.Value, ref _pawnAmountBuffer);
+                intPawnAmount.Value = int.Parse(_pawnAmountBuffer);
             }
             if (pawnAmount is PercentagePawnAmount percentagePawnAmount)
             {
                 _pawnAmountBuffer = (percentagePawnAmount.Percentage * 100f).ToString();
                 Widgets.TextFieldNumeric(amountRect, ref percentagePawnAmount.Percentage, ref _pawnAmountBuffer, 0f, 100f);
                 percentagePawnAmount.Percentage = float.Parse(_pawnAmountBuffer) / 100f;
+            }
+            if (pawnAmount is BuildingPawnAmount buildingPawnAmount)
+            {
+                Rect pickerRect = Utils.GetSubRectFraction(amountRect, Vector2.zero, new Vector2(0.7f, 1f));
+                Rect multLabelRect = Utils.GetSubRectFraction(amountRect, new Vector2(0.7f, 0f), new Vector2(0.8f, 1f));
+                Rect multRect = Utils.GetSubRectFraction(amountRect, new Vector2(0.8f, 0f), new Vector2(1f, 1f));
+                if (Widgets.ButtonText(pickerRect, buildingPawnAmount.BuildingDef?.label ?? "Select"))
+                {
+                    IEnumerable<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.Where(x => x.BuildableByPlayer);
+                    FloatMenuUtility.MakeMenu(defs, x => x.label, x => () => buildingPawnAmount.BuildingDef = x);
+                }
+                Text.Anchor = TextAnchor.MiddleCenter;
+                Widgets.Label(multLabelRect, "x");
+                _pawnAmountBuffer = buildingPawnAmount.Multiplier.ToString();
+                Widgets.TextFieldNumeric(multRect, ref buildingPawnAmount.Multiplier, ref _pawnAmountBuffer);
+                buildingPawnAmount.Multiplier = float.Parse(_pawnAmountBuffer);
+                Text.Anchor = TextAnchor.UpperLeft;
             }
 
             var pawnAmountDefs = DefDatabase<PawnAmountDef>.AllDefsListForReading;

@@ -72,6 +72,8 @@ namespace Lomzie.AutomaticWorkAssignment
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (OrderedPriorities == null) OrderedPriorities = new List<WorkTypeDef>();
+                
+                OrderedPriorities = OrderedPriorities.ToList().Where(x => x != null).ToList();
             }
         }
     }

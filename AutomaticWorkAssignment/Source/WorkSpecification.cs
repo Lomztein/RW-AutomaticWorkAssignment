@@ -14,10 +14,11 @@ namespace Lomzie.AutomaticWorkAssignment
 {
     public class WorkSpecification : IExposable
     {
-        public string Name; // Label for UI.
+        public string Name = "New Work"; // Label for UI.
 
         public bool IsCritical; // Job will temporarily be reassigned to another pawn if the prior assignee is unable to work.
         public bool IsIncremental; // Job will be assigned one pawn per assignment iteration.
+        public bool RequireFullPawnCapability = true; // Job will not be assigned if a pawn is unable to do some of the work. If off, pawn must only be able to do at least one thing.
         public float Commitment; // 0 = Occasional, 0.5 = part-time work, 1.0 = full-time work.
 
         public List<IPawnCondition> Conditions = new List<IPawnCondition>(); // Conditions required for a pawn to be valid. All conditions must be met.
@@ -67,9 +68,19 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             foreach (Pawn pawn in allPawns)
             {
-                if (Conditions.All(x => x.IsValid(pawn, this, request))
-                    && !pawn.OneOfWorkTypesIsDisabled(Priorities.OrderedPriorities))
-                    yield return pawn;
+                if (Conditions.All(x => x.IsValid(pawn, this, request)))
+                {
+                    if (RequireFullPawnCapability)
+                    {
+                        if (!pawn.OneOfWorkTypesIsDisabled(Priorities.OrderedPriorities))
+                            yield return pawn;
+                    }
+                    else
+                    {
+                        if (Priorities.OrderedPriorities.Any(x => !pawn.WorkTypeIsDisabled(x)))
+                            yield return pawn;
+                    }
+                }
             }
         }
 
@@ -125,6 +136,7 @@ namespace Lomzie.AutomaticWorkAssignment
             Scribe_Values.Look(ref Name, "name");
             Scribe_Values.Look(ref IsCritical, "isCritical");
             Scribe_Values.Look(ref IsIncremental, "isIncremental");
+            Scribe_Values.Look(ref RequireFullPawnCapability, "requireFullPawnCapability");
             Scribe_Values.Look(ref Commitment, "commitment");
             Scribe_Deep.Look(ref MinWorkers, "minWorkers");
             Scribe_Deep.Look(ref TargetWorkers, "targetWorkers");
@@ -141,6 +153,10 @@ namespace Lomzie.AutomaticWorkAssignment
                 if (Fitness == null) Fitness = new List<IPawnFitness>();
                 if (Conditions == null) Conditions = new List<IPawnCondition>();
                 if (PostProcessors == null) PostProcessors = new List<IPawnPostProcessor>();
+
+                Fitness = Fitness.ToList().Where(x => x != null).ToList();
+                Conditions = Conditions.ToList().Where(x => x != null).ToList();
+                PostProcessors = PostProcessors.ToList().Where(x => x != null).ToList();
             }
         }
 
