@@ -10,9 +10,6 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
     public class AnyPawnCondition : CompositePawnSetting, IPawnCondition
     {
-        public override string Label => "Any";
-        public override string Description => "Check if any of the nested conditions are true.";
-
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
             => InnerSettings.Any(x => x is IPawnCondition condition && condition.IsValid(pawn, specification, request));
     }

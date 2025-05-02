@@ -7,8 +7,6 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
     public class CompareFitnessPawnCondition : CompositePawnSetting, IPawnCondition
     {
-        public override string Label => "Compare fitness";
-        public override string Description => "Check if a comparison of fitness holds true.";
         public override int MaxSettings => 2;
 
         public enum Comparsion
@@ -27,6 +25,12 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
                 return DoComparison(lhs.CalcFitness(pawn, specification, request), rhs.CalcFitness(pawn, specification, request));
             }
             return false;
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref ComparisonType, "comparisonType");
         }
 
         private bool DoComparison(float v1, float v2)

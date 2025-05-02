@@ -112,6 +112,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 if (i++ % 2 == 1) Widgets.DrawAltRect(row);
                 var jobRect = Utils.ShrinkByMargin(row, ListElementHeight * 0.1f);
 
+                if (Mouse.IsOver(row))
+                    HighlightAssignees(work);
+
                 Text.Anchor = TextAnchor.MiddleLeft;
                 Rect labelRect = Utils.GetSubRectFraction(jobRect, Vector2.zero, new Vector2(1f, 0.5f));
                 Rect assignedRect = Utils.GetSubRectFraction(jobRect, new Vector2(0f, 0.5f), new Vector2(1f, 1f));
@@ -288,22 +291,25 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             {
                 _current.IsCritical = !_current.IsCritical;
             }
+            TooltipHandler.TipRegion(criticalRect, "Immediately find substitute if assignee becomes unavailable.");
 
-            // Incremental
-            Rect incrementalRect = Utils.GetSubRectFraction(secondRow, new Vector3(0f, 0.33f), new Vector2(1f, 0.66f));
-            incrementalRect = Utils.ShrinkByMargin(incrementalRect, MarginSize);
-            var incrementalRects = Utils.GetLabeledContentWithFixedLabelSize(incrementalRect, labelWidth * 2);
-            Widgets.Label(incrementalRects.labelRect, "Incremental");
-            if (Widgets.ButtonText(incrementalRects.contentRect, _current.IsIncremental ? "Yes" : "No"))
+            // Specialist
+            Rect specialistRect = Utils.GetSubRectFraction(secondRow, new Vector3(0f, 0.33f), new Vector2(1f, 0.66f));
+            specialistRect = Utils.ShrinkByMargin(specialistRect, MarginSize);
+            var specialistRects = Utils.GetLabeledContentWithFixedLabelSize(specialistRect, labelWidth * 2);
+            Widgets.Label(specialistRects.labelRect, "Specialist");
+            if (Widgets.ButtonText(specialistRects.contentRect, _current.IsSpecialist ? "Yes" : "No"))
             {
-                _current.IsIncremental = !_current.IsIncremental;
+                _current.IsSpecialist = !_current.IsSpecialist;
             }
+            TooltipHandler.TipRegion(specialistRect, "Exclude assignees from work further down the list.");
 
             // Commitment
             Rect commitmentRect = Utils.GetSubRectFraction(secondRow, new Vector3(0f, 0.66f), new Vector2(1f, 1f));
             commitmentRect = Utils.ShrinkByMargin(commitmentRect, MarginSize);
             var commitmentRects = Utils.GetLabeledContentWithFixedLabelSize(commitmentRect, labelWidth * 2);
             Widgets.Label(commitmentRects.labelRect, "Commitment");
+            TooltipHandler.TipRegion(commitmentRect, "Estimate of how much time this work requires.");
 
             Text.Anchor = TextAnchor.UpperCenter;
             Rect sliderLabelRect = Utils.GetSubRectFraction(commitmentRects.contentRect, Vector2.zero, new Vector2(1f, 0.5f));
@@ -410,7 +416,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Rect labelRect = Utils.GetSubRectFraction(inRect, Vector2.zero, new Vector2(1f, 0.6f));
 
             Matrix4x4 old = GUI.matrix;
-            GUIUtility.RotateAroundPivot(-90, labelRect.position);
+
+            Utils.RotateAroundPivot(-90f, labelRect.position);
             Text.Anchor = TextAnchor.MiddleLeft;
 
             labelRect.x -= labelRect.height;
@@ -554,7 +561,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 if (Widgets.ButtonInvisible(newRect))
                 {
                     var defs = GenDefDatabase.GetAllDefsInDatabaseForDef(settingDefType).Cast<PawnSettingDef>();
-                    FloatMenuUtility.MakeMenu(defs, x => x.label, x => () => onNewSetting((IPawnSetting)Activator.CreateInstance(x.settingClass)));
+                    FloatMenuUtility.MakeMenu(defs, x => x.label, x => () => onNewSetting(PawnSetting.CreateFrom<IPawnSetting>(x)));
                 }
 
                 cur.y += NewFunctionButtonSize;
@@ -674,6 +681,12 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             newRect.width *= fraction;
             newRect.x += inRect.width * moveByFraction;
             return newRect;
+        }
+
+        private void HighlightAssignees(WorkSpecification workSpec)
+        {
+            var pawns = WorkManager.Instance.GetPawnsAssignedTo(workSpec);
+            LookTargetsUtility.TryHighlight(new LookTargets(pawns));
         }
     }
 }

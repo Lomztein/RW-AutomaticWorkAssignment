@@ -25,6 +25,12 @@
     <description>Count of skills with passion.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_CommitmentPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CommitmentPawnFitness</settingClass>
+    <label>commitment</label>
+    <description>How much the pawn is already committed.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_ConditionPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ConditionPawnFitness</settingClass>
     <label>condition</label>

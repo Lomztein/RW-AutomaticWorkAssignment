@@ -12,6 +12,7 @@ using Verse;
 using System.Drawing;
 using Verse.Noise;
 using Verse.AI;
+using AutomaticWorkAssignment;
 
 namespace Lomzie.AutomaticWorkAssignment
 {
@@ -41,6 +42,12 @@ namespace Lomzie.AutomaticWorkAssignment
         public WorkManager(Game game)
         {
             Instance = this;
+        }
+
+        public override void StartedNewGame()
+        {
+            base.StartedNewGame();
+            WorkList = Defaults.GenerateDefaultWorkSpecifications().ToList();
         }
 
         public override void GameComponentTick()
@@ -148,7 +155,6 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             if (pawn != null && pawn.MentalStateDef != null)
             {
-                Log.Message(pawn.MentalStateDef.maxTicksBeforeRecovery);
                 if (pawn.MentalStateDef.maxTicksBeforeRecovery > GenDate.TicksPerHour * MaxMentalBreakHours) return true;
                 if (pawn.MentalStateDef.IsExtreme) return true;
                 if (pawn.MentalStateDef.IsAggro) return true;
@@ -186,14 +192,15 @@ namespace Lomzie.AutomaticWorkAssignment
             int maxCommitment = Mathf.Clamp(1, MaxCommitment, 25);
 
             ClearAllAssignments();
-            List<WorkSpecification> assignmentList = new List<WorkSpecification>(WorkList);
+            List<WorkSpecification> assignmentList = WorkList.Where(x => !x.IsSuspended).ToList();
+            List<Pawn> specialists = new List<Pawn>();
 
             while (assignmentList.Count > 0)
             {
                 // Go over each work specification, find best fits, and assign work accordingly.
                 WorkSpecification current = assignmentList[0];
                 IEnumerable<Pawn> matchesSorted = current.GetApplicableOrMinimalPawnsSorted(req.Pawns, req);
-                matchesSorted = matchesSorted.Where(x => CanBeAssignedTo(x, current));
+                matchesSorted = matchesSorted.Where(x => CanBeAssignedTo(x, current) && !specialists.Contains(x));
 
                 int currentAssigned = GetCountAssignedTo(current);
                 int targetAssigned = current.GetTargetWorkers();
@@ -221,8 +228,13 @@ namespace Lomzie.AutomaticWorkAssignment
                             if (commitable.Count == 0)
                                 break;
 
-                            AssignWorkToPawn(current, commitable.Dequeue());
+                            Pawn pawn = commitable.Dequeue();
+                            AssignWorkToPawn(current, pawn);
                             assigned++;
+
+                            // Add pawn to list of specialists, so that it may be excluded later.
+                            if (current.IsSpecialist)
+                                specialists.Add(pawn);
                         }
                         toAssign -= assigned;
 
@@ -413,6 +425,7 @@ namespace Lomzie.AutomaticWorkAssignment
             if (!PawnAssignments.ContainsKey(pawn))
                 PawnAssignments.Add(pawn, new List<WorkAssignment>());
             if (index == -1) index = PawnAssignments[pawn].Count;
+            index = Mathf.Clamp(index, 0, PawnAssignments[pawn].Count);
 
             WorkAssignment assignment = new WorkAssignment(spec, pawn, index, spec.IsCritical);
             PawnAssignments[pawn].Insert(index, assignment);

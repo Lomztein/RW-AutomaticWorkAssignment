@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using AutomaticWorkAssignment;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +9,13 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
-    public class TraitPawnCondition : IPawnCondition
+    public class TraitPawnCondition : PawnSetting, IPawnCondition
     {
-        public string Label => "Trait";
-        public string Description => "Check if pawn has a given trait.";
-
         public TraitDef TraitDef;
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Defs.Look(ref TraitDef, "traitDef");
         }
 

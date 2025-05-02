@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AutomaticWorkAssignment;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 {
-    public class SkillLevelPawnFitness : IPawnFitness
+    public class SkillLevelPawnFitness : PawnSetting, IPawnFitness
     {
-        public string Label => "Skill level";
-        public string Description => "Uses pawn skill level relevant skills for fitness.";
-
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             var workTypeDefs = specification.Priorities.OrderedPriorities;
@@ -22,10 +16,6 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 sum += relavantSkills.Sum(y => pawn.skills.GetSkill(y).Level);
             }
             return sum;
-        }
-
-        public void ExposeData()
-        {
         }
     }
 }

@@ -1,23 +1,16 @@
-﻿using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
+﻿using AutomaticWorkAssignment;
 using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 {
-    public class SetReadingPolicyPawnPostProcessor : IPawnPostProcessor
+    public class SetReadingPolicyPawnPostProcessor : PawnSetting, IPawnPostProcessor
     {
-        public string Label => "Set reading policy";
-        public string Description => "Set the pawns reading policy on assignment";
-
         public ReadingPolicy Policy;
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_References.Look(ref Policy, "policy");
         }
 

@@ -48,6 +48,7 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<LearnRatePawnFitness>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<SkillLevelPawnFitness>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<PassionCountPawnFitness>());
+            PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<CommitmentPawnFitness>());
 
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<StatPawnFitness, StatDef>(
                 () => DefDatabase<StatDef>.AllDefs, x => x.label, x => x?.StatDef?.label ?? "Select stat", (c, s) => c.StatDef = s));
@@ -61,6 +62,7 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<AveragePawnFitness, PawnFitnessDef>("Add function", false));
 
             // Initialize condition UI handlers.
+            PawnSettingUIHandlers.AddHandler(new CommitmentLimitPawnConditionUIHandler());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<SlavePawnCondition>());
             PawnSettingUIHandlers.AddHandler(new SkillLevelPawnConditionUIHandler());
             PawnSettingUIHandlers.AddHandler(new CompareFitnessPawnConditionUIHandler("Add operand", true));

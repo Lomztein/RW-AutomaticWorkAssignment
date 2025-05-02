@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutomaticWorkAssignment;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,15 +8,13 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
-    public class GenePawnCondition : IPawnCondition
+    public class GenePawnCondition : PawnSetting, IPawnCondition
     {
-        public string Label => "Has gene";
-        public string Description => "Check if the pawn has the given gene.";
-
         public GeneDef GeneDef;
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Defs.Look(ref GeneDef, "geneDef");
         }
 

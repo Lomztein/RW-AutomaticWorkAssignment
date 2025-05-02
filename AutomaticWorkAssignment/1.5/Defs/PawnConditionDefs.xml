@@ -37,6 +37,12 @@
     <description>Assign to pawns with a weapon of the given class.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_CommitmentLimit</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.CommitmentLimitPawnCondition</settingClass>
+    <label>commitment limit</label>
+    <description>Assign to pawns less committed than the limit.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_CompareFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.CompareFitnessPawnCondition</settingClass>
     <label>compare fitness</label>

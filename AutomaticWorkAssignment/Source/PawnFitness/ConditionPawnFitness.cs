@@ -13,9 +13,6 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 {
     public class ConditionPawnFitness : NestedPawnSetting, IPawnFitness
     {
-        public override string Label => "Condition";
-        public override string Description => "Priorities pawns with the given condition.";
-
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (InnerSetting != null)

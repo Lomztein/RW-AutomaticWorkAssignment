@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutomaticWorkAssignment;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
-    public class HediffPawnCondition : IPawnCondition
+    public class HediffPawnCondition : PawnSetting, IPawnCondition
     {
-        public string Label => "Health condition";
-        public string Description => "Check if the pawn has the given health condition.";
-
         public HediffDef HediffDef;
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Defs.Look(ref HediffDef, "hediffDef");
         }
 

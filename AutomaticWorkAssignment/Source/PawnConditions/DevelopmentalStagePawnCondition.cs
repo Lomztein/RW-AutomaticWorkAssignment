@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using AutomaticWorkAssignment.Source;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +9,13 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
-    public class DevelopmentalStagePawnCondition : IPawnCondition
+    public class DevelopmentalStagePawnCondition : PawnSetting, IPawnCondition
     {
-        public string Label => "Developmental stage";
-        public string Description => "Check if the pawn is a given developmental stage.";
-
         public DevelopmentalStage DevelopmentalStage;
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Values.Look(ref DevelopmentalStage, "developmentalStage");
         }
 

@@ -1,15 +1,12 @@
-﻿using RimWorld;
-using System.Linq;
+﻿using AutomaticWorkAssignment;
+using RimWorld;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
-    public class SkillLevelPawnCondition : IPawnCondition
+    public class SkillLevelPawnCondition : PawnSetting, IPawnCondition
     {
         // TODO: Figure out if we can use PawnConditionDefs label/description somehow, instead.
-        public string Label => "Skill level";
-        public string Description => "Only assign pawns with the given skill between set levels.";
-
         public SkillDef SkillDef;
 
         public int MinLevel = 0;
@@ -22,8 +19,9 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
                 && (pawnLevel <= MaxLevel);
         }
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Defs.Look(ref SkillDef, "skillDef");
             Scribe_Values.Look(ref MinLevel, "minLevel", 0);
             Scribe_Values.Look(ref MaxLevel, "maxLevel", 20);

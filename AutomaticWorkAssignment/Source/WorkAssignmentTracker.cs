@@ -69,16 +69,23 @@ namespace Lomzie.AutomaticWorkAssignment
         private Pawn FindSubstituteFor(WorkAssignment critical)
         {
             ResolveWorkRequest request = WorkManager.Instance.MakeDefaultRequest();
-            return critical.Specification.GetApplicableOrMinimalPawnsSorted(request.Pawns, request).FirstOrDefault();
+            return critical.Specification.GetApplicableOrMinimalPawnsSorted(request.Pawns, request)
+                .Where(x => !WorkManager.Instance.IsAssignedTo(x, critical.Specification)).FirstOrDefault();
         }
 
         private IEnumerator MakeSubstitution(Pawn original, Pawn substitute, WorkAssignment forAssignment)
         {
             yield return new WaitForEndOfFrame();
-            WorkAssignment substituteAssignment = WorkManager.Instance.AssignWorkToPawn(forAssignment.Specification, substitute, forAssignment.Index);
-            forAssignment.SubstituteWith(substituteAssignment);
-            WorkManager.Instance.RemoveAssignmentFromPawn(forAssignment, original);
-            WorkManager.Instance.ResolvePawnPriorities(substitute);
+            try
+            {
+                WorkAssignment substituteAssignment = WorkManager.Instance.AssignWorkToPawn(forAssignment.Specification, substitute, forAssignment.Index);
+                forAssignment.SubstituteWith(substituteAssignment);
+                WorkManager.Instance.RemoveAssignmentFromPawn(forAssignment, original);
+                WorkManager.Instance.ResolvePawnPriorities(substitute);
+            }catch(Exception ex)
+            {
+                Log.Error(ex.Message + " - " + ex.StackTrace);
+            }
         }
 
         private void DoSubstituteFoundMessage(Pawn original, Pawn subtitute, WorkSpecification workSpec)

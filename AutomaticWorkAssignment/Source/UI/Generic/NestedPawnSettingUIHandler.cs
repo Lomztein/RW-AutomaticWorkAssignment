@@ -54,7 +54,7 @@ namespace AutomaticWorkAssignment.UI
                 Rect addConditionButtonRect = new Rect(innerPosition, new Vector2(innerWidth, _addConditionButtonSize));
                 if (Widgets.ButtonText(addConditionButtonRect, "Select"))
                 {
-                    FloatMenuUtility.MakeMenu(GetDefs(), x => x.label, x => () => pawnSetting.InnerSetting = (IPawnSetting)Activator.CreateInstance(x.settingClass));
+                    FloatMenuUtility.MakeMenu(GetDefs(), x => x.label, x => () => pawnSetting.InnerSetting = PawnSetting.CreateFrom<IPawnSetting>(x));
                 }
 
                 y += addConditionButtonRect.height;

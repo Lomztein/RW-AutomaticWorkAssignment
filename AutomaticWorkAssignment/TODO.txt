@@ -1,8 +1,8 @@
 ﻿ - General -
- Implement import/export work specifications.
  Rework WorkManager to be per-map (with pocket maps), so that multiple colonies can be supported.
  Language support, everything is hardcoded :(
  Group system for work specs, for organization and for interweaving of assignments. Will replace current incremental feature.
+ Specialist work specs - if a pawn is assigned to this, they'll be excluded from later assignments.
 
  - Bugs - 
 

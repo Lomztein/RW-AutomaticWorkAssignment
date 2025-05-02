@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment
 {
@@ -49,6 +51,18 @@ namespace Lomzie.AutomaticWorkAssignment
             list.Remove(element);
             newIndex = Mathf.Clamp(newIndex, 0, list.Count);
             list.Insert(newIndex, element);
+        }
+        
+        // I would very much like an explanation as to why these utility functions are internal.
+        private static MethodInfo _unclip = typeof(GUIContent).Assembly.GetType("UnityEngine.GUIClip").GetMethod("Unclip", new[] {typeof(Vector2)} );
+        public static void RotateAroundPivot(float angle, Vector2 pivotPoint)
+        {
+            Matrix4x4 matrix = GUI.matrix;
+            GUI.matrix = Matrix4x4.identity;
+            Vector2 vector = (Vector2)_unclip.Invoke(null, new object[] { pivotPoint} );
+            vector *= Prefs.UIScale;
+            Matrix4x4 matrix4x = Matrix4x4.TRS(vector, Quaternion.Euler(0f, 0f, angle), Vector3.one) * Matrix4x4.TRS(-vector, Quaternion.identity, Vector3.one);
+            GUI.matrix = matrix4x * matrix;
         }
     }
 }

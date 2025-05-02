@@ -1,4 +1,5 @@
-﻿using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
+﻿using AutomaticWorkAssignment;
+using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using RR_PawnBadge;
 using System;
 using System.Reflection;
@@ -7,19 +8,17 @@ using Verse;
 namespace Lomzie.AutomaticWorkAssignment.Patches.PawnBadge
 {
     [StaticConstructorOnStartup]
-    public class SetBadgePawnPostProcessor : IPawnPostProcessor
+    public class SetBadgePawnPostProcessor : PawnSetting, IPawnPostProcessor
     {
-        public string Label => "Set badge";
-        public string Description => "Set the pawns badge";
-
         public int Position;
         public BadgeDef BadgeDef;
 
         private static Type _compBadgeType;
         private static FieldInfo _badgesField;
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Values.Look(ref Position, "position");
             Scribe_Defs.Look(ref BadgeDef, "badgeDef");
         }

@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutomaticWorkAssignment;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 {
-    public class ConstantPawnFitness : IPawnFitness
+    public class ConstantPawnFitness : PawnSetting, IPawnFitness
     {
-        public string Label => "Constant";
-        public string Description => "Constant value, intended for use in comparisons.";
-
         public float Value;
 
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
@@ -19,8 +12,9 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
             return Value;
         }
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Values.Look(ref Value, "value");
         }
     }

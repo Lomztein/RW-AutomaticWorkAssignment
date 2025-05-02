@@ -1,4 +1,6 @@
-﻿using AutomaticWorkAssignment;
+﻿using AutomaticWorkAssignment.Source;
+using Lomzie.AutomaticWorkAssignment;
+using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,24 +10,21 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
-    public class WeaponClassPawnCondition : PawnSetting, IPawnCondition
+    public class CommitmentLimitPawnCondition : PawnSetting, IPawnCondition
     {
-        public WeaponClassDef WeaponClassDef;
+        public float Limit = 1f;
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Defs.Look(ref WeaponClassDef, "weaponClassDef");
+            Scribe_Values.Look(ref Limit, "Limit");
         }
 
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
-            if (WeaponClassDef != null)
-            {
-                return pawn.equipment.Primary?.def.weaponClasses?.Contains(WeaponClassDef) ?? false;
-            }
+            if (pawn != null)
+                return WorkManager.Instance.GetPawnCommitment(pawn) < Limit;
             return false;
         }
     }
 }
-    

@@ -1,24 +1,16 @@
-﻿using Lomzie.AutomaticWorkAssignment.PawnConditions;
+﻿using AutomaticWorkAssignment;
 using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
-    public class XenotypePawnCondition : IPawnCondition
+    public class XenotypePawnCondition : PawnSetting, IPawnCondition
     {
-        public string Label => "Xenotype";
-
-        public string Description => "Check if a pawn is of the given xenotype";
-
         public XenotypeDef XenotypeDef;
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Defs.Look(ref XenotypeDef, "xenotypeDef");
         }
 

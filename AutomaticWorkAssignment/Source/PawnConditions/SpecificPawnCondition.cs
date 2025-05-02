@@ -1,19 +1,18 @@
-﻿using Lomzie.AutomaticWorkAssignment;
+﻿using AutomaticWorkAssignment;
+using Lomzie.AutomaticWorkAssignment;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using System;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
-    public class SpecificPawnCondition : IPawnCondition
+    public class SpecificPawnCondition : PawnSetting, IPawnCondition
     {
-        public string Label => "Is pawn";
-        public string Description => "Check if the pawn is a specific pawn.";
-
         public Pawn Pawn;
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_References.Look(ref Pawn, "pawn");
         }
 

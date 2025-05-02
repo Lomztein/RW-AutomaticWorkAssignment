@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutomaticWorkAssignment;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 {
-    public class SetAllowedAreaPawnPostProcessor : IPawnPostProcessor
+    public class SetAllowedAreaPawnPostProcessor : PawnSetting, IPawnPostProcessor
     {
-        public string Label => "Set allowed area";
-        public string Description => "Set the allowed area of the pawn.";
-
         public Area AllowedArea;
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_References.Look(ref AllowedArea, "area");
         }
 

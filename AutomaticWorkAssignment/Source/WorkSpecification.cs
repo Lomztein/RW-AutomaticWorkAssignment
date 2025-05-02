@@ -19,6 +19,8 @@ namespace Lomzie.AutomaticWorkAssignment
         public bool IsCritical; // Job will temporarily be reassigned to another pawn if the prior assignee is unable to work.
         public bool IsIncremental; // Job will be assigned one pawn per assignment iteration.
         public bool RequireFullPawnCapability = true; // Job will not be assigned if a pawn is unable to do some of the work. If off, pawn must only be able to do at least one thing.
+        public bool IsSpecialist; // Job will prohibit assignments to jobs further down the list.
+        public bool IsSuspended;
         public float Commitment; // 0 = Occasional, 0.5 = part-time work, 1.0 = full-time work.
 
         public List<IPawnCondition> Conditions = new List<IPawnCondition>(); // Conditions required for a pawn to be valid. All conditions must be met.
@@ -54,8 +56,6 @@ namespace Lomzie.AutomaticWorkAssignment
 
                 PawnFitnessComparer comparer = new PawnFitnessComparer(Fitness, this, request);
                 Array.Sort(substitutesSorted, comparer);
-
-                Log.Message($"Min threshold not reached: {missing}");
 
                 var toSubstitute = substitutesSorted.ToList().GetRange(0, Mathf.Min(missing, substitutesSorted.Length));
                 return Enumerable.Concat(applicable, toSubstitute).ToArray();
@@ -135,7 +135,9 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             Scribe_Values.Look(ref Name, "name");
             Scribe_Values.Look(ref IsCritical, "isCritical");
+            Scribe_Values.Look(ref IsSpecialist, "isSpecialist");
             Scribe_Values.Look(ref IsIncremental, "isIncremental");
+            Scribe_Values.Look(ref IsSuspended, "isSuspended");
             Scribe_Values.Look(ref RequireFullPawnCapability, "requireFullPawnCapability");
             Scribe_Values.Look(ref Commitment, "commitment");
             Scribe_Deep.Look(ref MinWorkers, "minWorkers");
