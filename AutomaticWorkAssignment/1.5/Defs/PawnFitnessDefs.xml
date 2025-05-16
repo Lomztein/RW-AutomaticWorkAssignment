@@ -22,13 +22,25 @@
     <defName>Lomzie_PassionCountPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.PassionCountPawnFitness</settingClass>
     <label>passion count</label>
-    <description>Count of skills with passion.</description>
+    <description>Total number of a the given pawns passions.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_CommitmentPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CommitmentPawnFitness</settingClass>
     <label>commitment</label>
     <description>How much the pawn is already committed.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_OrderingPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.OrderingPawnFitness</settingClass>
+    <label>ordering</label>
+    <description>The index of the pawn when ordered by fitness.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_PassionLevelPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.PassionLevelPawnFitness</settingClass>
+    <label>passion level</label>
+    <description>Priorize pawns with the higher passion levels in relevant skills.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_ConditionPawnFitness</defName>

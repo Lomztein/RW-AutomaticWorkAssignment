@@ -36,4 +36,16 @@
     <label>set allowed area</label>
     <description>Set pawn allowed area on assignment.</description>
   </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetSchedulePostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetSchedulePawnPostProcessor</settingClass>
+    <label>set schedule</label>
+    <description>Set pawn schedule.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_ConditionalPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.ConditionalPawnPostProcessor</settingClass>
+    <label>if condition</label>
+    <description>Perform a task if a pawn condition is met.</description>
+  </Def>
 </Defs>

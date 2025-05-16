@@ -1,21 +1,17 @@
 ﻿using Lomzie.AutomaticWorkAssignment.Defs;
-using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
-using Lomzie.AutomaticWorkAssignment.UI.Generic;
+using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
-using static RimWorld.PsychicRitualRoleDef;
 
 namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
 {
-    public class CompareFitnessPawnConditionUIHandler : CompositePawnSettingsUIHandler<CompareFitnessPawnCondition, PawnFitnessDef>
+    public class CompareFitnessPawnConditionUIHandler : PawnSettingUIHandler<CompareFitnessPawnCondition>
     {
+        private readonly float _labelSize = 24;
         private readonly float _buttonSize = 32;
         private Dictionary<CompareFitnessPawnCondition.Comparsion, string> _iconMap = new Dictionary<CompareFitnessPawnCondition.Comparsion, string>()
         {
@@ -27,20 +23,81 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
             { CompareFitnessPawnCondition.Comparsion.GreaterThanOrEqual, ">=" }
         };
 
-        public CompareFitnessPawnConditionUIHandler(string newSettingLabel, bool allowMoveSetting) : base(newSettingLabel, allowMoveSetting)
+        protected override float Handle(Vector2 position, float width, CompareFitnessPawnCondition pawnSetting)
         {
+            float y = 0f;
+            if (pawnSetting.InnerSettings[0] != null)
+            {
+                float height = DrawOperand(position, width, (IPawnFitness)pawnSetting.InnerSettings[0], 0, pawnSetting);
+                position.y += height;
+                y += height;
+            }
+            else
+            {
+                float height = DrawAddOperandButton(position, width, "Add left operand", 0, pawnSetting);
+                position.y += height;
+                y += height;
+            }
+
+            Rect buttonRect = new Rect(position, new Vector2(width, _buttonSize));
+            if (Widgets.ButtonText(buttonRect, _iconMap[pawnSetting.ComparisonType]))
+            {
+                Find.WindowStack.Add(new FloatMenu(GetFloatMenuOptions(pawnSetting).ToList()));
+            }
+
+            position.y += _buttonSize;
+            y += _buttonSize;
+
+            if (pawnSetting.InnerSettings[1] != null)
+            {
+                float height = DrawOperand(position, width, (IPawnFitness)pawnSetting.InnerSettings[1], 1, pawnSetting);
+                position.y += height;
+                y += height;
+            }
+            else
+            {
+                float height = DrawAddOperandButton(position, width, "Add right operand", 1, pawnSetting);
+                position.y += height;
+                y += height;
+            }
+
+            return y;
         }
 
-        protected override float Handle(Vector2 position, float width, CompositePawnSetting pawnSetting)
+        private float DrawAddOperandButton(Vector2 position, float width, string label, int operandIndex, CompareFitnessPawnCondition pawnSetting)
         {
-            Rect buttonRect = new Rect(position, new Vector2(width, _buttonSize));
-            CompareFitnessPawnCondition compareCondition = pawnSetting as CompareFitnessPawnCondition;
-            if (Widgets.ButtonText(buttonRect, _iconMap[compareCondition.ComparisonType]))
+            Rect rect = new Rect(position, new Vector2(width, _buttonSize));
+            if (Widgets.ButtonText(rect, label))
             {
-                Find.WindowStack.Add(new FloatMenu(GetFloatMenuOptions(compareCondition).ToList()));
+                FloatMenuUtility.MakeMenu(DefDatabase<PawnFitnessDef>.AllDefs, x => x.label, x => () => pawnSetting.InnerSettings[operandIndex] = PawnSetting.CreateFrom<IPawnFitness>(x));
             }
-            position.y += _buttonSize;
-            return base.Handle(position, width, pawnSetting) + _buttonSize;
+            return _buttonSize;
+        }
+
+        private float DrawOperand(Vector2 position, float width, IPawnFitness operand, int operandIndex, CompareFitnessPawnCondition pawnSetting)
+        {
+            float y = 0f;
+            position.x += 4;
+            width -= 4;
+
+            Rect labelRect = new Rect(position, new Vector2(width, _labelSize));
+            (Rect label, Rect button) = Utils.GetLabeledContentWithFixedLabelSize(labelRect, width - _labelSize);
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(label, WorkManagerWindow.GetSettingLabel(operand));
+            position.y += _labelSize;
+            y += _labelSize;
+            Text.Anchor = TextAnchor.UpperLeft;
+
+            if (Widgets.ButtonText(button, "X"))
+            {
+                pawnSetting.InnerSettings[operandIndex] = null;
+            }
+            else
+            {
+                y += PawnSettingUIHandlers.Handle(position, width, operand);
+            }
+
+            return y;
         }
 
         private void SetComparison(CompareFitnessPawnCondition condition, CompareFitnessPawnCondition.Comparsion comparison)

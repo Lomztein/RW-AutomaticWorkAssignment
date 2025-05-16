@@ -6,5 +6,7 @@
     <li IfModActive="voult.betterpawncontrol">1.5/Mods/BetterPawnControl</li>
     <li IfModActive="saucypigeon.pawnbadge">1.5/Mods/PawnBadge</li>
     <li IfModActive="ceteam.combatextended">1.5/Mods/CombatExtended</li>
+    <li IfModActive="vanillaexpanded.skills">1.5/Mods/VanillaSkillsExpanded</li>
+    <li IfModActive="taranchuk.performanceoptimizer">1.5/Mods/PerformanceOptimizer</li>
   </v1.5>
 </loadFolders>

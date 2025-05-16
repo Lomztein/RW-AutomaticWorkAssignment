@@ -116,5 +116,7 @@
     <li>VouLT.BetterPawnControl</li>
     <li>saucypigeon.pawnbadge</li>
     <li>ceteam.combatextended</li>
+    <li>vanillaexpanded.skills</li>
+    <li>taranchuk.performanceoptimizer</li>
   </loadAfter>
 </ModMetaData>

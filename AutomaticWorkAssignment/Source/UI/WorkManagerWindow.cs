@@ -3,6 +3,8 @@ using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
+using Lomzie.AutomaticWorkAssignment.UI.Dialogs;
+using Lomzie.AutomaticWorkAssignment.UI.Windows;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -522,7 +524,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 Rect labelRect = new Rect(x, cur.y, width, SettingsLabelSize);
 
                 Text.Anchor = TextAnchor.MiddleLeft;
-                Widgets.Label(labelRect, Instance.GetSettingLabel(setting));
+                Widgets.Label(labelRect, GetSettingLabel(setting));
                 Text.Anchor = TextAnchor.UpperLeft;
 
                 Action<int> onMove = null;
@@ -574,7 +576,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Widgets.EndScrollView();
         }
 
-        private string GetSettingLabel(IPawnSetting setting)
+        public static string GetSettingLabel(IPawnSetting setting)
         {
             if (Find.Selector.NumSelected == 1 && Find.Selector.AnyPawnSelected)
             {
@@ -584,7 +586,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             return setting.Label;
         }
 
-        private string GetSettingLabelValue(IPawnSetting setting, WorkSpecification spec, Pawn pawn)
+        private static string GetSettingLabelValue(IPawnSetting setting, WorkSpecification spec, Pawn pawn)
         {
             ResolveWorkRequest req = WorkManager.Instance.MakeDefaultRequest();
 

@@ -1,5 +1,4 @@
-﻿using AutomaticWorkAssignment;
-using System.Linq;
+﻿using System.Linq;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnFitness

@@ -9,6 +9,7 @@ using Lomzie.AutomaticWorkAssignment.UI.Generic;
 using Lomzie.AutomaticWorkAssignment.UI.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.UI.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor;
+using Lomzie.AutomaticWorkAssignment.UI.Windows;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,8 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<SkillLevelPawnFitness>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<PassionCountPawnFitness>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<CommitmentPawnFitness>());
+            PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<PassionLevelPawnFitness>());
+            PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<OrderingPawnFitness>());
 
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<StatPawnFitness, StatDef>(
                 () => DefDatabase<StatDef>.AllDefs, x => x.label, x => x?.StatDef?.label ?? "Select stat", (c, s) => c.StatDef = s));
@@ -65,7 +68,8 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new CommitmentLimitPawnConditionUIHandler());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<SlavePawnCondition>());
             PawnSettingUIHandlers.AddHandler(new SkillLevelPawnConditionUIHandler());
-            PawnSettingUIHandlers.AddHandler(new CompareFitnessPawnConditionUIHandler("Add operand", true));
+            PawnSettingUIHandlers.AddHandler(new FitnessInRangePawnConditionUIHandler());
+            PawnSettingUIHandlers.AddHandler(new CompareFitnessPawnConditionUIHandler());
 
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<HediffPawnCondition, HediffDef>(
                 () => DefDatabase<HediffDef>.AllDefs, x => x.label, x => x?.HediffDef?.label ?? "Select condition", (c, s) => c.HediffDef = s));
@@ -96,6 +100,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
             // Initialize post processor UI handlers.
             PawnSettingUIHandlers.AddHandler(new SetTitlePawnPostProcessorUIHandler());
+            PawnSettingUIHandlers.AddHandler(new ConditionalPawnPostProcessorUIHandler());
 
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SetApparelPolicyPawnPostProcessor, ApparelPolicy>(
                 () => Current.Game.outfitDatabase.AllOutfits, (x) => x.label, (x) => x?.Policy?.label ?? "Select policy", (pp, po) => pp.Policy = po));
@@ -105,6 +110,7 @@ namespace Lomzie.AutomaticWorkAssignment
                 () => Current.Game.drugPolicyDatabase.AllPolicies, (x) => x.label, (x) => x?.Policy?.label ?? "Select policy", (pp, po) => pp.Policy = po));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SetReadingPolicyPawnPostProcessor, ReadingPolicy>(
                 () => Current.Game.readingPolicyDatabase.AllReadingPolicies, (x) => x.label, (x) => x?.Policy?.label ?? "Select policy", (pp, po) => pp.Policy = po));
+            PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<SetSchedulePawnPostProcessor>(x => Find.WindowStack.Add(new EditScheduleWindow(x.Times)), "Edit schedule"));
 
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SetAllowedAreaPawnPostProcessor, Area>(
                 () => new List<Area>() { null }.Concat(Current.Game.CurrentMap.areaManager.AllAreas).Where(x => x?.AssignableAsAllowed() ?? true), (x) => x?.Label ?? "Everywhere", (x) => x?.AllowedArea?.Label ?? "Everywhere", (pp, po) => pp.AllowedArea = po));

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Verse;
 
-namespace Lomzie.AutomaticWorkAssignment.UI
+namespace Lomzie.AutomaticWorkAssignment.UI.Dialogs
 {
     public class Dialog_SaveConfigFileList : Dialog_ConfigFileList
     {

@@ -2,13 +2,15 @@
  Rework WorkManager to be per-map (with pocket maps), so that multiple colonies can be supported.
  Language support, everything is hardcoded :(
  Group system for work specs, for organization and for interweaving of assignments. Will replace current incremental feature.
- Specialist work specs - if a pawn is assigned to this, they'll be excluded from later assignments.
 
  - Bugs - 
 
+ - Fitness -
+ Stockpile
+
  - Conditions -
+ Has stockpile of items
  
  - Post Processors -
- Set schedule
- (MOD) Set loadout (both CE and compositable loadouts)
- (MOD) Vanilla Skills expanded version of passionsasd
+ Conditional processors, using conditions
+ (MOD) Compositable loadouts

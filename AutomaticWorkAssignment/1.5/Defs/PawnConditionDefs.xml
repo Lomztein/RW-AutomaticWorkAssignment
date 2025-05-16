@@ -49,6 +49,12 @@
     <description>Compare two different fitness values.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_FitnessInRange</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.FitnessInRangePawnCondition</settingClass>
+    <label>fitness in range</label>
+    <description>Check if a fitness value is within a given range.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_NotCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.NotPawnCondition</settingClass>
     <label>not</label>
