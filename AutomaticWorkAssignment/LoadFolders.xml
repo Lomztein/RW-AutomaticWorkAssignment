@@ -3,6 +3,7 @@
     <li>1.5</li>
     <li IfModActive="Ludeon.RimWorld.Ideology">1.5/Mods/Ideology</li>
     <li IfModActive="Ludeon.RimWorld.Biotech">1.5/Mods/Biotech</li>
+    <li IfModActive="Ludeon.RimWorld.Anomaly">1.5/Mods/Anomaly</li>
     <li IfModActive="voult.betterpawncontrol">1.5/Mods/BetterPawnControl</li>
     <li IfModActive="saucypigeon.pawnbadge">1.5/Mods/PawnBadge</li>
     <li IfModActive="ceteam.combatextended">1.5/Mods/CombatExtended</li>

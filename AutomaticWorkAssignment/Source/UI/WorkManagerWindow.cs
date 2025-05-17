@@ -609,8 +609,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             DoPawnSettingList(sectionRect, typeof(PawnPostProcessorDef), "Add new on assignment task", ref _postProcessorListHeight, ref _postProcessorListPosition,
                 () => _current.PostProcessors,
                 (x) => _current.PostProcessors.Add(x as IPawnPostProcessor),
-                null,
-                (setting) => _current.DeletePostProcess(setting as IPawnPostProcessor)
+                (x, m) => _current.MovePostProcessor(x as IPawnPostProcessor, m),
+                (setting) => _current.DeletePostProcessor(setting as IPawnPostProcessor)
                 );
         }
 

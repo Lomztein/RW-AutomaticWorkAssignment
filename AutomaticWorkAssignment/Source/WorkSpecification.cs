@@ -122,7 +122,16 @@ namespace Lomzie.AutomaticWorkAssignment
             Conditions.Remove(condition);
         }
 
-        public void DeletePostProcess(IPawnPostProcessor postProcess)
+        public void MovePostProcessor(IPawnPostProcessor postProcess, int movement)
+         => Find.Root.StartCoroutine(DelayedMovePostProcess(postProcess, movement));
+
+        private IEnumerator DelayedMovePostProcess(IPawnPostProcessor postProcess, int movement)
+        {
+            yield return new WaitForEndOfFrame();
+            Utils.MoveElement(PostProcessors, postProcess, movement);
+        }
+
+        public void DeletePostProcessor(IPawnPostProcessor postProcess)
             => Find.Root.StartCoroutine(DelayedDeletePostProcess(postProcess));
 
         private IEnumerator DelayedDeletePostProcess(IPawnPostProcessor postProcess)
