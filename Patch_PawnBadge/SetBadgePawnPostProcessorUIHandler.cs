@@ -18,12 +18,12 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.PawnBadge
         protected override float Handle(Vector2 position, float width, SetBadgePawnPostProcessor pawnSetting)
         {
             Rect positionButtonRect = new Rect(position, new Vector2(width, _buttonSize));
-            if (Widgets.ButtonText(positionButtonRect, pawnSetting.Position == 0 ? "Badge 1" : "Badge 2"))
+            if (Widgets.ButtonText(positionButtonRect, pawnSetting.Position == 0 ? "AWA.PawnBadge.BadgeOne".Translate() : "AWA.PawnBadge.BadgeTwo".Translate()))
                 pawnSetting.Position = pawnSetting.Position == 0 ? 1 : 0;
 
             Rect pickerButtonRect = new Rect(positionButtonRect);
             pickerButtonRect.y += _buttonSize;
-            if (Widgets.ButtonText(pickerButtonRect, pawnSetting.BadgeDef?.label ?? "None"))
+            if (Widgets.ButtonText(pickerButtonRect, pawnSetting.BadgeDef?.LabelCap ?? "AWA.PawnBadge.None".Translate()))
             {
                 IEnumerable<FloatMenuOption> options = GetFloatMenuOptions(pawnSetting);
                 Find.WindowStack.Add(new FloatMenu(options.ToList()));
@@ -34,7 +34,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.PawnBadge
 
         private IEnumerable<FloatMenuOption> GetFloatMenuOptions (SetBadgePawnPostProcessor pawnSetting)
         {
-            yield return new FloatMenuOption("None", () => pawnSetting.BadgeDef = null);
+            yield return new FloatMenuOption("AWA.PawnBadge.None".Translate(), () => pawnSetting.BadgeDef = null);
             var defs = DefDatabase<BadgeDef>.AllDefs;
             foreach (var def in defs)
             {

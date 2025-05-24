@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Patch_CombatExtended", "Pat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Patch_VanillaSkillsExpanded", "Patch_VanillaSkillsExpanded\Patch_VanillaSkillsExpanded.csproj", "{BBC2423F-6097-48B6-97F6-72DBDAD94BF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patch_PerformanceOptimizer", "Patch_PerformanceOptimizer\Patch_PerformanceOptimizer.csproj", "{ED0B68A7-6A94-48B3-B717-CA11D254C2E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Patch_PerformanceOptimizer", "Patch_PerformanceOptimizer\Patch_PerformanceOptimizer.csproj", "{ED0B68A7-6A94-48B3-B717-CA11D254C2E5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Addon_AutomaticSurgeries", "Addon_AutomaticSurgeries\Addon_AutomaticSurgeries.csproj", "{93380B52-D483-4C0C-8B8E-587EF53AEA0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{ED0B68A7-6A94-48B3-B717-CA11D254C2E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED0B68A7-6A94-48B3-B717-CA11D254C2E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED0B68A7-6A94-48B3-B717-CA11D254C2E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93380B52-D483-4C0C-8B8E-587EF53AEA0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93380B52-D483-4C0C-8B8E-587EF53AEA0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93380B52-D483-4C0C-8B8E-587EF53AEA0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93380B52-D483-4C0C-8B8E-587EF53AEA0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

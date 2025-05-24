@@ -24,6 +24,12 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             Scribe_Deep.Look(ref Fitness, "fitness");
             Scribe_Values.Look(ref Min, "min");
             Scribe_Values.Look(ref Max, "max");
+
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if (!Fitness.IsValidAfterLoad())
+                    Fitness = null;
+            }
         }
     }
 }

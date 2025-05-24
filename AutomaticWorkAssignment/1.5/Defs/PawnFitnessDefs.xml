@@ -55,6 +55,12 @@
     <description>Invert the fitness, so that positive becomes negative.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_StockpilePawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.StockpilePawnFitness</settingClass>
+    <label>stockpile</label>
+    <description>Return stockpile of the filtered items.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_ConstantPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ConstantPawnFitness</settingClass>
     <label>constant</label>

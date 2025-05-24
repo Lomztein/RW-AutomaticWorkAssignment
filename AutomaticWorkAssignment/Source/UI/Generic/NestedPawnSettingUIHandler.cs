@@ -35,7 +35,7 @@ namespace AutomaticWorkAssignment.UI
             if (pawnSetting.InnerSetting != null)
             {
                 Rect labelRect = new Rect(innerPosition.x, position.y, innerWidth, _labelSize);
-                string label = pawnSetting.InnerSetting?.Label ?? "None selected";
+                string label = pawnSetting.InnerSetting?.Label ?? "AWA.NestedSettingNoneSelected".Translate();
                 Widgets.Label(labelRect, pawnSetting.InnerSetting.Label);
 
                 Rect deleteButtonRect = new Rect(innerPosition.x + innerWidth - _labelSize, position.y, _labelSize, _labelSize);
@@ -52,9 +52,9 @@ namespace AutomaticWorkAssignment.UI
             else
             {
                 Rect addConditionButtonRect = new Rect(innerPosition, new Vector2(innerWidth, _addConditionButtonSize));
-                if (Widgets.ButtonText(addConditionButtonRect, "Select"))
+                if (Widgets.ButtonText(addConditionButtonRect, "AWA.NestedSettingSelect".Translate()))
                 {
-                    FloatMenuUtility.MakeMenu(GetDefs(), x => x.label, x => () => pawnSetting.InnerSetting = PawnSetting.CreateFrom<IPawnSetting>(x));
+                    FloatMenuUtility.MakeMenu(GetDefs(), x => x.LabelCap, x => () => pawnSetting.InnerSetting = PawnSetting.CreateFrom<IPawnSetting>(x));
                 }
 
                 y += addConditionButtonRect.height;

@@ -12,7 +12,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Dialogs
     {
         public Dialog_SaveConfigFileList()
         {
-            interactButLabel = "Save";
+            interactButLabel = "AWA.Save".Translate();
         }
 
         protected override bool ShouldDoTypeInField => true;
@@ -21,7 +21,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Dialogs
         {
             fileName = GenFile.SanitizedFileName(fileName);
             IO.ExportToFile(fileName);
-            Messages.Message("Work manager configuration saved..", MessageTypeDefOf.SilentInput, false);
+            Messages.Message("AWA.SaveMessage", MessageTypeDefOf.SilentInput, false);
             Close();
         }
     }

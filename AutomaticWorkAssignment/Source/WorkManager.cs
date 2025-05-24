@@ -39,6 +39,8 @@ namespace Lomzie.AutomaticWorkAssignment
         public static float MaxMentalBreakHours => AutomaticWorkAssignmentSettings.MentalBreakHourThreshold;
         public static bool IgnoreUnmanagedWorkTypes => AutomaticWorkAssignmentSettings.IgnoreUnmanagedWorkTypes;
 
+        public Reservations Reservations = new Reservations();
+
         public WorkManager(Game game)
         {
             Instance = this;
@@ -437,11 +439,13 @@ namespace Lomzie.AutomaticWorkAssignment
             Scribe_Values.Look(ref RefreshEachDay, "refreshEachDay", false);
             Scribe_Collections.Look(ref WorkList, "workSpecifications", LookMode.Deep);
             Scribe_Collections.Look(ref ExcludePawns, "excludePawns", LookMode.Reference);
+            Scribe_Deep.Look(ref Reservations, "reservations");
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (WorkList == null) WorkList = new List<WorkSpecification>();
                 if (ExcludePawns == null) ExcludePawns = new List<Pawn>();
+                if (Reservations == null) Reservations = new Reservations();
             }
         }
 

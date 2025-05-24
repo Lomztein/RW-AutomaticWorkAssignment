@@ -47,12 +47,12 @@ namespace Lomzie.AutomaticWorkAssignment
         public override string GetLabel()
         {
             if (AnyCritical)
-                return "Critical work unsatisfied!";
-            return "Work unsatisfied";
+                return "AWA.CriticalWorkUnsatisfied".Translate();
+            return "Work unsatisfied".Translate();
         }
 
         public override TaggedString GetExplanation()
-            => $"Work specifications can not be minimally satisfied by applicable pawns. Substitutes may be assigned: {string.Join(", ", GetSpecsWithIssuesSorted().Select(x => x.Name))}";
+            => $"AWA.WorkAlertExplanation".Translate().Formatted(string.Join(", ", GetSpecsWithIssuesSorted().Select(x => x.Name)));
 
         private Color GetColor ()
         {

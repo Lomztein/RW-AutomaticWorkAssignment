@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <AWA.StatSelect>Select stat</AWA.StatSelect>
+  <AWA.StatAdd>Add stat</AWA.StatAdd>
+  <AWA.ConditionSelect>Select condition</AWA.ConditionSelect>
+  <AWA.ConditionAdd>Add condition</AWA.ConditionAdd>
+  <AWA.FunctionSelect>Select function</AWA.FunctionSelect>
+  <AWA.FunctionAdd>Add function</AWA.FunctionAdd>
+  <AWA.PostProcessorAdd>Add on assignment</AWA.PostProcessorAdd>
+  <AWA.PostProcessorSelect>Select on assignment</AWA.PostProcessorSelect>
+  <AWA.SkillSelect>Select skill</AWA.SkillSelect>
+  <AWA.SkillAdd>Add skill</AWA.SkillAdd>
+  <AWA.PawnSelect>Select pawn</AWA.PawnSelect>
+  <AWA.PawnAdd>Add pawn</AWA.PawnAdd>
+  <AWA.TraitSelect>Select trait</AWA.TraitSelect>
+  <AWA.TraitAdd>Add trait</AWA.TraitAdd>
+  <AWA.ClassSelect>Select class</AWA.ClassSelect>
+  <AWA.ClassAdd>Add class</AWA.ClassAdd>
+  <AWA.StageSelect>Select stage</AWA.StageSelect>
+  <AWA.GeneSelect>Select gene</AWA.GeneSelect>
+  <AWA.XenotypeSelect>Select xenotype</AWA.XenotypeSelect>
+  <AWA.PolicySelect>Select policy</AWA.PolicySelect>
+  <AWA.Select>Select</AWA.Select>
+  <AWA.ScheduleEdit>Edit schedule</AWA.ScheduleEdit>
+  <AWA.FilterEdit>Edit filter</AWA.FilterEdit>
+  <AWA.Everywhere>Everywhere</AWA.Everywhere>
+
+  <AWA.NewSettingAddDefault>Add</AWA.NewSettingAddDefault>
+  <AWA.NestedSettingNoneSelected>None selected</AWA.NestedSettingNoneSelected>
+  <AWA.NestedSettingSelect>Select</AWA.NestedSettingSelect>
+  <AWA.LeftOperandSet>Add left operand</AWA.LeftOperandSet>
+  <AWA.RightOperandSet>Add right operand</AWA.RightOperandSet>
+  <AWA.MinValue>Min</AWA.MinValue>
+  <AWA.MaxValue>Max</AWA.MaxValue>
+
+  <AWA.PawnsAssigned>Assigned: {0} / {1}</AWA.PawnsAssigned>
+  <AWA.PawnsAssignedTip>Pawns assigned to this:\n{0}</AWA.PawnsAssignedTip>
+  <AWA.NewWorkSpecification>New work specification</AWA.NewWorkSpecification>
+  <AWA.NewWorkSpecificationTip>Create new work specification used to assign work to pawns.</AWA.NewWorkSpecificationTip>
+  <AWA.ResolveAssignmentsNowTip>Resolve assignments now</AWA.ResolveAssignmentsNowTip>
+  <AWA.AutoResolveTip>Auto-resolve: {0}</AWA.AutoResolveTip>
+  <AWA.ExcludePawnsTip>Exclude pawns</AWA.ExcludePawnsTip>
+  <AWA.SaveLoadTip>Save / load configurations</AWA.SaveLoadTip>
+  <AWA.Save>Save</AWA.Save>
+  <AWA.Load>Load</AWA.Load>
+  <AWA.Import>Import</AWA.Import>
+  <AWA.SaveMessage>Configuration saved to file..</AWA.SaveMessage>
+  <AWA.LoadMessage>Configuration loaded from file..</AWA.LoadMessage>
+  <AWA.ImportMessage>Configuration imported from save..</AWA.ImportMessage>
+  <AWA.OpenFolder>Open folder</AWA.OpenFolder>
+  <AWA.LabelName>Name</AWA.LabelName>
+  <AWA.LabelMinWorkers>Min workers</AWA.LabelMinWorkers>
+  <AWA.LabelTargetWorkers>Target workers</AWA.LabelTargetWorkers>
+  <AWA.LabelCritical>Critical</AWA.LabelCritical>
+  <AWA.LabelCriticalTip>Immediately find substitute if assignee becomes unavailable.</AWA.LabelCriticalTip>
+  <AWA.LabelSpecialist>Specialist</AWA.LabelSpecialist>
+  <AWA.LabelSpecialistTip>Exclude assignees from work further down the list.</AWA.LabelSpecialistTip>
+  <AWA.LabelCommitment>Commitment</AWA.LabelCommitment>
+  <AWA.LabelCommitmentTip>Estimate of how much time this work requires.</AWA.LabelCommitmentTip>
+  <AWA.Yes>Yes</AWA.Yes>
+  <AWA.No>No</AWA.No>
+  <AWA.PriorityHigher>higher priority</AWA.PriorityHigher>
+  <AWA.PriorityLower>lower priority</AWA.PriorityLower>
+  <AWA.LabelNewPriorityTip>Add priority</AWA.LabelNewPriorityTip>
+  <AWA.LabelRequireFullCapability>Require full capability</AWA.LabelRequireFullCapability>
+  <AWA.LabelRequireFullCapabilityTip>Require that pawn is capable of all work for assignment?</AWA.LabelRequireFullCapabilityTip>
+  <AWA.HeaderFitness>Fitness</AWA.HeaderFitness>
+  <AWA.HeaderConditions>Conditions</AWA.HeaderConditions>
+  <AWA.HeaderPostProcessors>On assignment</AWA.HeaderPostProcessors>
+
+  <AWA.HeaderExcludedPawns>Excluded Pawns</AWA.HeaderExcludedPawns>
+  <AWA.ExcludePawn>Exclude pawn</AWA.ExcludePawn>
+</LanguageData>

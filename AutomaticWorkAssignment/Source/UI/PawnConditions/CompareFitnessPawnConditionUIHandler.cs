@@ -34,7 +34,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
             }
             else
             {
-                float height = DrawAddOperandButton(position, width, "Add left operand", 0, pawnSetting);
+                float height = DrawAddOperandButton(position, width, "AWA.LeftOperandSet".Translate(), 0, pawnSetting);
                 position.y += height;
                 y += height;
             }
@@ -56,7 +56,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
             }
             else
             {
-                float height = DrawAddOperandButton(position, width, "Add right operand", 1, pawnSetting);
+                float height = DrawAddOperandButton(position, width, "AWA.RightOperandSet".Translate(), 1, pawnSetting);
                 position.y += height;
                 y += height;
             }
@@ -69,7 +69,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
             Rect rect = new Rect(position, new Vector2(width, _buttonSize));
             if (Widgets.ButtonText(rect, label))
             {
-                FloatMenuUtility.MakeMenu(DefDatabase<PawnFitnessDef>.AllDefs, x => x.label, x => () => pawnSetting.InnerSettings[operandIndex] = PawnSetting.CreateFrom<IPawnFitness>(x));
+                FloatMenuUtility.MakeMenu(DefDatabase<PawnFitnessDef>.AllDefs, x => x.LabelCap, x => () => pawnSetting.InnerSettings[operandIndex] = PawnSetting.CreateFrom<IPawnFitness>(x));
             }
             return _buttonSize;
         }

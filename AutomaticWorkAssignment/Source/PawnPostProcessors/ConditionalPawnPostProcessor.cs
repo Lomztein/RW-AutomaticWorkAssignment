@@ -27,6 +27,14 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
             base.ExposeData();
             Scribe_Deep.Look(ref Condition, "condition");
             Scribe_Deep.Look(ref PostProcessor, "postProcessor");
+
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if (!Condition.IsValidAfterLoad())
+                    Condition = null;
+                if (!PostProcessor.IsValidAfterLoad())
+                    PostProcessor = null;
+            }
         }
     }
 }

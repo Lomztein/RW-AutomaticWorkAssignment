@@ -43,6 +43,12 @@
     <description>Set pawn schedule.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetCarriedMedicinePostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetCarriedMedicinePawnPostProcessor</settingClass>
+    <label>set carríed meds</label>
+    <description>Set the amount of medicine the pawn should carry.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_ConditionalPostProcessor</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.ConditionalPawnPostProcessor</settingClass>
     <label>if condition</label>

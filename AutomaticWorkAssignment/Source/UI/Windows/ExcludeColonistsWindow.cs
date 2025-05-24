@@ -40,7 +40,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Windows
             inRect = Utils.GetSubRectFraction(inRect, new Vector2(0f, 0.075f), new Vector2(1f, 1f));
 
             Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(headerRect, "Excluded Pawns");
+            Widgets.Label(headerRect, "AWA.HeaderExcludedPawns".Translate());
             Text.Anchor = TextAnchor.UpperLeft;
 
             WorkManager manager = WorkManager.Instance;
@@ -86,7 +86,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Windows
 
                 Text.Anchor = TextAnchor.MiddleCenter;
                 WorkTypeDef workDef = new WorkTypeDef();
-                if (Widgets.ButtonText(newRect, "Exclude pawn"))
+                if (Widgets.ButtonText(newRect, "AWA.ExcludePawn".Translate()))
                 {
                     var pawns = WorkManager.Instance.GetAllPawns();
                     FloatMenuUtility.MakeMenu(pawns.Where(x => !WorkManager.Instance.ExcludePawns.Contains(x)), x => x.Name.ToString(), x => () => Find.Root.StartCoroutine(AddPawn(x)));

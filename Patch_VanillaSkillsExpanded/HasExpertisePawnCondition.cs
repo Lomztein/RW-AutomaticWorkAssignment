@@ -1,5 +1,4 @@
 ﻿using AutomaticWorkAssignment.UI.Generic;
-using Lomzie.AutomaticWorkAssignment;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.UI;
 using Verse;
@@ -37,8 +36,8 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.VanillaSkillsExpanded
         {
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<HasExpertisePawnCondition, ExpertiseDef>(
                 () => DefDatabase<ExpertiseDef>.AllDefs,
-                (x) => x?.label,
-                (x) => x.ExpertiseDef?.label ?? "Select expertise",
+                (x) => x?.LabelCap,
+                (x) => x.ExpertiseDef?.LabelCap ?? "AWA.VSE.SelectExpertise".Translate(),
                 (x, def) => x.ExpertiseDef = def
                 ));
         }

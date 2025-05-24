@@ -8,7 +8,7 @@ namespace Lomzie.AutomaticWorkAssignment
 {
     public abstract class PawnSetting : IPawnSetting
     {
-        public string Label => Def.label;
+        public string Label => Def.LabelCap;
         public string Description => Def.description;
 
         public PawnSettingDef Def;

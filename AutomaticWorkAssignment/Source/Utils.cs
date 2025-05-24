@@ -65,5 +65,14 @@ namespace Lomzie.AutomaticWorkAssignment
             Matrix4x4 matrix4x = Matrix4x4.TRS(vector, Quaternion.Euler(0f, 0f, angle), Vector3.one) * Matrix4x4.TRS(-vector, Quaternion.identity, Vector3.one);
             GUI.matrix = matrix4x * matrix;
         }
+
+        public static bool IsValidAfterLoad(this IPawnSetting setting)
+        {
+            if (setting == null)
+                return false;
+            if (setting is PawnSetting pawnSetting && pawnSetting.Def == null)
+                return false;
+            return true;
+        }
     }
 }

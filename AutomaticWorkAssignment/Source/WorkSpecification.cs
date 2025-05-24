@@ -165,9 +165,9 @@ namespace Lomzie.AutomaticWorkAssignment
                 if (Conditions == null) Conditions = new List<IPawnCondition>();
                 if (PostProcessors == null) PostProcessors = new List<IPawnPostProcessor>();
 
-                Fitness = Fitness.ToList().Where(x => x != null).ToList();
-                Conditions = Conditions.ToList().Where(x => x != null).ToList();
-                PostProcessors = PostProcessors.ToList().Where(x => x != null).ToList();
+                Fitness = Fitness.ToList().Where(x => x.IsValidAfterLoad()).ToList();
+                Conditions = Conditions.ToList().Where(x => x.IsValidAfterLoad()).ToList();
+                PostProcessors = PostProcessors.ToList().Where(x => x.IsValidAfterLoad()).ToList();
             }
         }
 

@@ -12,7 +12,7 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
 {
     public class BuildingPawnAmount : IPawnAmount
     {
-        public ThingDef BuildingDef; 
+        public ThingDef BuildingDef;
         public float Multiplier = 1f;
 
         public int GetCount()

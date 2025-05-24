@@ -27,7 +27,7 @@ namespace Lomzie.AutomaticWorkAssignment
             spec.IsCritical = true;
             spec.TargetWorkers = new PercentagePawnAmount() { Percentage = 0.5f };
             spec.MinWorkers = new PercentagePawnAmount() { Percentage = 0.2f };
-            if (ModLister.HasActiveModWithName("ludeon.rimworld.biotech"))
+            if (ModsConfig.BiotechActive)
             {
                 GenePawnCondition pyrophobiaCondition = PawnSetting.CreateFrom<GenePawnCondition>(DefDatabase<PawnConditionDef>.GetNamed("Lomzie_GeneCondition"));
                 pyrophobiaCondition.GeneDef = DefDatabase<GeneDef>.GetNamed("FireTerror");

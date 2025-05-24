@@ -14,6 +14,7 @@ namespace Lomzie.AutomaticWorkAssignment
         public static float MentalBreakHourThreshold = 0.5f;
         private static string _hourBuffer;
         public static bool IgnoreUnmanagedWorkTypes = true;
+        public static float ReservationTimeoutDays = 1f;
 
         internal void DoWindow(Rect inRect)
         {

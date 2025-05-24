@@ -50,7 +50,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         private void SetupDefaults()
         {
             InnerSettings = new System.Collections.Generic.List<IPawnSetting>() { null, null };
-            InnerSettings[1] = PawnSetting.CreateFrom<IPawnFitness>(DefDatabase<PawnFitnessDef>.GetNamed("Lomzie_ConstantPawnFitness"));
+            InnerSettings[1] = CreateFrom<IPawnFitness>(DefDatabase<PawnFitnessDef>.GetNamed("Lomzie_ConstantPawnFitness"));
         }
 
         private bool DoComparison(float v1, float v2)

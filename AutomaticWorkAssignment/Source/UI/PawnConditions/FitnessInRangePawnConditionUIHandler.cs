@@ -54,9 +54,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
                 buttonPosition.y += y;
 
                 Rect menuButtonRect = new Rect(position, new Vector2(width, _menuButtonSize));
-                if (Widgets.ButtonText(menuButtonRect, "Set fitness"))
+                if (Widgets.ButtonText(menuButtonRect, "AWA.FunctionSelect".Translate()))
                 {
-                    FloatMenuUtility.MakeMenu(DefDatabase<PawnFitnessDef>.AllDefs, x => x.label, x => () => pawnCondition.Fitness = PawnSetting.CreateFrom<IPawnFitness>(x));
+                    FloatMenuUtility.MakeMenu(DefDatabase<PawnFitnessDef>.AllDefs, x => x.LabelCap, x => () => pawnCondition.Fitness = PawnSetting.CreateFrom<IPawnFitness>(x));
                 }
 
                 y += menuButtonRect.height;
@@ -70,8 +70,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
             Rect maxRect = Utils.GetSubRectFraction(labelsRect, new Vector2(0.5f, 0f), Vector2.one);
 
             Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(minRect, "Min");
-            Widgets.Label(maxRect, "Max");
+            Widgets.Label(minRect, "AWA.MinValue".Translate());
+            Widgets.Label(maxRect, "AWA.MaxValue".Translate());
 
             y += labelsRect.height;
 

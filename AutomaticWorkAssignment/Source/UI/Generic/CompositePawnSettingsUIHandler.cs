@@ -24,7 +24,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
 
         private float _sectionHeight = 128;
 
-        public string NewSettingLabel = "Add";
+        public string NewSettingLabel = "AWA.NewSettingAddDefault".Translate();
         public bool AllowMoveSettings = true;
 
         public CompositePawnSettingsUIHandler(string newSettingLabel, bool allowMoveSetting)

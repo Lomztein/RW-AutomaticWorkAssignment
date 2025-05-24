@@ -4,7 +4,7 @@
     <defName>Lomzie_SkillLevelCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.SkillLevelPawnCondition</settingClass>
     <label>skill level</label>
-    <description>Assign pawns within a skill range.</description>
+    <description>Check if pawns skill level is within a given range.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_HasPassionCondition</defName>
@@ -49,6 +49,12 @@
     <description>Assign to pawns less committed than the limit.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_HasStockpile</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.StockpilePawnCondition</settingClass>
+    <label>has stockpile</label>
+    <description>Check if any of the allowed items are available.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_CompareFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.CompareFitnessPawnCondition</settingClass>
     <label>compare fitness</label>
@@ -77,5 +83,11 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.AllPawnCondition</settingClass>
     <label>all</label>
     <description>Check all internal condition.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_AnyPawnCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.AnyPawnPawnCondition</settingClass>
+    <label>any pawn</label>
+    <description>Check if any working pawn meets the condition.</description>
   </Def>
 </Defs>

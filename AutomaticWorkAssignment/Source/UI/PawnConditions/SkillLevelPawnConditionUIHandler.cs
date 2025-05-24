@@ -20,7 +20,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
             Rect menuButtonRect = new Rect(position, new Vector2(width, _menuButtonSize));
 
             // TODO: Handle case where skill has not been selected properly, either by auto selecting a default, or supporting "Auto";
-            string label = pawnCondition.SkillDef != null ? pawnCondition.SkillDef.skillLabel : "Select skill";
+            string label = pawnCondition.SkillDef != null ? pawnCondition.SkillDef.LabelCap : "AWA.SkillSelect".Translate();
 
             // Skill selection
             if (Widgets.ButtonText(menuButtonRect, label))
@@ -38,8 +38,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
             Rect maxRect = Utils.GetSubRectFraction(labelsRect, new Vector2(0.5f, 0f), Vector2.one);
 
             Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(minRect, "Min");
-            Widgets.Label(maxRect, "Max");
+            Widgets.Label(minRect, "AWA.MinValue".Translate());
+            Widgets.Label(maxRect, "AWA.MaxValue".Translate());
 
             y += labelsRect.height;
 

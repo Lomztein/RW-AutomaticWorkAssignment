@@ -28,7 +28,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
             if (pawnSetting.Condition != null)
                 y += DrawSetting(innerPosition, width, pawnSetting.Condition, x => pawnSetting.Condition = null);
             else
-                y += DrawNewSettingButton<PawnConditionDef, IPawnCondition>(innerPosition, width, "Set condition", x => pawnSetting.Condition = x);
+                y += DrawNewSettingButton<PawnConditionDef, IPawnCondition>(innerPosition, width, "AWA.ConditionSelect".Translate(), x => pawnSetting.Condition = x);
 
             innerPosition = position;
             innerPosition.y += y;
@@ -36,7 +36,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
             if (pawnSetting.PostProcessor != null)
                 y += DrawSetting(innerPosition, width, pawnSetting.PostProcessor, x => pawnSetting.PostProcessor = null);
             else
-                y += DrawNewSettingButton<PawnPostProcessorDef, IPawnPostProcessor>(innerPosition, width, "Set task", x => pawnSetting.PostProcessor = x);
+                y += DrawNewSettingButton<PawnPostProcessorDef, IPawnPostProcessor>(innerPosition, width, "AWA.PostProcessorSelect".Translate(), x => pawnSetting.PostProcessor = x);
 
             return y;
         }
@@ -72,7 +72,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
             Rect buttonRect = new Rect(position, new Vector2(width, _buttonSize));
             if (Widgets.ButtonText(buttonRect, newLabel))
             {
-                FloatMenuUtility.MakeMenu(DefDatabase<TDef>.AllDefs, x => x.label, x => () => onNewSetting(PawnSetting.CreateFrom<TSetting>(x)));
+                FloatMenuUtility.MakeMenu(DefDatabase<TDef>.AllDefs, x => x.LabelCap, x => () => onNewSetting(PawnSetting.CreateFrom<TSetting>(x)));
             }
             return _buttonSize;
         }

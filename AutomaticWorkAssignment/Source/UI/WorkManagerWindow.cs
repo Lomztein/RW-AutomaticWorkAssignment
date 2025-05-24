@@ -122,14 +122,14 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 Rect assignedRect = Utils.GetSubRectFraction(jobRect, new Vector2(0f, 0.5f), new Vector2(1f, 1f));
 
                 Widgets.Label(labelRect, new GUIContent($"{work.Name}"));
-                Widgets.Label(assignedRect, new GUIContent($"Assigned: {_workManager.GetCountAssignedTo(work)} / {work.GetTargetWorkers()}"));
+                Widgets.Label(assignedRect, new GUIContent("AWA.PawnsAssigned".Translate(_workManager.GetCountAssignedTo(work), work.GetTargetWorkers())));
 
                 if (_current == work)
                     Widgets.DrawHighlight(row);
 
                 Text.Anchor = TextAnchor.UpperLeft;
                 
-                TooltipHandler.TipRegion(row, () => $"Pawns assigned to this:\n    {string.Join("\n    ", _workManager.GetPawnsAssignedTo(work))}", 10371037);
+                TooltipHandler.TipRegion(row, () => "AWA.PawnsAssignedTip".Translate("    " + string.Join("\n    ", _workManager.GetPawnsAssignedTo(work))), 10371037);
 
                 Rect rearrangeRect = Utils.GetSubRectFraction(jobRect, new Vector2(0.75f, 0f), new Vector2(0.875f, 1f));
                 int movement = DoVerticalRearrangeButtons(rearrangeRect);
@@ -156,10 +156,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             if (i % 2 == 1) Widgets.DrawAltRect(newRect);
 
             Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(newRect, new GUIContent("New work specification"));
+            Widgets.Label(newRect, new GUIContent("AWA.NewWorkSpecification".Translate()));
             Text.Anchor = TextAnchor.UpperLeft;
 
-            TooltipHandler.TipRegion(newRect, "Create new work specification.");
+            TooltipHandler.TipRegion(newRect, "AWA.NewWorkSpecificationTip".Translate());
             
             if (Widgets.ButtonInvisible(newRect))
             {
@@ -186,10 +186,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             if (Widgets.ButtonImageWithBG(importFromSaveButtonRect, _openImportExportIcon, _iconImageSize))
                 OpenImportFromSaveWindow();
 
-            TooltipHandler.TipRegion(resolveNowButtonRect, "Resolve assignments now");
-            TooltipHandler.TipRegion(autoResolveButtonRect, $"Auto-resolve: {_workManager.RefreshEachDay}");
-            TooltipHandler.TipRegion(excludePawnsButtonRect, "Exclude pawns");
-            TooltipHandler.TipRegion(importFromSaveButtonRect, "Save / load");
+            TooltipHandler.TipRegion(resolveNowButtonRect, "AWA.ResolveAssignmentsNowTip".Translate());
+            TooltipHandler.TipRegion(autoResolveButtonRect, "AWA.AutoResolveTip".Translate(_workManager.RefreshEachDay.ToString()));
+            TooltipHandler.TipRegion(excludePawnsButtonRect, "AWA.ExcludePawnsTip".Translate());
+            TooltipHandler.TipRegion(importFromSaveButtonRect, "AWA.SaveLoadTip".Translate());
         }
 
         private void OpenExcludePawnsWindow()
@@ -202,10 +202,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         private void OpenImportFromSaveWindow()
         {
-            FloatMenuOption save = new FloatMenuOption("Save", () => Find.WindowStack.Add(new Dialog_SaveConfigFileList()));
-            FloatMenuOption load = new FloatMenuOption("Load", () => Find.WindowStack.Add(new Dialog_LoadConfigFileList()));
-            FloatMenuOption import = new FloatMenuOption("Import", () => Find.WindowStack.Add(new Dialog_ImportConfigFileList()));
-            FloatMenuOption openFolder = new FloatMenuOption("Open folder", () => Process.Start(IO.GetConfigDirectory().FullName));
+            FloatMenuOption save = new FloatMenuOption("AWA.Save".Translate(), () => Find.WindowStack.Add(new Dialog_SaveConfigFileList()));
+            FloatMenuOption load = new FloatMenuOption("AWA.Load".Translate(), () => Find.WindowStack.Add(new Dialog_LoadConfigFileList()));
+            FloatMenuOption import = new FloatMenuOption("AWA.Import".Translate(), () => Find.WindowStack.Add(new Dialog_ImportConfigFileList()));
+            FloatMenuOption openFolder = new FloatMenuOption("AWA.OpenFolder".Translate(), () => Process.Start(IO.GetConfigDirectory().FullName));
             Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>() { save, load, import, openFolder }));
         }
 
@@ -266,20 +266,20 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             nameRect = Utils.ShrinkByMargin(nameRect, MarginSize);
             var nameRects = Utils.GetLabeledContentWithFixedLabelSize(nameRect, labelWidth);
 
-            Widgets.Label(nameRects.labelRect, "Name");
+            Widgets.Label(nameRects.labelRect, "AWA.LabelName".Translate());
             _current.Name = Widgets.TextField(nameRects.contentRect, _current.Name);
 
             // Min workers
             Rect minRect = Utils.GetSubRectFraction(firstRow, new Vector2(0f, 0.33f), new Vector2(1f, 0.66f));
             minRect = Utils.ShrinkByMargin(minRect, MarginSize);
             var minRects = Utils.GetLabeledContentWithFixedLabelSize(minRect, labelWidth);
-            DoPawnAmountContents(minRects.labelRect, minRects.contentRect, "Min", _current.MinWorkers, (x) => _current.MinWorkers = x);
+            DoPawnAmountContents(minRects.labelRect, minRects.contentRect, "AWA.LabelMinWorkers".Translate(), _current.MinWorkers, (x) => _current.MinWorkers = x);
 
             // Target workers
             Rect maxRect = Utils.GetSubRectFraction(firstRow, new Vector2(0f, 0.66f), new Vector2(1f, 1f));
             maxRect = Utils.ShrinkByMargin(maxRect, MarginSize);
             var maxRects = Utils.GetLabeledContentWithFixedLabelSize(maxRect, labelWidth);
-            DoPawnAmountContents(maxRects.labelRect, maxRects.contentRect, "Target", _current.TargetWorkers, (x) => _current.TargetWorkers = x);
+            DoPawnAmountContents(maxRects.labelRect, maxRects.contentRect, "AWA.LabelTargetWorkers".Translate(), _current.TargetWorkers, (x) => _current.TargetWorkers = x);
 
             Rect secondRow = Utils.GetSubRectFraction(sectionRect, new Vector2(0.5f, 0f), new Vector2(1f, 1f));
             Text.Anchor = TextAnchor.MiddleLeft;
@@ -288,30 +288,30 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Rect criticalRect = Utils.GetSubRectFraction(secondRow, Vector2.zero, new Vector2(1f, 0.33f));
             criticalRect = Utils.ShrinkByMargin(criticalRect, MarginSize);
             var criticalRects = Utils.GetLabeledContentWithFixedLabelSize(criticalRect, labelWidth * 2);
-            Widgets.Label(criticalRects.labelRect, "Critical");
-            if (Widgets.ButtonText(criticalRects.contentRect, _current.IsCritical ? "Yes" : "No"))
+            Widgets.Label(criticalRects.labelRect, "AWA.LabelCritical".Translate());
+            if (Widgets.ButtonText(criticalRects.contentRect, _current.IsCritical ? "AWA.Yes".Translate() : "AWA.No".Translate()))
             {
                 _current.IsCritical = !_current.IsCritical;
             }
-            TooltipHandler.TipRegion(criticalRect, "Immediately find substitute if assignee becomes unavailable.");
+            TooltipHandler.TipRegion(criticalRect, "AWA.LabelCriticalTip".Translate());
 
             // Specialist
             Rect specialistRect = Utils.GetSubRectFraction(secondRow, new Vector3(0f, 0.33f), new Vector2(1f, 0.66f));
             specialistRect = Utils.ShrinkByMargin(specialistRect, MarginSize);
             var specialistRects = Utils.GetLabeledContentWithFixedLabelSize(specialistRect, labelWidth * 2);
-            Widgets.Label(specialistRects.labelRect, "Specialist");
-            if (Widgets.ButtonText(specialistRects.contentRect, _current.IsSpecialist ? "Yes" : "No"))
+            Widgets.Label(specialistRects.labelRect, "AWA.LabelSpecialist".Translate());
+            if (Widgets.ButtonText(specialistRects.contentRect, _current.IsSpecialist ? "AWA.Yes".Translate() : "AWA.No".Translate()))
             {
                 _current.IsSpecialist = !_current.IsSpecialist;
             }
-            TooltipHandler.TipRegion(specialistRect, "Exclude assignees from work further down the list.");
+            TooltipHandler.TipRegion(specialistRect, "AWA.LabelSpecialistTip".Translate());
 
             // Commitment
             Rect commitmentRect = Utils.GetSubRectFraction(secondRow, new Vector3(0f, 0.66f), new Vector2(1f, 1f));
             commitmentRect = Utils.ShrinkByMargin(commitmentRect, MarginSize);
             var commitmentRects = Utils.GetLabeledContentWithFixedLabelSize(commitmentRect, labelWidth * 2);
-            Widgets.Label(commitmentRects.labelRect, "Commitment");
-            TooltipHandler.TipRegion(commitmentRect, "Estimate of how much time this work requires.");
+            Widgets.Label(commitmentRects.labelRect, "AWA.LabelCommitment".Translate());
+            TooltipHandler.TipRegion(commitmentRect, "AWA.LabelCommitmentTip".Translate());
 
             Text.Anchor = TextAnchor.UpperCenter;
             Rect sliderLabelRect = Utils.GetSubRectFraction(commitmentRects.contentRect, Vector2.zero, new Vector2(1f, 0.5f));
@@ -348,7 +348,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         Vector2 _priorityListPosition = Vector2.zero;
         private void DoPriorityContents(Rect sectionRect)
         {
-            DoHeader(sectionRect, "<-------- higher priority | lower priority -------->");
+            DoHeader(sectionRect, $"<-------- {"AWA.PriorityHigher".Translate()} | {"AWA.PriorityLower".Translate()} -------->");
 
             sectionRect = Utils.GetSubRectFraction(sectionRect, new Vector2(0, 0.1f), Vector2.one);
 
@@ -384,13 +384,13 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Text.Anchor = TextAnchor.MiddleCenter;
             Widgets.Label(newRect, new GUIContent("+"));
             Text.Anchor = TextAnchor.UpperLeft;
-            TooltipHandler.TipRegion(newRect, "Create new priority.");
+            TooltipHandler.TipRegion(newRect, "AWA.LabelNewPriorityTip".Translate());
 
             WorkTypeDef workDef = new WorkTypeDef();
 
             if (Widgets.ButtonInvisible(newRect))
             {
-                FloatMenuUtility.MakeMenu(_workTypeDefsSorted, x => x.labelShort, x => () => _current.Priorities.AddPriority(x));
+                FloatMenuUtility.MakeMenu(_workTypeDefsSorted, x => x.labelShort.CapitalizeFirst(), x => () => _current.Priorities.AddPriority(x));
             }
 
             cur.x += ListScrollbarWidth;
@@ -405,11 +405,11 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             requireCapabilityRect.height = RequireFullCapabilitySize;
             (Rect labelRect, Rect buttonRect) = Utils.GetLabeledContentWithFixedLabelSize(requireCapabilityRect, requireCapabilityRect.width - RequireFullCapabilitySize);
             labelRect.width -= MarginSize;
-            Widgets.Label(labelRect, "Require full capability");
+            Widgets.Label(labelRect, "AWA.LabelRequireFullCapability".Translate());
             if (Widgets.ButtonImage(buttonRect, _current.RequireFullPawnCapability ? _toggleOnIcon : _toggleOffIcon))
                 _current.RequireFullPawnCapability = !_current.RequireFullPawnCapability;
             Text.Anchor = TextAnchor.UpperLeft;
-            TooltipHandler.TipRegion(requireCapabilityRect, "Require that pawn is capable of all work for assignment?");
+            TooltipHandler.TipRegion(requireCapabilityRect, "AWA.LabelRequireFullCapabilityTip".Translate());
         }
 
         private void DrawPriority(Rect inRect, PawnWorkPriorities priorities, WorkTypeDef workDef)
@@ -453,10 +453,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private Vector2 _fitnessListPosition = Vector2.zero;
         private void DoFitnessContents(Rect sectionRect)
         {
-            DoHeader(sectionRect, "Fitness");
+            DoHeader(sectionRect, "AWA.HeaderFitness".Translate());
             sectionRect = Utils.GetSubRectFraction(sectionRect, new Vector2(0, 0.1f), Vector2.one);
 
-            DoPawnSettingList(sectionRect, typeof(PawnFitnessDef), "Add fitness function", ref _fitnessListHeight, ref _fitnessListPosition,
+            DoPawnSettingList(sectionRect, typeof(PawnFitnessDef), "AWA.FunctionAdd".Translate(), ref _fitnessListHeight, ref _fitnessListPosition,
                 () => _current.Fitness,
                 (x) => _current.Fitness.Add(x as IPawnFitness),
                 (setting, movement) => _current.MoveFitness(setting as IPawnFitness, movement),
@@ -489,10 +489,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private Vector2 _conditionListPosition;
         private void DoConditionsContents(Rect sectionRect)
         {
-            DoHeader(sectionRect, "Conditions");
+            DoHeader(sectionRect, "AWA.HeaderConditions".Translate());
             sectionRect = Utils.GetSubRectFraction(sectionRect, new Vector2(0, 0.1f), Vector2.one);
 
-            DoPawnSettingList(sectionRect, typeof(PawnConditionDef), "Add new condition", ref _conditionListHeight, ref _conditionListPosition,
+            DoPawnSettingList(sectionRect, typeof(PawnConditionDef), "AWA.ConditionAdd".Translate(), ref _conditionListHeight, ref _conditionListPosition,
                 () => _current.Conditions,
                 (x) => _current.Conditions.Add(x as IPawnCondition),
                 null,
@@ -563,7 +563,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 if (Widgets.ButtonInvisible(newRect))
                 {
                     var defs = GenDefDatabase.GetAllDefsInDatabaseForDef(settingDefType).Cast<PawnSettingDef>();
-                    FloatMenuUtility.MakeMenu(defs, x => x.label, x => () => onNewSetting(PawnSetting.CreateFrom<IPawnSetting>(x)));
+                    FloatMenuUtility.MakeMenu(defs, x => x.LabelCap, x => () => onNewSetting(PawnSetting.CreateFrom<IPawnSetting>(x)));
                 }
 
                 cur.y += NewFunctionButtonSize;
@@ -591,7 +591,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             ResolveWorkRequest req = WorkManager.Instance.MakeDefaultRequest();
 
             if (setting is IPawnCondition cond) return cond.IsValid(pawn, spec, req).ToString();
-            if (setting is IPawnFitness fit) return fit.CalcFitness(pawn, spec, req).ToString();
+            if (setting is IPawnFitness fit) return fit.CalcFitness(pawn, spec, req).ToString("0.##");
             return string.Empty;
         }
 
@@ -603,10 +603,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private Vector2 _postProcessorListPosition;
         private void DoPostProcessContents(Rect sectionRect)
         {
-            DoHeader(sectionRect, "On Assignment");
+            DoHeader(sectionRect, "AWA.HeaderPostProcessors".Translate());
             sectionRect = Utils.GetSubRectFraction(sectionRect, new Vector2(0, 0.1f), Vector2.one);
 
-            DoPawnSettingList(sectionRect, typeof(PawnPostProcessorDef), "Add new on assignment task", ref _postProcessorListHeight, ref _postProcessorListPosition,
+            DoPawnSettingList(sectionRect, typeof(PawnPostProcessorDef), "AWA.PostProcessorAdd".Translate(), ref _postProcessorListHeight, ref _postProcessorListPosition,
                 () => _current.PostProcessors,
                 (x) => _current.PostProcessors.Add(x as IPawnPostProcessor),
                 (x, m) => _current.MovePostProcessor(x as IPawnPostProcessor, m),
@@ -641,7 +641,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 Rect pickerRect = Utils.GetSubRectFraction(amountRect, Vector2.zero, new Vector2(0.7f, 1f));
                 Rect multLabelRect = Utils.GetSubRectFraction(amountRect, new Vector2(0.7f, 0f), new Vector2(0.8f, 1f));
                 Rect multRect = Utils.GetSubRectFraction(amountRect, new Vector2(0.8f, 0f), new Vector2(1f, 1f));
-                if (Widgets.ButtonText(pickerRect, buildingPawnAmount.BuildingDef?.label ?? "Select"))
+                if (Widgets.ButtonText(pickerRect, buildingPawnAmount.BuildingDef?.LabelCap ?? "AWA.Select".Translate()))
                 {
                     IEnumerable<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.Where(x => x.BuildableByPlayer);
                     FloatMenuUtility.MakeMenu(defs, x => x.label, x => () => buildingPawnAmount.BuildingDef = x);

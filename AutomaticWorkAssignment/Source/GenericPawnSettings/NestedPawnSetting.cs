@@ -11,6 +11,12 @@ namespace Lomzie.AutomaticWorkAssignment.GenericPawnSettings
         {
             base.ExposeData();
             Scribe_Deep.Look(ref InnerSetting, "innerCondition");
+
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if (InnerSetting != null && !InnerSetting.IsValidAfterLoad())
+                    InnerSetting = null;
+            }
         }
     }
 }

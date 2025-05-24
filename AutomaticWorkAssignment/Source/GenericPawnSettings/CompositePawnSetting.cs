@@ -22,6 +22,7 @@ namespace Lomzie.AutomaticWorkAssignment.GenericPawnSettings
             {
                 if (InnerSettings == null)
                     InnerSettings = new List<IPawnSetting>();
+                InnerSettings = InnerSettings.Where(x => x.IsValidAfterLoad()).ToList();
             }
         }
     }

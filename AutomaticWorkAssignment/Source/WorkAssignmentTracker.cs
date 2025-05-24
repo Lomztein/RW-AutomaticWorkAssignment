@@ -88,12 +88,12 @@ namespace Lomzie.AutomaticWorkAssignment
             }
         }
 
-        private void DoSubstituteFoundMessage(Pawn original, Pawn subtitute, WorkSpecification workSpec)
+        private void DoSubstituteFoundMessage(Pawn original, Pawn substitute, WorkSpecification workSpec)
         {
-            LookTargets targets = new LookTargets(original, subtitute);
+            LookTargets targets = new LookTargets(original, substitute);
 
             Message message = new Message(
-                $"{original} has become unable to do their critical '{workSpec.Name}' work, and {subtitute} has been chosen to substitute.",
+                "AWA.SubstituteMessage".Translate().Formatted(original, workSpec.Name, substitute),
                 MessageTypeDefOf.NegativeEvent, targets);
             Messages.Message(message);
         }

@@ -12,13 +12,13 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Dialogs
     {
         public Dialog_LoadConfigFileList()
         {
-            interactButLabel = "Load";
+            interactButLabel = "AWA.Load".Translate();
         }
 
         protected override void DoFileInteraction(string fileName)
         {
             IO.ImportFromFile(fileName);
-            Messages.Message("Work manager configuration loaded..", MessageTypeDefOf.SilentInput, false);
+            Messages.Message("AWA.LoadMessage", MessageTypeDefOf.SilentInput, false);
             Close();
         }
     }
