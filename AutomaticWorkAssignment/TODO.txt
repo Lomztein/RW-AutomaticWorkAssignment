@@ -2,28 +2,21 @@
  Rework WorkManager to be per-map (with pocket maps), so that multiple colonies can be supported.
  Group system for work specs, for organization and for interweaving of assignments. Will replace current incremental feature.
  Add support for Float Sub-Menus using https://steamcommunity.com/sharedfiles/filedetails/?id=2864015430
- Add bill processors should only add bills if ingredients are available
+ Change selection UI handler to allow multiple entries.
+ Change priority adder float menu to not show already added priorities.
 
  - Bugs - 
 
  - Fitness -
  Stockpile
- Health condition
 
  - Conditions -
  Has stockpile of items
- Part condition (health condition, but for body parts)
  
  - Post Processors -
- Conditional processors, using conditions
- (MOD) Compositable loadouts
  Do all (list of post processors)
 
  - Addons -
- Automatic surgery
-	Add bill post processor
-	Part hediff condition
-	Part effeciency fitness function
 
  Math and Variables
 	Set variable

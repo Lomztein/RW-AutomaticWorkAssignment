@@ -1,9 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
-    <defName>Lomzie_IsMutant</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.MutantPawnCondition</settingClass>
-    <label>is mutant</label>
-    <description>Assign to mutant pawns such as ghouls.</description>
+    <defName>Lomzie_IsSlave</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.SlavePawnCondition</settingClass>
+    <label>is slave</label>
+    <description>Assign to slave pawns.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_HasIdeoRole</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.IdeoRolePawnCondition</settingClass>
+    <label>has role</label>
+    <description>Assign to pawns with the given role.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetIdeoRole</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetIdeoRolePawnPostProcessor</settingClass>
+    <label>assign role</label>
+    <description>Assign the given role to the pawn. Does not perform a ritual. May upset current holder.</description>
   </Def>
 </Defs>

@@ -9,10 +9,10 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         public HediffDef HediffDef;
         public BodyPartRecord HediffPart
         {
-            get { return _bodyPartIndex > 0 ? BodyDefOf.Human.GetPartAtIndex(_bodyPartIndex) : null; }
+            get { return _bodyPartIndex != -1 ? BodyDefOf.Human.GetPartAtIndex(_bodyPartIndex) : null; }
             set { _bodyPartIndex = BodyDefOf.Human.GetIndexOfPart(value); }
         }
-        private int _bodyPartIndex;
+        private int _bodyPartIndex = -1;
 
         public override void ExposeData()
         {
@@ -22,6 +22,6 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         }
 
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
-            => pawn?.health.hediffSet?.hediffs.Any(x => x.def == HediffDef && x.Part.Index == _bodyPartIndex) ?? false;
+            => pawn?.health.hediffSet?.hediffs.Any(x => x.def == HediffDef && x.Part.LabelCap == HediffPart.LabelCap) ?? false;
     }
 }

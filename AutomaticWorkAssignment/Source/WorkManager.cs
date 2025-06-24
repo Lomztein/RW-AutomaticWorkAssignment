@@ -150,7 +150,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public static bool IsTemporarilyUnavailable(Pawn pawn)
         {
-            return pawn != null && (IsMentalStateBlocking(pawn) || pawn.Downed);
+            return pawn != null && (IsMentalStateBlocking(pawn) || pawn.Downed || pawn.InCryptosleep);
         }
 
         private static bool IsMentalStateBlocking(Pawn pawn)
@@ -317,11 +317,19 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public void ResolvePawnPriorities(Pawn pawn)
         {
-            foreach (var def in DefDatabase<WorkTypeDef>.AllDefs)
+            var workList = DefDatabase<WorkTypeDef>.AllDefs.ToList();
+            workList.SortBy(x => x.naturalPriority); // Shouldn't actually matter
+
+            Dictionary<WorkTypeDef, int> newPriorities = new Dictionary<WorkTypeDef, int>(); 
+            foreach (var def in workList)
             {
                 if (!ShouldIgnoreWorkType(def))
                 {
-                    pawn.workSettings?.SetPriority(def, 0);
+                    newPriorities.Add(def, 0);
+                }
+                else
+                {
+                    newPriorities.Add(def, pawn.workSettings.GetPriority(def));
                 }
             }
 
@@ -337,7 +345,7 @@ namespace Lomzie.AutomaticWorkAssignment
                     for (int i = 0; i < spec.Priorities.OrderedPriorities.Count; i++)
                     {
                         WorkTypeDef curDef = spec.Priorities.OrderedPriorities[i];
-                        int currentPriority = pawn.workSettings.GetPriority(curDef);
+                        int currentPriority = newPriorities[curDef];
 
                         if (currentPriority == 0)
                         {
@@ -347,11 +355,17 @@ namespace Lomzie.AutomaticWorkAssignment
 
                             if (!pawn.WorkTypeIsDisabled(curDef))
                             {
-                                pawn.workSettings?.SetPriority(curDef, prioritization);
+                                newPriorities[curDef] = prioritization;
                             }
                         }
                     }
                 }
+            }
+
+            foreach (var kvp in newPriorities)
+            {
+                if (pawn.workSettings.GetPriority(kvp.Key) != kvp.Value)
+                    pawn.workSettings.SetPriority(kvp.Key, kvp.Value);
             }
         }
 

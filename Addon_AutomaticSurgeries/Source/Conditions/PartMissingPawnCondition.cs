@@ -11,7 +11,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             get { return _bodyPartIndex > 0 ? BodyDefOf.Human.GetPartAtIndex(_bodyPartIndex) : null; }
             set { _bodyPartIndex = BodyDefOf.Human.GetIndexOfPart(value); }
         }
-        private int _bodyPartIndex;
+        private int _bodyPartIndex = -1;
 
         public override void ExposeData()
         {

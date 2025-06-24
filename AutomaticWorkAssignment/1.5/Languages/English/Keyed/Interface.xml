@@ -20,6 +20,7 @@
   <AWA.GeneSelect>Select gene</AWA.GeneSelect>
   <AWA.XenotypeSelect>Select xenotype</AWA.XenotypeSelect>
   <AWA.PolicySelect>Select policy</AWA.PolicySelect>
+  <AWA.IdeoRoleSelect>Select role</AWA.IdeoRoleSelect>
   <AWA.Select>Select</AWA.Select>
   <AWA.ScheduleEdit>Edit schedule</AWA.ScheduleEdit>
   <AWA.FilterEdit>Edit filter</AWA.FilterEdit>

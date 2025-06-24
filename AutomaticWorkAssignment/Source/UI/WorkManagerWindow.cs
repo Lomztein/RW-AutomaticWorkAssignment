@@ -390,7 +390,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             if (Widgets.ButtonInvisible(newRect))
             {
-                FloatMenuUtility.MakeMenu(_workTypeDefsSorted, x => x.labelShort.CapitalizeFirst(), x => () => _current.Priorities.AddPriority(x));
+                FloatMenuUtility.MakeMenu(_workTypeDefsSorted, x => x.labelShort.CapitalizeFirst() + (_current.Priorities.OrderedPriorities.Contains(x) ? " *" : ""), x => () => _current.Priorities.AddPriority(x));
             }
 
             cur.x += ListScrollbarWidth;

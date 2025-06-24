@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
-    <defName>Lomzie_IsSlave</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.SlavePawnCondition</settingClass>
-    <label>is slave</label>
-    <description>Assign to slave pawns.</description>
+    <defName>Lomzie_IsMutant</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.MutantPawnCondition</settingClass>
+    <label>is mutant</label>
+    <description>Assign to mutant pawns such as ghouls.</description>
   </Def>
 </Defs>

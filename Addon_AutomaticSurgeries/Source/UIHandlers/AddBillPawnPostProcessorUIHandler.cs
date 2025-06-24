@@ -28,14 +28,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
                 {
                     pawnPostProcessor.BodyPartRecord = validBodyParts.FirstOrDefault();
                 }
-                if (pawnPostProcessor.BodyPartRecord != null && !validBodyParts.Any(x => x.Index == pawnPostProcessor.BodyPartRecord.Index))
-                {
-                    pawnPostProcessor.BodyPartRecord = null;
-                }
 
                 if (Widgets.ButtonText(bodyPartRect, pawnPostProcessor.BodyPartRecord?.LabelCap ?? "AWA.BodyPartSelect".Translate()))
                 {
-                    FloatMenuUtility.MakeMenu(validBodyParts, x => x.customLabel, x => () => pawnPostProcessor.BodyPartRecord = x);
+                    FloatMenuUtility.MakeMenu(validBodyParts, x => x.LabelCap, x => () => pawnPostProcessor.BodyPartRecord = x);
                 }
                 y += _buttonSize;
             }

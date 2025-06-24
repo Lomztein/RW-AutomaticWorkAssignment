@@ -22,6 +22,12 @@
     <description>Assign to pawns with the given body part condition.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_AnyPartHediffCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PartAnyHediffPawnCondition</settingClass>
+    <label>any part condition</label>
+    <description>Assign to pawns with any condition on the given part.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_PartMissingCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PartMissingPawnCondition</settingClass>
     <label>part missing</label>

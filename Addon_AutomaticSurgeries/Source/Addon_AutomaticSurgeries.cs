@@ -23,6 +23,8 @@ namespace Lomzie.AutomaticWorkAssignment
                 () => BodyDefOf.Human.AllParts, x => x.LabelCap, x => x.BodyPartRecord?.LabelCap ?? "AWA.BodyPartSelect".Translate(), (c, s) => c.BodyPartRecord = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<PartMissingPawnCondition, BodyPartRecord>(
                 () => BodyDefOf.Human.AllParts, x => x.LabelCap, x => x.BodyPartRecord?.LabelCap ?? "AWA.BodyPartSelect".Translate(), (c, s) => c.BodyPartRecord = s));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<PartAnyHediffPawnCondition, BodyPartRecord>(
+                () => BodyDefOf.Human.AllParts, x => x.LabelCap, x => x.BodyPartRecord?.LabelCap ?? "AWA.BodyPartSelect".Translate(), (c, s) => c.BodyPartRecord = s));
 
             PawnSettingUIHandlers.AddHandler(new PartHediffPawnConditionUIHandler());
             PawnSettingUIHandlers.AddHandler(new AddBillPawnPostProcessorUIHandler());
