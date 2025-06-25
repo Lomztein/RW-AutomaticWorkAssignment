@@ -21,90 +21,138 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
-            if (BillRecipeDef != null)
+            if (BillRecipeDef == null)
             {
-                BodyPartRecord bodyPart = GetRecordOnPawn(pawn, BodyPartRecord);
-                if (bodyPart != null || BodyPartRecord == null)
+                Log.Warning($"[AWA:AS] BillRecipeDef is null for work specification '{workSpecification.Name}'");
+                return;
+            }
+
+            // Get the correct body part for this pawn
+            BodyPartRecord bodyPart = GetRecordOnPawn(pawn, BodyPartRecord);
+
+            // Create the medical bill
+            Bill_Medical bill = new Bill_Medical(BillRecipeDef, new List<Thing>()) { Part = bodyPart };
+
+            // Check if we can apply this bill to the pawn
+            if (CanApplyTo(pawn, bill))
+            {
+                // Try to reserve ingredients - only add the bill if ingredients are available
+                if (TryReserve(bill, pawn.Map))
                 {
-                    Bill_Medical bill = new Bill_Medical(BillRecipeDef, null) { Part = bodyPart };
-                    if (CanApplyTo(pawn, bill) && TryReserve(bill, pawn.Map))
-                    {
-                        pawn.BillStack.AddBill(bill);
-                    }
+                    // Add the bill to the pawn's bill stack
+                    pawn.BillStack.AddBill(bill);
                 }
             }
         }
 
         BodyPartRecord GetRecordOnPawn(Pawn pawn, BodyPartRecord record)
         {
-            if (record != null)
+            if (record == null)
+                return null;
+                
+            try
             {
                 var parts = pawn.RaceProps.body.GetPartsWithDef(record.def);
-                return parts.Find(x => x.LabelCap == record.LabelCap);
+                if (parts != null && parts.Count > 0)
+                {
+                    // Try to find exact match only
+                    var exactMatch = parts.Find(x => x.LabelCap == record.LabelCap);
+                    return exactMatch;
+                }
             }
+            catch (Exception ex)
+            {
+                Log.Warning($"[AWA:AS] Error getting body part for {pawn.NameShortColored}: {ex.Message}");
+            }
+            
             return null;
         }
 
         private bool TryReserve(Bill_Medical bill, Map onMap)
         {
-            List<Tuple<Thing, int>> reservables = new List<Tuple<Thing, int>>();
-            foreach (var ingredient in bill.recipe.ingredients)
+            if (onMap == null)
+                return false;
+                
+            try
             {
-                foreach (var def in ingredient.filter.AllowedThingDefs)
+                List<Tuple<Thing, int>> reservables = new List<Tuple<Thing, int>>();
+                foreach (var ingredient in bill.recipe.ingredients)
                 {
-                    if (!def.IsMedicine)
+                    foreach (var def in ingredient.filter.AllowedThingDefs)
                     {
-                        int count = ingredient.CountRequiredOfFor(def, bill.recipe, bill);
-                        Thing reservable = WorkManager.Instance.Reservations.FindReservable(def, count, onMap);
-                        if (reservable != null)
+                        if (!def.IsMedicine)
                         {
-                            reservables.Add(new Tuple<Thing, int>(reservable, count));
-                        }
-                        else
-                        {
-                            return false;
+                            int count = ingredient.CountRequiredOfFor(def, bill.recipe, bill);
+                            Thing reservable = WorkManager.Instance.Reservations.FindReservable(def, count, onMap);
+                            if (reservable != null)
+                            {
+                                reservables.Add(new Tuple<Thing, int>(reservable, count));
+                            }
+                            else
+                            {
+                                return false;
+                            }
                         }
                     }
                 }
-            }
 
-            foreach (var reservable in reservables)
+                foreach (var reservable in reservables)
+                {
+                    WorkManager.Instance.Reservations.Reserve(reservable.Item1, reservable.Item2);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
             {
-                WorkManager.Instance.Reservations.Reserve(reservable.Item1, reservable.Item2);
+                Log.Warning($"[AWA:AS] Error reserving ingredients: {ex.Message}");
+                return false;
             }
-
-            return true;
         }
 
         private bool CanApplyTo(Pawn pawn, Bill_Medical bill)
         {
             if (BillRecipeDef == null || bill == null)
                 return LogError("Bill recipe def or bill was null");
-            if (!BillRecipeDef.Worker.AvailableOnNow(pawn, BodyPartRecord))
-                return LogError($"Recipe worker {BillRecipeDef.Worker.GetType().Name} AvailableOnNow({pawn}, {BodyPartRecord?.LabelCap}) = false");
-            //if (BodyPartRecord != null && !BillRecipeDef.Worker.GetPartsToApplyOn(pawn, BillRecipeDef).Any(x => x.LabelCap == BodyPartRecord.LabelCap))
-            //    return LogError("Target body part mismatch.");
+                
+            if (pawn == null)
+                return LogError("Pawn is null");
+                
+            // Check if recipe is available on the pawn
+            if (!BillRecipeDef.Worker.AvailableOnNow(pawn, bill.Part))
+                return LogError($"Recipe worker {BillRecipeDef.Worker.GetType().Name} AvailableOnNow({pawn}, {bill.Part?.LabelCap}) = false");
+                
+            // Check if pawn already has the resulting hediff
             if (BillRecipeDef.addsHediff != null && HasHediff(pawn, BillRecipeDef.addsHediff, bill.Part))
                 return LogError($"Target pawn '{pawn}' already has resulting hediff '{BillRecipeDef.addsHediff}'.");
-            if (BillRecipeDef.appliedOnFixedBodyParts.Any() && BodyPartRecord == null)
+                
+            // Check if recipe requires fixed body parts but we don't have one
+            if (BillRecipeDef.appliedOnFixedBodyParts.Any() && bill.Part == null)
                 return LogError($"Recipe applied on fixed body parts, but body part record = null.");
+                
+            // Check if identical bill already exists
             if (pawn.BillStack.Bills.Where(x => x is Bill_Medical).Cast<Bill_Medical>()
                 .Any(x => x.recipe == bill.recipe && x.Part == bill.Part))
                 return LogError($"Identical bill already present on pawn '{pawn}'.");
-            if (BillRecipeDef.ingredients.Any(x => !IsOnMap(BillRecipeDef, x, pawn.Map)))
-                return LogError($"Missing or reserved ingredients on map.");
+                
             return true;
         }
 
         private bool HasHediff (Pawn pawn, HediffDef hediff, BodyPartRecord bodyPartRecord)
         {
             if (bodyPartRecord == null)
-                return pawn.health.hediffSet.HasHediff(BillRecipeDef.addsHediff);
-            return pawn?.health.hediffSet?.hediffs.Any(x => x.def == hediff && x.Part.LabelCap == bodyPartRecord.LabelCap) ?? false;
+                return pawn.health.hediffSet.HasHediff(hediff);
+            return pawn?.health.hediffSet?.hediffs.Any(x => 
+                x.def == hediff && 
+                x.Part != null && 
+                x.Part.LabelCap == bodyPartRecord.LabelCap) ?? false;
         }
 
         private bool IsOnMap(RecipeDef recipe, IngredientCount ingredientCount, Map map)
         {
+            if (map == null)
+                return false;
+                
             return map.listerThings.ThingsInGroup(ThingRequestGroup.HaulableEver)
                 .Any(x => ingredientCount.filter.Allows(x) && ingredientCount.CountFor(recipe) <= x.stackCount - WorkManager.Instance.Reservations.Get(x));
         }

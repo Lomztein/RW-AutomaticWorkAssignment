@@ -22,6 +22,14 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         }
 
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
-            => pawn?.health.hediffSet?.hediffs.Any(x => x.def == HediffDef && x.Part.LabelCap == HediffPart.LabelCap) ?? false;
+        {
+            if (pawn?.health?.hediffSet?.hediffs == null || HediffDef == null || HediffPart == null)
+                return false;
+                
+            return pawn.health.hediffSet.hediffs.Any(x => 
+                x.def == HediffDef && 
+                x.Part != null && 
+                x.Part.LabelCap == HediffPart.LabelCap);
+        }
     }
 }

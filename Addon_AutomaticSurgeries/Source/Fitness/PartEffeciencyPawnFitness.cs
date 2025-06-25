@@ -9,7 +9,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
     {
         public BodyPartRecord BodyPartRecord
         {
-            get { return _bodyPartIndex > 0 ? BodyDefOf.Human.GetPartAtIndex(_bodyPartIndex) : null; }
+            get { return _bodyPartIndex >= 0 ? BodyDefOf.Human.GetPartAtIndex(_bodyPartIndex) : null; }
             set { _bodyPartIndex = BodyDefOf.Human.GetIndexOfPart(value); }
         }
         private int _bodyPartIndex = -1;

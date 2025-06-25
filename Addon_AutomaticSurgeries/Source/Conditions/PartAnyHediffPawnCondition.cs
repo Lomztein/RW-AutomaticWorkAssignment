@@ -8,7 +8,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
     {
         public BodyPartRecord BodyPartRecord
         {
-            get { return _bodyPartIndex > 0 ? BodyDefOf.Human.GetPartAtIndex(_bodyPartIndex) : null; }
+            get { return _bodyPartIndex >= 0 ? BodyDefOf.Human.GetPartAtIndex(_bodyPartIndex) : null; }
             set { _bodyPartIndex = BodyDefOf.Human.GetIndexOfPart(value); }
         }
         private int _bodyPartIndex = -1;
@@ -20,6 +20,13 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         }
 
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
-            => pawn?.health.hediffSet?.hediffs.Any(x => x.Part.LabelCap == BodyPartRecord.LabelCap) ?? false;
+        {
+            if (pawn?.health?.hediffSet?.hediffs == null || BodyPartRecord == null)
+                return false;
+                
+            return pawn.health.hediffSet.hediffs.Any(x => 
+                x.Part != null && 
+                x.Part.LabelCap == BodyPartRecord.LabelCap);
+        }
     }
 }
