@@ -42,6 +42,14 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                     // Add the bill to the pawn's bill stack
                     pawn.BillStack.AddBill(bill);
                 }
+                else
+                {
+                    LogError($"Failed to reserve ingredients for bill '{bill.recipe.LabelCap}'");
+                }
+            }
+            else
+            {
+                LogError($"Automatic surgery could not apply to pawn '{pawn}'");
             }
         }
 
@@ -80,7 +88,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                 {
                     foreach (var def in ingredient.filter.AllowedThingDefs)
                     {
-                        if (!def.IsMedicine)
+                        if (!IsMedicine(def))
                         {
                             int count = ingredient.CountRequiredOfFor(def, bill.recipe, bill);
                             Thing reservable = WorkManager.Instance.Reservations.FindReservable(def, count, onMap);
@@ -90,7 +98,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                             }
                             else
                             {
-                                return false;
+                                return LogError($"Failed to find {count} reservable: '{def.LabelCap}'");
                             }
                         }
                     }
@@ -105,10 +113,13 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
             }
             catch (Exception ex)
             {
-                Log.Warning($"[AWA:AS] Error reserving ingredients: {ex.Message}");
+                LogError($"Error reserving ingredients: {ex.Message}");
                 return false;
             }
         }
+
+        private bool IsMedicine(ThingDef def)
+            => def.IsMedicine || def.thingCategories.Contains(ThingCategoryDefOf.Medicine);
 
         private bool CanApplyTo(Pawn pawn, Bill_Medical bill)
         {
@@ -117,7 +128,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                 
             if (pawn == null)
                 return LogError("Pawn is null");
-                
+
+            // Check if selected body part is compatable. Commented out because it may have caused issues.
+            //if (bill.Part != null && !BillRecipeDef.Worker.GetPartsToApplyOn(pawn, BillRecipeDef).Any(x => x.LabelCap == bill.Part.LabelCap))
+            //    return LogError($"Target body part mismatch: {bill.Part?.LabelCap ?? "null"}");
+
             // Check if recipe is available on the pawn
             if (!BillRecipeDef.Worker.AvailableOnNow(pawn, bill.Part))
                 return LogError($"Recipe worker {BillRecipeDef.Worker.GetType().Name} AvailableOnNow({pawn}, {bill.Part?.LabelCap}) = false");
@@ -134,7 +149,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
             if (pawn.BillStack.Bills.Where(x => x is Bill_Medical).Cast<Bill_Medical>()
                 .Any(x => x.recipe == bill.recipe && x.Part == bill.Part))
                 return LogError($"Identical bill already present on pawn '{pawn}'.");
-                
+
             return true;
         }
 
@@ -159,7 +174,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 
         private bool LogError(string message)
         {
-            Log.Message("[AWA:AS] AddBillPostProcessor failed: " + message);
+            Logger.Message("[AWA:AS] AddBillPostProcessor failed: " + message);
             return false;
         }
 

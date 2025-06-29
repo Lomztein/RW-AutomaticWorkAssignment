@@ -3,18 +3,20 @@
  Group system for work specs, for organization and for interweaving of assignments. Will replace current incremental feature.
  Add support for Float Sub-Menus using https://steamcommunity.com/sharedfiles/filedetails/?id=2864015430
  Change selection UI handler to allow multiple entries.
- Change priority adder float menu to not show already added priorities.
 
  - Bugs - 
 
  - Fitness -
- Stockpile
+ Royal honor
 
  - Conditions -
- Has stockpile of items
- 
+ Has royality title
+ Has ideoligion
+ Has assignment
+
  - Post Processors -
  Do all (list of post processors)
+ Force work priority
 
  - Addons -
 

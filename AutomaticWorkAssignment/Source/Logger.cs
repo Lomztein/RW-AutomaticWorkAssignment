@@ -9,12 +9,15 @@ namespace Lomzie.AutomaticWorkAssignment
 {
     public static class Logger
     {
-        public static bool Enabled = true; // TODO: Make this a setting.
-                                           // TODO: Extend to include log levels.
+        // TODO: Extend to include log levels.
+        public static bool Enabled => AutomaticWorkAssignmentSettings.LogEnabled;
 
-        public static void Write (string message)
+        public static void Message (string message)
         {
-            Log.Message(message);
+            if (Enabled)
+            {
+                Log.Message(message);
+            }
         }
     }
 }

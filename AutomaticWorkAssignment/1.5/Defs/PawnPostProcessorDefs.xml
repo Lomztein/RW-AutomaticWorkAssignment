@@ -49,6 +49,18 @@
     <description>Set the amount of medicine the pawn should carry.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_MovePawnInColonistBar</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.MovePawnInColonistBarPawnPostProcessor</settingClass>
+    <label>move in colonist bar</label>
+    <description>Move the pawn to the left or right of the colonist bar.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetPawnColonistBarOrdering</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetPawnColonistBarOrderingPawnPostProcessor</settingClass>
+    <label>set colonist bar ordering</label>
+    <description>Set the pawns ordering in the colonist bar using a fitness function.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_ConditionalPostProcessor</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.ConditionalPawnPostProcessor</settingClass>
     <label>if condition</label>

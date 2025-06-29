@@ -67,6 +67,12 @@
     <description>Check if a fitness value is within a given range.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_AssignmentPawnCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.AssignmentPawnCondition</settingClass>
+    <label>has assignment</label>
+    <description>Check if the pawn has been assigned to a specific work specification.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_NotCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.NotPawnCondition</settingClass>
     <label>not</label>

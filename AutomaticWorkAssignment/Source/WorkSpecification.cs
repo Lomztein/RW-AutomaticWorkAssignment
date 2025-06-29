@@ -12,7 +12,7 @@ using RimWorld;
 
 namespace Lomzie.AutomaticWorkAssignment
 {
-    public class WorkSpecification : IExposable
+    public class WorkSpecification : IExposable, ILoadReferenceable
     {
         public string Name = "New Work"; // Label for UI.
 
@@ -169,6 +169,11 @@ namespace Lomzie.AutomaticWorkAssignment
                 Conditions = Conditions.ToList().Where(x => x.IsValidAfterLoad()).ToList();
                 PostProcessors = PostProcessors.ToList().Where(x => x.IsValidAfterLoad()).ToList();
             }
+        }
+
+        public string GetUniqueLoadID()
+        {
+            return $"WorkSpec_{GetHashCode()}";
         }
 
         private class PawnFitnessComparer : IComparer<Pawn>

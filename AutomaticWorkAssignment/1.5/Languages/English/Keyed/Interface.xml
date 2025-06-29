@@ -25,6 +25,10 @@
   <AWA.ScheduleEdit>Edit schedule</AWA.ScheduleEdit>
   <AWA.FilterEdit>Edit filter</AWA.FilterEdit>
   <AWA.Everywhere>Everywhere</AWA.Everywhere>
+  <AWA.Any>Any</AWA.Any>
+  <AWA.IdeoSelect>Select ideoligion</AWA.IdeoSelect>
+  <AWA.WorkSpecSelect>Select spec</AWA.WorkSpecSelect>
+  <AWA.SelectTitle>Select title</AWA.SelectTitle>
 
   <AWA.NewSettingAddDefault>Add</AWA.NewSettingAddDefault>
   <AWA.NestedSettingNoneSelected>None selected</AWA.NestedSettingNoneSelected>
@@ -60,6 +64,8 @@
   <AWA.LabelCommitmentTip>Estimate of how much time this work requires.</AWA.LabelCommitmentTip>
   <AWA.Yes>Yes</AWA.Yes>
   <AWA.No>No</AWA.No>
+  <AWA.Left>Left</AWA.Left>
+  <AWA.Right>Right</AWA.Right>
   <AWA.PriorityHigher>higher priority</AWA.PriorityHigher>
   <AWA.PriorityLower>lower priority</AWA.PriorityLower>
   <AWA.LabelNewPriorityTip>Add priority</AWA.LabelNewPriorityTip>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace Lomzie.AutomaticWorkAssignment
         private static string _hourBuffer;
         public static bool IgnoreUnmanagedWorkTypes = true;
         public static float ReservationTimeoutDays = 1f;
+        public static bool LogEnabled = false;
 
         internal void DoWindow(Rect inRect)
         {
@@ -34,6 +36,7 @@ namespace Lomzie.AutomaticWorkAssignment
             MentalBreakHourThreshold = float.Parse(_hourBuffer);
 
             listing.CheckboxLabeled("Ignore unmanged work types", ref IgnoreUnmanagedWorkTypes);
+            listing.CheckboxLabeled("Additional logging", ref LogEnabled, tooltip: "Might provide additional information as to why things aren't working.");
         }
 
         public override void ExposeData()
@@ -41,6 +44,7 @@ namespace Lomzie.AutomaticWorkAssignment
             Scribe_Values.Look(ref MaxCommitment, "maxCommitment", 10);
             Scribe_Values.Look(ref MentalBreakHourThreshold, "mentalBreakHourTreshold", 0.5f);
             Scribe_Values.Look(ref IgnoreUnmanagedWorkTypes, "ignoreUmanagedWorkTypes", true);
+            Scribe_Values.Look(ref LogEnabled, "logEnabled", false);
         }
     }
 }
