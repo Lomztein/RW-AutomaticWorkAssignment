@@ -91,7 +91,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                         if (!IsMedicine(def))
                         {
                             int count = ingredient.CountRequiredOfFor(def, bill.recipe, bill);
-                            Thing reservable = WorkManager.Instance.Reservations.FindReservable(def, count, onMap);
+                            Thing reservable = MapWorkManager.GetManager(onMap).Reservations.FindReservable(def, count, onMap);
                             if (reservable != null)
                             {
                                 reservables.Add(new Tuple<Thing, int>(reservable, count));
@@ -106,7 +106,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 
                 foreach (var reservable in reservables)
                 {
-                    WorkManager.Instance.Reservations.Reserve(reservable.Item1, reservable.Item2);
+                    MapWorkManager.GetManager(onMap).Reservations.Reserve(reservable.Item1, reservable.Item2);
                 }
 
                 return true;
@@ -169,7 +169,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                 return false;
                 
             return map.listerThings.ThingsInGroup(ThingRequestGroup.HaulableEver)
-                .Any(x => ingredientCount.filter.Allows(x) && ingredientCount.CountFor(recipe) <= x.stackCount - WorkManager.Instance.Reservations.Get(x));
+                .Any(x => ingredientCount.filter.Allows(x) && ingredientCount.CountFor(recipe) <= x.stackCount - MapWorkManager.GetManager(map).Reservations.Get(x));
         }
 
         private bool LogError(string message)

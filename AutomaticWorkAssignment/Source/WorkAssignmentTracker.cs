@@ -12,17 +12,19 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment
 {
-    public class WorkAssignmentTracker : GameComponent
+    public class WorkAssignmentTracker : MapComponent
     {
-        public WorkAssignmentTracker(Game game) 
+        private int _checkDelayTicks = 60;
+        private readonly MapWorkManager _workManager;
+
+        public WorkAssignmentTracker(Map map) : base(map)
         {
+            _workManager = MapWorkManager.GetManager(map);
         }
 
-        private int _checkDelayTicks = 60;
-
-        public override void GameComponentTick()
+        public override void MapComponentTick()
         {
-            base.GameComponentTick();
+            base.MapComponentTick();
             if (GenTicks.TicksGame % _checkDelayTicks == 0)
             {
                 CheckCriticalAssignments();
@@ -36,15 +38,15 @@ namespace Lomzie.AutomaticWorkAssignment
 
         private void CheckCriticalAssignmentsCoroutine()
         {
-            foreach (WorkSpecification workSpec in WorkManager.Instance.WorkList)
+            foreach (WorkSpecification workSpec in _workManager.WorkList)
             {
                 if (workSpec.IsCritical && IsBelowMinimalAfter(workSpec, -1))
                 {
-                    var pawnsAssignedTo = WorkManager.Instance.GetPawnsAssignedTo(workSpec);
+                    var pawnsAssignedTo = _workManager.GetPawnsAssignedTo(workSpec);
                     foreach (var pawn in pawnsAssignedTo)
                     {
-                        WorkAssignment critical = WorkManager.Instance.GetAssignmentTo(pawn, workSpec);
-                        if (!WorkManager.Instance.CanBeAssignedNow(pawn) && !critical.IsSubstituted)
+                        WorkAssignment critical = _workManager.GetAssignmentTo(pawn, workSpec);
+                        if (!_workManager.CanBeAssignedNow(pawn) && !critical.IsSubstituted)
                         {
                             Pawn substitute = FindSubstituteFor(critical);
                             if (substitute != null)
@@ -60,17 +62,17 @@ namespace Lomzie.AutomaticWorkAssignment
 
         private bool IsBelowMinimalAfter(WorkSpecification spec, int change)
         {
-            int numAssigned = WorkManager.Instance.GetCountAssignedTo(spec);
+            int numAssigned = _workManager.GetCountAssignedTo(spec);
             numAssigned += change;
-            int target = spec.MinWorkers.GetCount();
+            int target = spec.MinWorkers.GetCount(spec, _workManager.MakeDefaultRequest());
             return numAssigned < target;
         }
 
         private Pawn FindSubstituteFor(WorkAssignment critical)
         {
-            ResolveWorkRequest request = WorkManager.Instance.MakeDefaultRequest();
+            ResolveWorkRequest request = _workManager.MakeDefaultRequest();
             return critical.Specification.GetApplicableOrMinimalPawnsSorted(request.Pawns, request)
-                .Where(x => !WorkManager.Instance.IsAssignedTo(x, critical.Specification)).FirstOrDefault();
+                .Where(x => !_workManager.IsAssignedTo(x, critical.Specification)).FirstOrDefault();
         }
 
         private IEnumerator MakeSubstitution(Pawn original, Pawn substitute, WorkAssignment forAssignment)
@@ -78,10 +80,10 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return new WaitForEndOfFrame();
             try
             {
-                WorkAssignment substituteAssignment = WorkManager.Instance.AssignWorkToPawn(forAssignment.Specification, substitute, forAssignment.Index);
+                WorkAssignment substituteAssignment = _workManager.AssignWorkToPawn(forAssignment.Specification, substitute, forAssignment.Index);
                 forAssignment.SubstituteWith(substituteAssignment);
-                WorkManager.Instance.RemoveAssignmentFromPawn(forAssignment, original);
-                WorkManager.Instance.ResolvePawnPriorities(substitute);
+                _workManager.RemoveAssignmentFromPawn(forAssignment, original);
+                _workManager.ResolvePawnPriorities(substitute);
             }catch(Exception ex)
             {
                 Log.Error(ex.Message + " - " + ex.StackTrace);

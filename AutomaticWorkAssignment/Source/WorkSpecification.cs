@@ -48,7 +48,7 @@ namespace Lomzie.AutomaticWorkAssignment
             // Find applicable pawns.
             var applicable = GetApplicablePawns(allPawns, request);
             int _applicableCount = applicable.Count();
-            int minCount = MinWorkers.GetCount();
+            int minCount = MinWorkers.GetCount(this, request);
             if (_applicableCount < minCount)
             {
                 int missing = minCount - _applicableCount;
@@ -84,8 +84,8 @@ namespace Lomzie.AutomaticWorkAssignment
             }
         }
 
-        public int GetTargetWorkers ()
-            => Math.Max(TargetWorkers.GetCount(), MinWorkers.GetCount());
+        public int GetTargetWorkers (ResolveWorkRequest request)
+            => Math.Max(TargetWorkers.GetCount(this, request), MinWorkers.GetCount(this, request));
 
         public void ApplyPostProcessing(Pawn pawn, ResolveWorkRequest request)
         {

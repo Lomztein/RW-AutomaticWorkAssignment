@@ -93,8 +93,6 @@
     I plan to extend the library over time, including integrating features from other mods, such as setting Combat Extended loadouts.
 
     There is still a lot of room for improvements, in particular regarding quality-of-life features for the UI.
-
-    You can't currently use this with multiple colonies, as the automation is global. I plan to change this later down the line.
   </description>
   <supportedVersions>
     <li>1.5</li>

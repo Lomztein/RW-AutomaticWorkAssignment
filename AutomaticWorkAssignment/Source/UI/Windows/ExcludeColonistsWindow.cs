@@ -21,17 +21,19 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Windows
         private float AddPawnButtonSize = 48;
         private float RowHeight = 32;
 
+        private MapWorkManager _workManager;
+
         public override void PreOpen()
         {
             base.PreOpen();
-            WorkManager manager = WorkManager.Instance;
+            _workManager = MapWorkManager.GetManager(Find.CurrentMap);
             // Clear of any null pawns.
-            manager.ExcludePawns = manager.ExcludePawns.Where(x => x != null).ToList();
+            _workManager.ExcludePawns = _workManager.ExcludePawns.Where(x => x != null).ToList();
         }
 
         public override void DoWindowContents(Rect inRect)
         {
-            if (Widgets.CloseButtonFor(inRect))
+            if (Widgets.CloseButtonFor(inRect) || _workManager == null)
             {
                 Close();
             }
@@ -43,7 +45,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Windows
             Widgets.Label(headerRect, "AWA.HeaderExcludedPawns".Translate());
             Text.Anchor = TextAnchor.UpperLeft;
 
-            WorkManager manager = WorkManager.Instance;
+            MapWorkManager manager = MapWorkManager.GetManager(Find.CurrentMap);
 
             var excluded = manager.ExcludePawns
                 .Where(x => x != null);
@@ -88,8 +90,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Windows
                 WorkTypeDef workDef = new WorkTypeDef();
                 if (Widgets.ButtonText(newRect, "AWA.ExcludePawn".Translate()))
                 {
-                    var pawns = WorkManager.Instance.GetAllPawns();
-                    FloatMenuUtility.MakeMenu(pawns.Where(x => !WorkManager.Instance.ExcludePawns.Contains(x)), x => x.Name.ToString(), x => () => Find.Root.StartCoroutine(AddPawn(x)));
+                    var pawns = _workManager.GetAllPawns();
+                    FloatMenuUtility.MakeMenu(pawns.Where(x => !_workManager.ExcludePawns.Contains(x)), x => x.Name.ToString(), x => () => Find.Root.StartCoroutine(AddPawn(x)));
                 }
                 Text.Anchor = TextAnchor.UpperLeft;
                 cur.y += AddPawnButtonSize;
@@ -105,13 +107,13 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Windows
         private IEnumerator AddPawn(Pawn pawn)
         {
             yield return new WaitForEndOfFrame();
-            WorkManager.Instance.ExcludePawns.Add(pawn);
+            _workManager.ExcludePawns.Add(pawn);
         }
 
         private IEnumerator RemovePawn(Pawn pawn)
         {
             yield return new WaitForEndOfFrame();
-            WorkManager.Instance.ExcludePawns.Remove(pawn);
+            _workManager.ExcludePawns.Remove(pawn);
         }
     }
 }

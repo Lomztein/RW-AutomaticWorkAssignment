@@ -13,7 +13,7 @@ namespace AutomaticWorkAssignment.UI.Generic
 {
     public class PickerPawnSettingUIHandler<T, E> : PawnSettingUIHandler<T> where T : IPawnSetting
     {
-        private readonly Func<IEnumerable<E>> _optionGetter;
+        private readonly Func<Map, IEnumerable<E>> _optionGetter;
         private readonly Func<E, string> _optionLabelGetter;
         private readonly Func<T, string> _labelGetter;
         private readonly Action<T, E> _onSelected;
@@ -21,7 +21,7 @@ namespace AutomaticWorkAssignment.UI.Generic
 
         private readonly float _pickButtonSize = 32;
 
-        public PickerPawnSettingUIHandler(Func<IEnumerable<E>> optionGetter, Func<E, string> optionLabelGetter, Func<T, string> labelGetter, Action<T, E> onSelected, Func<E, Texture2D> iconGetter = null)
+        public PickerPawnSettingUIHandler(Func<Map, IEnumerable<E>> optionGetter, Func<E, string> optionLabelGetter, Func<T, string> labelGetter, Action<T, E> onSelected, Func<E, Texture2D> iconGetter = null)
         {
             _optionGetter = optionGetter;
             _optionLabelGetter = optionLabelGetter;
@@ -49,7 +49,7 @@ namespace AutomaticWorkAssignment.UI.Generic
 
         private IEnumerable<FloatMenuOption> GetFloatMenuOptions(T pawnSetting)
         {
-            var options = _optionGetter();
+            var options = _optionGetter(Find.CurrentMap);
             foreach (var option in options)
             {
                 yield return new FloatMenuOption(

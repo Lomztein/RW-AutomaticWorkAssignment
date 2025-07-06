@@ -9,6 +9,6 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
 {
     public interface IPawnAmount : IExposable
     {
-        int GetCount();
+        int GetCount(WorkSpecification workSpecification, ResolveWorkRequest request);
     }
 }

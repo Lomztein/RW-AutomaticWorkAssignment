@@ -11,7 +11,7 @@ namespace Lomzie.AutomaticWorkAssignment
     {
         public List<Pawn> Pawns;
         public Map Map;
-        public WorkManager WorkManager;
+        public MapWorkManager WorkManager;
         private readonly Dictionary<string, object> _variables = new Dictionary<string, object>();
 
         public void SetVariable(string key, object value)

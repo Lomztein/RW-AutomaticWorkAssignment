@@ -43,7 +43,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.BetterPawnControl
             _assignManager_getActivePolicy = AccessTools.Method("BetterPawnControl.AssignManager:GetActivePolicy", new[] { typeof(int) });
             _assignManager_saveCurrentState = AccessTools.Method("BetterPawnControl.AssignManager:SaveCurrentState", new[] { typeof(List<Pawn>) });
 
-            MethodInfo resolveMethod = AccessTools.Method(typeof(WorkManager), "ResolvePriorities", new[] { typeof (ResolveWorkRequest) });
+            MethodInfo resolveMethod = AccessTools.Method(typeof(MapWorkManager), "ResolvePriorities", new[] { typeof (ResolveWorkRequest) });
             harm.Patch(resolveMethod, postfix: new HarmonyMethod(new Action<ResolveWorkRequest>(WorkManager_ResolvePriorities_PostFix)));
 
             MethodInfo settings_doListing = AccessTools.Method(typeof(AutomaticWorkAssignmentSettings), "DoListing", new[] { typeof(Listing_Standard) });
@@ -51,6 +51,8 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.BetterPawnControl
 
             MethodInfo settings_exposeData = AccessTools.Method(typeof(AutomaticWorkAssignmentSettings), "ExposeData");
             harm.Patch(settings_doListing, postfix: new Action<Listing_Standard>(Settings_ExposeData_PostFix));
+
+            Log.Message("[AWA] Applied BetterPawnControl patch.");
         }
 
         private static void Settings_ExposeData_PostFix(Listing_Standard listing)

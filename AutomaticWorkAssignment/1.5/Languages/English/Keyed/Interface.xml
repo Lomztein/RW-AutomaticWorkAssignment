@@ -29,6 +29,7 @@
   <AWA.IdeoSelect>Select ideoligion</AWA.IdeoSelect>
   <AWA.WorkSpecSelect>Select spec</AWA.WorkSpecSelect>
   <AWA.SelectTitle>Select title</AWA.SelectTitle>
+  <AWA.SelectSave>Select save</AWA.SelectSave>
 
   <AWA.NewSettingAddDefault>Add</AWA.NewSettingAddDefault>
   <AWA.NestedSettingNoneSelected>None selected</AWA.NestedSettingNoneSelected>
@@ -74,6 +75,11 @@
   <AWA.HeaderFitness>Fitness</AWA.HeaderFitness>
   <AWA.HeaderConditions>Conditions</AWA.HeaderConditions>
   <AWA.HeaderPostProcessors>On assignment</AWA.HeaderPostProcessors>
+  <AWA.SelectMapParent>Select map parent</AWA.SelectMapParent>
+  <AWA.MapParentedLabel>This map has been parented to another map, and the configuration cannot be independantly edited.\nThis map is effectively considered a part of the parent map.</AWA.MapParentedLabel>
+  <AWA.NoParent>No parent</AWA.NoParent>
+  <AWA.ResetManagerToDefault>Reset work specs to default?\nThis replaces all current work specs.</AWA.ResetManagerToDefault>
+  <AWA.ResetToDefault>Reset to default</AWA.ResetToDefault>
 
   <AWA.HeaderExcludedPawns>Excluded Pawns</AWA.HeaderExcludedPawns>
   <AWA.ExcludePawn>Exclude pawn</AWA.ExcludePawn>

@@ -17,7 +17,7 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
             Scribe_Values.Look(ref Value, "value");
         }
 
-        public int GetCount()
+        public int GetCount(WorkSpecification spec, ResolveWorkRequest req)
         {
             return Value;
         }

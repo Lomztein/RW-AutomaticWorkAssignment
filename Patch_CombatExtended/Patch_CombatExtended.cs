@@ -17,7 +17,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CombatExtended
         private void Initialize ()
         {
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SetLoadoutPawnPostProcessor, Loadout>(
-                () => LoadoutManager.Loadouts, x => x.label, x => x?.Loadout?.label ?? "AWA.CombatExtended.SelectLoadout".Translate(), (x, y) => x.Loadout = y
+                (m) => LoadoutManager.Loadouts, x => x.label, x => x?.Loadout?.label ?? "AWA.CombatExtended.SelectLoadout".Translate(), (x, y) => x.Loadout = y
                 ));
         }
     }

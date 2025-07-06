@@ -17,7 +17,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Dialogs
 
         protected override void DoFileInteraction(string fileName)
         {
-            IO.ImportFromFile(fileName);
+            IO.ImportFromFile(MapWorkManager.GetCurrentMapManager(), fileName);
             Messages.Message("AWA.LoadMessage", MessageTypeDefOf.SilentInput, false);
             Close();
         }

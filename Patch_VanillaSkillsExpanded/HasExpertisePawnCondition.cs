@@ -35,7 +35,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.VanillaSkillsExpanded
         static HasExpertisePawnCondition()
         {
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<HasExpertisePawnCondition, ExpertiseDef>(
-                () => DefDatabase<ExpertiseDef>.AllDefs,
+                (m) => DefDatabase<ExpertiseDef>.AllDefs,
                 (x) => x?.LabelCap,
                 (x) => x.ExpertiseDef?.LabelCap ?? "AWA.VSE.SelectExpertise".Translate(),
                 (x, def) => x.ExpertiseDef = def

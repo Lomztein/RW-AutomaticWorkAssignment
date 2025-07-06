@@ -18,9 +18,9 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
             Scribe_Values.Look(ref Percentage, "percentage");
         }
 
-        public int GetCount()
+        public int GetCount(WorkSpecification workSpecification, ResolveWorkRequest request)
         {
-            int colonistCount = WorkManager.Instance.GetAllAssignableNowPawns().Count();
+            int colonistCount = request.WorkManager.GetAllAssignableNowPawns().Count();
             return Mathf.RoundToInt(colonistCount * Percentage);
         }
     }

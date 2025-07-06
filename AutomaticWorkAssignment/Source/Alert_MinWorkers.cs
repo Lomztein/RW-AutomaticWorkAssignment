@@ -17,11 +17,16 @@ namespace Lomzie.AutomaticWorkAssignment
         public override AlertReport GetReport()
         {
             _specsWithIssue.Clear();
-            foreach (WorkSpecification workSpec in WorkManager.Instance.WorkList)
+            var maps = Find.Maps;
+            foreach (var map in maps)
             {
-                if (!WorkManager.Instance.CanWorkSpecificationBeMinimallySatisfiedWithApplicablePawns(workSpec))
+                MapWorkManager manager = MapWorkManager.GetManager(map);
+                foreach (WorkSpecification workSpec in manager.WorkList)
                 {
-                    _specsWithIssue.Add(workSpec);
+                    if (!manager.CanWorkSpecificationBeMinimallySatisfiedWithApplicablePawns(workSpec, manager.MakeDefaultRequest()))
+                    {
+                        _specsWithIssue.Add(workSpec);
+                    }
                 }
             }
 

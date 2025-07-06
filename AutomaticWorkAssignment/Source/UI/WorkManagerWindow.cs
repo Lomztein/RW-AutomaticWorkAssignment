@@ -21,7 +21,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
     public class WorkManagerWindow : MainTabWindow
     {
-        private WorkManager _workManager;
+        private MapWorkManager _workManager;
         public static WorkManagerWindow Instance;
 
         // Overall layout
@@ -37,6 +37,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private float _listHeight;
 
         private Vector2 _listScrollPosition;
+        private string _search;
         
         // Main section layout
         private const float ConditionsFitnessSectionPart = 0.2f;
@@ -65,7 +66,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         public override void PreOpen()
         {
             base.PreOpen();
-            _workManager = Current.Game.GetComponent<WorkManager>();
+            _workManager = MapWorkManager.GetManager(Find.CurrentMap);
 
             var workList = DefDatabase<WorkTypeDef>.AllDefs.ToList();
             workList.SortBy(x => x.naturalPriority);
@@ -76,7 +77,32 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         public override void DoWindowContents(Rect inRect)
         {
-            DoListSectionContents(GetMajorSectionRect(inRect, ListSectionPart, 0f));
+            Rect majorSectionRect = GetMajorSectionRect(inRect, ListSectionPart, 0f);
+            Rect headerRect = Utils.GetSubRectFraction(majorSectionRect, new Vector2(0.0f, 0.0f), new Vector2(1f, 0.1f));
+
+            Rect moreSettingsRect = Utils.GetSubRectFraction(headerRect, Vector2.zero, new Vector2(0.15f, 1f));
+            Text.Anchor = TextAnchor.MiddleCenter;
+            if (Widgets.ButtonText(moreSettingsRect, "***"))
+            {
+                FloatMenuOption setParent = new FloatMenuOption("AWA.SelectMapParent".Translate(), SelectMapParent);
+                Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption> { setParent }));
+            }
+            Text.Anchor = TextAnchor.UpperLeft;
+
+            if (_workManager.ParentMap != null)
+            {
+                Text.Anchor = TextAnchor.MiddleCenter;
+                Widgets.Label(inRect, "AWA.MapParentedLabel".Translate());
+                Text.Anchor = TextAnchor.UpperLeft;
+                return;
+            }
+
+            // Header section
+            Rect searchBarRect = Utils.GetSubRectFraction(headerRect, new Vector2(0.15f, 0f), new Vector2(1f, 1f));
+            _search = Widgets.TextField(searchBarRect, _search);
+
+            Rect listRect = Utils.GetSubRectFraction(majorSectionRect, new Vector2(0.0f, 0.1f), new Vector2(1f, 1f));
+            DoListSectionContents(listRect);
 
             if (_current != null)
             {
@@ -85,13 +111,35 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             }
         }
 
+        private void SelectMapParent ()
+        {
+            Map currentMap = Find.CurrentMap;
+            MapWorkManager workManager = currentMap.GetComponent<MapWorkManager>();
+
+            var allMaps = Find.Maps;
+            var validMaps = allMaps.Where(x => x != currentMap && x != workManager.ParentMap)
+                .Where(x => !workManager.GetAllMaps().Contains(x));
+
+            var selectable = Enumerable.Concat(new List<Map>{ null }, validMaps);
+            Dialog_SelectMap selectMap = new Dialog_SelectMap(selectable, x => workManager.ParentMap = x);
+            Find.WindowStack.Add(selectMap);
+        }
 
         private void DoListSectionContents(Rect rect)
         {
             Widgets.DrawWindowBackground(rect);
             List<WorkSpecification> workSpecifications = _workManager.WorkList;
 
-            Rect listRect = Utils.GetSubRectFraction(rect, Vector3.zero, new Vector2(1f, 0.9f));
+            if (!string.IsNullOrEmpty(_search))
+            {
+                // Quick and simple search function. Might do a proper one later.
+                string[] parts = _search.Split('|');
+                workSpecifications = workSpecifications.
+                    Where(x => parts.Any(y => x.Name.ToLower().Contains(y.ToLower())))
+                    .ToList();
+            }
+
+            Rect listRect = Utils.GetSubRectFraction(rect, new Vector2(0.0f, 0.0f), new Vector2(1f, 0.9f));
             Rect buttomsRect = Utils.GetSubRectFraction(rect, new Vector2(0f, 0.9f), Vector2.one);
 
             var height = _listHeight;
@@ -122,7 +170,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 Rect assignedRect = Utils.GetSubRectFraction(jobRect, new Vector2(0f, 0.5f), new Vector2(1f, 1f));
 
                 Widgets.Label(labelRect, new GUIContent($"{work.Name}"));
-                Widgets.Label(assignedRect, new GUIContent("AWA.PawnsAssigned".Translate(_workManager.GetCountAssignedTo(work), work.GetTargetWorkers())));
+                Widgets.Label(assignedRect, new GUIContent("AWA.PawnsAssigned".Translate(_workManager.GetCountAssignedTo(work), work.GetTargetWorkers(_workManager.MakeDefaultRequest()))));
 
                 if (_current == work)
                     Widgets.DrawHighlight(row);
@@ -204,9 +252,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         {
             FloatMenuOption save = new FloatMenuOption("AWA.Save".Translate(), () => Find.WindowStack.Add(new Dialog_SaveConfigFileList()));
             FloatMenuOption load = new FloatMenuOption("AWA.Load".Translate(), () => Find.WindowStack.Add(new Dialog_LoadConfigFileList()));
-            FloatMenuOption import = new FloatMenuOption("AWA.Import".Translate(), () => Find.WindowStack.Add(new Dialog_ImportConfigFileList()));
+            FloatMenuOption import = new FloatMenuOption("AWA.Import".Translate(), () => Find.WindowStack.Add(new Dialog_ImportSaveConfigFileList()));
             FloatMenuOption openFolder = new FloatMenuOption("AWA.OpenFolder".Translate(), () => Process.Start(IO.GetConfigDirectory().FullName));
-            Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>() { save, load, import, openFolder }));
+            FloatMenuOption resetToDefault = new FloatMenuOption("AWA.ResetToDefault".Translate(), () => Find.WindowStack.Add(new Dialog_Confirm("AWA.ResetManagerToDefault".Translate(), () => _workManager.WorkList = Defaults.GenerateDefaultWorkSpecifications().ToList())));
+            Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>() { save, load, import, openFolder, resetToDefault }));
         }
 
         private int DoVerticalRearrangeButtons(Rect inRect)
@@ -588,7 +637,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         private static string GetSettingLabelValue(IPawnSetting setting, WorkSpecification spec, Pawn pawn)
         {
-            ResolveWorkRequest req = WorkManager.Instance.MakeDefaultRequest();
+            ResolveWorkRequest req = MapWorkManager.GetManager(pawn.Map).MakeDefaultRequest();
 
             if (setting is IPawnCondition cond) return cond.IsValid(pawn, spec, req).ToString();
             if (setting is IPawnFitness fit) return fit.CalcFitness(pawn, spec, req).ToString("0.##");
@@ -687,7 +736,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         private void HighlightAssignees(WorkSpecification workSpec)
         {
-            var pawns = WorkManager.Instance.GetPawnsAssignedTo(workSpec);
+            var pawns = _workManager.GetPawnsAssignedTo(workSpec);
             LookTargetsUtility.TryHighlight(new LookTargets(pawns));
         }
     }

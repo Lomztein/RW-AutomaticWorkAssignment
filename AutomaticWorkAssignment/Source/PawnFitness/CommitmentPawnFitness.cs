@@ -8,7 +8,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (pawn != null)
-                return WorkManager.Instance.GetPawnCommitment(pawn);
+                return request.WorkManager.GetPawnCommitment(pawn);
             return 0;
         }
     }
