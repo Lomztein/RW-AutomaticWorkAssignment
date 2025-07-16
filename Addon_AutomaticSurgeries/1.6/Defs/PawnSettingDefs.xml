@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- Fitness -->
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_CapacityPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CapacityPawnFitness</settingClass>
+    <label>capacity</label>
+    <description>The given capacity of the pawn.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_PartEffeciencyPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.PartEffeciencyPawnFitness</settingClass>
+    <label>part effeciency</label>
+    <description>Return effeciency of a body part.</description>
+  </Def>
+  
+  <!-- Conditions -->
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_HasPartHediffCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PartHediffPawnCondition</settingClass>
+    <label>part condition</label>
+    <description>Assign to pawns with the given body part condition.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_AnyPartHediffCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PartAnyHediffPawnCondition</settingClass>
+    <label>any part condition</label>
+    <description>Assign to pawns with any condition on the given part.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_PartMissingCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PartMissingPawnCondition</settingClass>
+    <label>part missing</label>
+    <description>Assign to pawns without the given body part.</description>
+  </Def>
+
+  <!-- Post processors -->
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_AddBillPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.AddBillPawnPostProcessor</settingClass>
+    <label>add bill</label>
+    <description>Add medical bill to pawn.</description>
+  </Def>
+</Defs>

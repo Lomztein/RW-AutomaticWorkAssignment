@@ -1,4 +1,5 @@
 ﻿using Inventory;
+using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
 using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,10 +32,27 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
             {
                 foreach (var pp in spec.PostProcessors)
                 {
-                    if (pp is AddTagPawnPostProcessor addTagPP && addTagPP.Tag != null)
+                    foreach (Tag tag in GetTagsFrom(pp))
                     {
-                        yield return addTagPP.Tag;
+                        yield return tag;
                     }
+                }
+            }
+        }
+
+        private IEnumerable<Tag> GetTagsFrom(IPawnSetting setting)
+        {
+            if (setting is AddTagPawnPostProcessor addTagPP && addTagPP.Tag != null)
+            {
+                yield return addTagPP.Tag;
+            }
+            if (setting is ICompositePawnSetting composite)
+            {
+                foreach (var inner in composite.GetSettings())
+                {
+                    var tags = GetTagsFrom(inner);
+                    foreach (var  tag in tags)
+                        yield return tag;
                 }
             }
         }

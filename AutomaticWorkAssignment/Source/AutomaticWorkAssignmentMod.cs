@@ -42,8 +42,6 @@ namespace Lomzie.AutomaticWorkAssignment
         private void InitializePawnSettingUIHandlers ()
         {
             // Initialize fitness UI handlers.
-            PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<LearnRatePawnFitness>());
-            PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<SkillLevelPawnFitness>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<PassionCountPawnFitness>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<CommitmentPawnFitness>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<PassionLevelPawnFitness>());
@@ -53,6 +51,12 @@ namespace Lomzie.AutomaticWorkAssignment
 
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<StatPawnFitness, StatDef>(
                 (m) => DefDatabase<StatDef>.AllDefs.Where(x => x.showOnPawns), x => x.LabelCap, x => x?.StatDef?.LabelCap ?? "AWA.StatSelect".Translate(), (c, s) => c.StatDef = s));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<LearnRatePawnFitness, SkillDef>(
+                (m) => new SkillDef[] { null }.Concat(DefDatabase<SkillDef>.AllDefs), x => x?.LabelCap ?? "AWA.Auto".Translate(), x => x.SkillDef?.LabelCap ?? "AWA.Auto".Translate(), (f, s) => f.SkillDef = s));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SkillLevelPawnFitness, SkillDef>(
+                (m) => new SkillDef[] { null }.Concat(DefDatabase<SkillDef>.AllDefs), x => x?.LabelCap ?? "AWA.Auto".Translate(), x => x.SkillDef?.LabelCap ?? "AWA.Auto".Translate(), (f, s) => f.SkillDef = s));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<NeedPawnFitness, NeedDef>(
+                (m) => DefDatabase<NeedDef>.AllDefs, x => x.LabelCap, x => x.NeedDef?.LabelCap ?? "AWA.NeedSelect".Translate(), (f, s) => f.NeedDef = s));
 
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<InvertPawnFitness, PawnFitnessDef>());
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<ConditionPawnFitness, PawnConditionDef>());
@@ -76,7 +80,7 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<PassionPawnCondition, SkillDef>(
                 (m) => DefDatabase<SkillDef>.AllDefs, x => x.LabelCap, x => x?.SkillDef?.LabelCap ?? "AWA.SkillSelect".Translate(), (c, s) => c.SkillDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SpecificPawnCondition, Pawn>(
-                (m) => Find.Maps.SelectMany(x => x.mapPawns.AllPawnsSpawned), x => x.Name.ToString(), x => x?.Pawn?.Name.ToString() ?? "AWA.PawnSelect".Translate(), (c, s) => c.Pawn = s));
+                (m) => MapWorkManager.GetManager(m).GetAllPawns(), x => x.Name.ToString(), x => x?.Pawn?.Name.ToString() ?? "AWA.PawnSelect".Translate(), (c, s) => c.Pawn = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<TraitPawnCondition, TraitDef>(
                 (m) => DefDatabase<TraitDef>.AllDefs, x => x.degreeDatas?.FirstOrDefault()?.label ?? x.label, x => x?.TraitDef?.label ?? x.TraitDef?.degreeDatas?.FirstOrDefault()?.label ?? "AWA.TraitSelect".Translate(), (c, s) => c.TraitDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<WeaponClassPawnCondition, WeaponClassDef>(
@@ -107,6 +111,12 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<MovePawnInColonistBarPawnPostProcessor, MovePawnInColonistBarPawnPostProcessor.MoveToSide>(
                 (m) => MovePawnInColonistBarPawnPostProcessor.GetOptions(), (x) => MovePawnInColonistBarPawnPostProcessor.GetLabel(x), (x) => MovePawnInColonistBarPawnPostProcessor.GetLabel(x?.MoveTo), (pp, po) => pp.MoveTo = po));
             PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<SetSchedulePawnPostProcessor>(x => Find.WindowStack.Add(new EditScheduleWindow(x.Times)), "AWA.ScheduleEdit".Translate()));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SetSelfTendPawnPostProcessor, bool>(
+                (m) => new bool[] { false, true }, (x) => SetSelfTendPawnPostProcessor.GetLabel(x), (x) => SetSelfTendPawnPostProcessor.GetLabel(x.SelfTend), (pp, po) => pp.SelfTend = po));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SetHostilityResponsePawnPostProcessor, HostilityResponseMode>(
+                (m) => (HostilityResponseMode[])Enum.GetValues(typeof(HostilityResponseMode)), (x) => HostilityResponseModeUtility.GetLabel(x), (x) => HostilityResponseModeUtility.GetLabel(x.ResponseMode), (pp, po) => pp.ResponseMode = po));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SetMedicalCarePawnPostProcessor, MedicalCareCategory>(
+                (m) => (MedicalCareCategory[])Enum.GetValues(typeof(MedicalCareCategory)), (x) => MedicalCareUtility.GetLabel(x), (x) => MedicalCareUtility.GetLabel(x.MedicalCare), (pp, po) => pp.MedicalCare = po));
 
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SetAllowedAreaPawnPostProcessor, Area>(
                 (m) => new List<Area>() { null }.Concat(Current.Game.CurrentMap.areaManager.AllAreas).Where(x => x?.AssignableAsAllowed() ?? true), (x) => x?.Label ?? "AWA.Everywhere".Translate(), (x) => x?.AllowedArea?.Label ?? "AWA.Everywhere".Translate(), (pp, po) => pp.AllowedArea = po));
@@ -132,15 +142,17 @@ namespace Lomzie.AutomaticWorkAssignment
                     (m) => DefDatabase<GeneDef>.AllDefs, x => x.LabelCap, x => x?.GeneDef?.LabelCap ?? "AWA.GeneSelect".Translate(), (c, s) => c.GeneDef = s));
                 PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<XenotypePawnCondition, XenotypeDef>(
                     (m) => DefDatabase<XenotypeDef>.AllDefs, x => x.LabelCap, x => x?.XenotypeDef?.LabelCap ?? "AWA.XenotypeSelect".Translate(), (c, s) => c.XenotypeDef = s));
+                PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<XenogermPawnCondition, CustomXenogerm>(
+                    (m) => Current.Game.customXenogermDatabase.CustomXenogermsForReading, x => x.name, x => x.Xenogerm?.name ?? "AWA.XenotypeSelect".Translate(), (c, s) => c.Xenogerm = s));
             }
 
             // Royality
             if (ModLister.RoyaltyInstalled)
             {
                 PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<FavorPawnFitness, Faction>(
-                    (m) => Find.FactionManager.AllFactionsVisible.Where(x => x.def.royalFavorLabel != null), x => x.Name, x => x.Faction?.Name ?? "AWA.Any".Translate(), (c, s) => c.Faction = s));
+                    (m) => new Faction[] { null }.Concat(Find.FactionManager.AllFactionsVisible.Where(x => x.def.royalFavorLabel != null)), x => x?.Name ?? "AWA.Any".Translate(), x => x.Faction?.Name ?? "AWA.Any".Translate(), (c, s) => c.Faction = s));
                 PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<RoyalSeniorityPawnFitness, Faction>(
-                    (m) => Find.FactionManager.AllFactionsVisible.Where(x => x.def.royalFavorLabel != null), x => x.Name, x => x.Faction?.Name ?? "AWA.Any".Translate(), (c, s) => c.Faction = s));
+                    (m) => new Faction[] { null }.Concat(Find.FactionManager.AllFactionsVisible.Where(x => x.def.royalFavorLabel != null)), x => x?.Name ?? "AWA.Any".Translate(), x => x.Faction?.Name ?? "AWA.Any".Translate(), (c, s) => c.Faction = s));
                 PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<RoyaltyTitlePawnCondition, RoyalTitleDef>(
                     (m) => DefDatabase<RoyalTitleDef>.AllDefs, x => x.LabelCap, x => x.TitleDef?.label ?? "AWA.SelectTitle".Translate(), (c, s) => c.TitleDef = s));
             }

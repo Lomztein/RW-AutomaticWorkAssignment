@@ -1,27 +1,43 @@
-﻿using System.Linq;
+﻿using RimWorld;
+using System.Linq;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 {
     public class LearnRatePawnFitness : PawnSetting, IPawnFitness
     {
+        public SkillDef SkillDef;
+
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
-            var workTypeDefs = specification.Priorities.OrderedPriorities;
-            float sum = 0;
-            int total = 0;
-            foreach (var workTypeDef in workTypeDefs)
+            if (SkillDef == null)
             {
-                var relavantSkills = workTypeDef.relevantSkills;
-                foreach (var skill in  relavantSkills)
+                var workTypeDefs = specification.Priorities.OrderedPriorities;
+                float sum = 0;
+                int total = 0;
+                foreach (var workTypeDef in workTypeDefs)
                 {
-                    sum += pawn.skills.GetSkill(skill).LearnRateFactor();
-                    total++;
+                    var relavantSkills = workTypeDef.relevantSkills;
+                    foreach (var skill in relavantSkills)
+                    {
+                        sum += pawn.skills.GetSkill(skill).LearnRateFactor();
+                        total++;
+                    }
                 }
+                if (total == 0)
+                    return 0;
+                return sum / total;
             }
-            if (total == 0)
-                return 0;
-            return sum / total;
+            else
+            {
+                return pawn?.skills.GetSkill(SkillDef).LearnRateFactor() ?? 0f;
+            }
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Defs.Look(ref SkillDef, "skillDef");
         }
     }
 }

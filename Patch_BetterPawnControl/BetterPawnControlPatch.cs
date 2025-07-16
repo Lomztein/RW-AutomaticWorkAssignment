@@ -65,10 +65,10 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.BetterPawnControl
         private static void Settings_DoListing_PostFix(Listing_Standard listing)
         {
             listing.GapLine();
-            listing.Label("Better Pawn Control Compatability");
-            AutoWorkPolicy = listing.TextEntryLabeled("Automatic work policy label", AutoWorkPolicy);
-            AutoSchedulePolicy = listing.TextEntryLabeled("Automatic schedule policy label", AutoSchedulePolicy);
-            AutoAssignPolicy = listing.TextEntryLabeled("Automatic assign policy label", AutoAssignPolicy);
+            listing.Label("AWA.BPC.SettingsHeader".Translate());
+            AutoWorkPolicy = listing.TextEntryLabeled("AWA.BPC.SettingsAutoWorkPolicy".Translate(), AutoWorkPolicy);
+            AutoSchedulePolicy = listing.TextEntryLabeled("AWA.BPC.SettingsAutoSchedulePolicy".Translate(), AutoSchedulePolicy);
+            AutoAssignPolicy = listing.TextEntryLabeled("AWA.BPC.SettingsAutoAssignPolicy".Translate(), AutoAssignPolicy);
         }
 
         private static void WorkManager_ResolvePriorities_PostFix(ResolveWorkRequest req)

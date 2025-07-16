@@ -25,11 +25,15 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         public static WorkManagerWindow Instance;
 
         // Overall layout
-        private const float ListSectionPart = 0.15f;
-        private const float MainSectionPart = 0.4f;
-        private const float AdvancedSectionPart = 0.45f;
+        private float ListSectionPart => AutomaticWorkAssignmentSettings.ManagerListSectionRatioNormalized;
+        private float MainSectionPart => AutomaticWorkAssignmentSettings.ManagerMainSectionRatioNormalized;
+        private float AdvancedSectionPart => AutomaticWorkAssignmentSettings.ManagerSettingsSectionRatioNormalized;
         private const int MarginSize = 4;
-        public override Vector2 RequestedTabSize => new Vector2(1400, 400);
+        public override Vector2 RequestedTabSize => 
+            new Vector2(
+                AutomaticWorkAssignmentSettings.ManagerWindowWidth, 
+                AutomaticWorkAssignmentSettings.ManagerWindowHeight
+                );
 
         // List section layout.
         private const float ListScrollbarWidth = 16;
@@ -40,7 +44,6 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private string _search;
         
         // Main section layout
-        private const float ConditionsFitnessSectionPart = 0.2f;
         private const float PriotityListElementWidth = 32;
         private const float RequireFullCapabilitySize = 24;
 
@@ -254,7 +257,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             FloatMenuOption load = new FloatMenuOption("AWA.Load".Translate(), () => Find.WindowStack.Add(new Dialog_LoadConfigFileList()));
             FloatMenuOption import = new FloatMenuOption("AWA.Import".Translate(), () => Find.WindowStack.Add(new Dialog_ImportSaveConfigFileList()));
             FloatMenuOption openFolder = new FloatMenuOption("AWA.OpenFolder".Translate(), () => Process.Start(IO.GetConfigDirectory().FullName));
-            FloatMenuOption resetToDefault = new FloatMenuOption("AWA.ResetToDefault".Translate(), () => Find.WindowStack.Add(new Dialog_Confirm("AWA.ResetManagerToDefault".Translate(), () => _workManager.WorkList = Defaults.GenerateDefaultWorkSpecifications().ToList())));
+            FloatMenuOption resetToDefault = new FloatMenuOption("AWA.ResetToDefault".Translate(), () => Find.WindowStack.Add(new Dialog_Confirm("AWA.ResetManagerToDefault".Translate(), () => _workManager.ResetToDefaults())));
             Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>() { save, load, import, openFolder, resetToDefault }));
         }
 
@@ -627,6 +630,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         public static string GetSettingLabel(IPawnSetting setting)
         {
+            if (setting is IPawnPostProcessor)
+                return setting.Label;
+
             if (Find.Selector.NumSelected == 1 && Find.Selector.AnyPawnSelected)
             {
                 Pawn selectedPawn = Find.Selector.SelectedPawns.First();
@@ -637,6 +643,14 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         private static string GetSettingLabelValue(IPawnSetting setting, WorkSpecification spec, Pawn pawn)
         {
+            if (setting == null ||
+                spec == null ||
+                pawn == null ||
+                pawn.Map == null)
+            {
+                return string.Empty;
+            }
+
             ResolveWorkRequest req = MapWorkManager.GetManager(pawn.Map).MakeDefaultRequest();
 
             if (setting is IPawnCondition cond) return cond.IsValid(pawn, spec, req).ToString();

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<Defs>
+  <MainButtonDef>
+    <defName>Lomzie_WorkManagerWindow</defName>
+    <label>Work Manager</label>
+    <description>Set up work specifications to be automatically assigned to colonists.</description>
+    <tabWindowClass>Lomzie.AutomaticWorkAssignment.UI.WorkManagerWindow</tabWindowClass>
+    <closesWorldView>true</closesWorldView>
+    <minimized>True</minimized>
+    <order>11</order>
+    <iconPath>UI/AutomaticWorkAssignment/WorkManagerTab</iconPath>
+  </MainButtonDef>
+</Defs>

@@ -1,4 +1,5 @@
-﻿using Lomzie.AutomaticWorkAssignment.PawnConditions;
+﻿using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
+using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 {
-    public class ConditionalPawnPostProcessor : PawnSetting, IPawnPostProcessor
+    public class ConditionalPawnPostProcessor : PawnSetting, IPawnPostProcessor, ICompositePawnSetting
     {
         public IPawnCondition Condition;
         public IPawnPostProcessor PostProcessor;
@@ -35,6 +36,12 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                 if (!PostProcessor.IsValidAfterLoad())
                     PostProcessor = null;
             }
+        }
+
+        public IEnumerable<IPawnSetting> GetSettings()
+        {
+            yield return Condition;
+            yield return PostProcessor;
         }
     }
 }

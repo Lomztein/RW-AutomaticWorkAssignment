@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,11 +30,10 @@ namespace Lomzie.AutomaticWorkAssignment
 
         private int _lastResolveDay;
 
-        private int _lastCachePawnsTick;
-        private readonly int _cachePawnsThreshold = GenTicks.TickLongInterval;
-        private IEnumerable<Pawn> _cachedPawns;
+        private Cache<IEnumerable<Pawn>> _cachedPawns = new Cache<IEnumerable<Pawn>>();
+        private Cache<IEnumerable<Map>> _allMaps = new Cache<IEnumerable<Map>>();
+
         private List<WorkTypeDef> _unmanagedWorkTypes;
-        private bool IsPawnCacheDirty => GenTicks.TicksGame > _lastCachePawnsTick + _cachePawnsThreshold || _cachedPawns == null;
 
         public static int MaxCommitment => AutomaticWorkAssignmentSettings.MaxCommitment;
         public static float MaxMentalBreakHours => AutomaticWorkAssignmentSettings.MentalBreakHourThreshold;
@@ -45,12 +45,16 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             Map = map;
             LongEventHandler.QueueLongEvent(InitializeManager(), "AWA.InitializeManager");
-            InitializeManager();
         }
 
         private IEnumerable InitializeManager()
         {
             yield return new WaitForEndOfFrame();
+            ResetToDefaults();
+        }
+
+        public void ResetToDefaults ()
+        {
             WorkManager legacyManager = WorkManager.GetLegacyManager();
             if (legacyManager != null && legacyManager.WorkList.Count > 0)
             {
@@ -61,8 +65,17 @@ namespace Lomzie.AutomaticWorkAssignment
             }
             else if (WorkList.Count == 0)
             {
-                WorkList = Defaults.GenerateDefaultWorkSpecifications().ToList();
-                Log.Message("[AWA] Generated default work specs.");
+                FileInfo defaultConfig = AutomaticWorkAssignmentSettings.DefaultConfigurationFile;
+                if (defaultConfig == null)
+                {
+                    WorkList = Defaults.GenerateDefaultWorkSpecifications().ToList();
+                    Log.Message("[AWA] Generated default work specs.");
+                }
+                else
+                {
+                    IO.ImportFromFile(this, defaultConfig.Name);
+                    Log.Message($"[AWA] Imported from '{defaultConfig.Name}'.");
+                }
             }
         }
 
@@ -97,6 +110,9 @@ namespace Lomzie.AutomaticWorkAssignment
 
 
         public IEnumerable<Map> GetAllMaps()
+            => _allMaps.Get(CacheMaps);
+
+        private IEnumerable<Map> CacheMaps ()
         {
             Map rootMap = Map;
 
@@ -128,33 +144,26 @@ namespace Lomzie.AutomaticWorkAssignment
             }
         } 
 
-        private void CachePawns()
+        private IEnumerable<Pawn> CachePawns()
         {
-            _cachedPawns = GetAllMaps()
+            return GetAllMaps()
                 .SelectMany(x => x.mapPawns.FreeColonistsAndPrisoners)
                 .Where(x => x != null && (x.IsFreeNonSlaveColonist || x.IsSlaveOfColony));
-            _lastCachePawnsTick = GenTicks.TicksGame;
         }
 
         public IEnumerable<Pawn> GetAllPawns()
         {
-            if (IsPawnCacheDirty)
-                CachePawns();
-            return _cachedPawns.Where(x => x != null);
+            return _cachedPawns.Get(CachePawns).Where(x => x != null);
         }
 
         public IEnumerable<Pawn> GetAllAssignableNowPawns()
         {
-            if (IsPawnCacheDirty)
-                CachePawns();
-            return _cachedPawns.Where(x => x != null && CanBeAssignedNow(x));
+            return _cachedPawns.Get(CachePawns).Where(x => x != null && CanBeAssignedNow(x));
         }
 
         public IEnumerable<Pawn> GetAllEverAssignablePawns()
         {
-            if (IsPawnCacheDirty)
-                CachePawns();
-            return _cachedPawns.Where(x => x != null && CanEverBeAssigned(x));
+            return _cachedPawns.Get(CachePawns).Where(x => x != null && CanEverBeAssigned(x));
         }
 
         public int GetPawnCount()
@@ -246,8 +255,8 @@ namespace Lomzie.AutomaticWorkAssignment
             {
                 // Go over each work specification, find best fits, and assign work accordingly.
                 WorkSpecification current = assignmentList[0];
-                IEnumerable<Pawn> matchesSorted = current.GetApplicableOrMinimalPawnsSorted(req.Pawns, req);
-                matchesSorted = matchesSorted.Where(x => CanBeAssignedTo(x, current) && !specialists.Contains(x));
+                IEnumerable<Pawn> matchesSorted = current.GetApplicableOrMinimalPawnsSorted(req.Pawns.Where(x => !specialists.Contains(x)), req);
+                matchesSorted = matchesSorted.Where(x => CanBeAssignedTo(x, current));
 
                 int currentAssigned = GetCountAssignedTo(current);
                 int targetAssigned = current.GetTargetWorkers(req);

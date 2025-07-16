@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetTitlePostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetTitlePawnPostProcessor</settingClass>
+    <label>set title</label>
+    <description>Set pawn title on assignment.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetApparelPolicyPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetApparelPolicyPawnPostProcessor</settingClass>
+    <label>set apparel policy</label>
+    <description>Set pawn apparel policy on assignment.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetFoodPolicyPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetFoodPolicyPawnPostProcessor</settingClass>
+    <label>set food policy</label>
+    <description>Set pawn food policy on assignment.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetDrugPolicyPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetDrugPolicyPawnPostProcessor</settingClass>
+    <label>set drug policy</label>
+    <description>Set pawn drug policy on assignment.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetReadingPolicyPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetReadingPolicyPawnPostProcessor</settingClass>
+    <label>set reading policy</label>
+    <description>Set pawn reading policy on assignment.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetAllowedAreaPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetAllowedAreaPawnPostProcessor</settingClass>
+    <label>set allowed area</label>
+    <description>Set pawn allowed area on assignment.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetSchedulePostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetSchedulePawnPostProcessor</settingClass>
+    <label>set schedule</label>
+    <description>Set pawn schedule.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetCarriedMedicinePostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetCarriedMedicinePawnPostProcessor</settingClass>
+    <label>set carríed meds</label>
+    <description>Set the amount of medicine the pawn should carry.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetMedicalCarePostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetMedicalCarePawnPostProcessor</settingClass>
+    <label>set medical care</label>
+    <description>Set the level of medical care for the pawn.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetSelfTendPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetSelfTendPawnPostProcessor</settingClass>
+    <label>set self tend</label>
+    <description>Set whether or not the pawn should tend themselves.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetHostilityResponsePostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetHostilityResponsePawnPostProcessor</settingClass>
+    <label>set hostility response</label>
+    <description>Set how the pawn should respond to nearby hostility.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_MovePawnInColonistBar</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.MovePawnInColonistBarPawnPostProcessor</settingClass>
+    <label>move in colonist bar</label>
+    <description>Move the pawn to the left or right of the colonist bar.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetPawnColonistBarOrdering</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetPawnColonistBarOrderingPawnPostProcessor</settingClass>
+    <label>set colonist bar ordering</label>
+    <description>Set the pawns ordering in the colonist bar using a fitness function.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_ConditionalPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.ConditionalPawnPostProcessor</settingClass>
+    <label>if condition</label>
+    <description>Perform a task if a pawn condition is met.</description>
+  </Def>
+</Defs>

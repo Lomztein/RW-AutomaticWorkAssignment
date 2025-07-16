@@ -15,13 +15,20 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
         public ThingDef BuildingDef;
         public float Multiplier = 1f;
 
+        private Cache<int> _cache;
+
         public int GetCount(WorkSpecification spec, ResolveWorkRequest req)
         {
+            if (_cache == null)
+            {
+                _cache = new Cache<int>(() => Mathf.RoundToInt(req.WorkManager.GetAllMaps()
+                    .SelectMany(x => x.listerBuildings.allBuildingsColonist)
+                    .Count(x => x.def == BuildingDef) * Multiplier));
+            }
+
             if (BuildingDef != null)
             {
-                return Mathf.RoundToInt(req.WorkManager.GetAllMaps()
-                    .SelectMany(x => x.listerBuildings.allBuildingsColonist)
-                    .Count(x => x.def == BuildingDef) * Multiplier);
+                return _cache.Get();
             }
             return 0;
         }

@@ -88,7 +88,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Dialogs
         protected void DoFileInteraction(int mapId)
         {
             IO.ImportFromSave(MapWorkManager.GetCurrentMapManager(), _fileName, mapId);
-            Messages.Message("AWA.ImportMessage", MessageTypeDefOf.SilentInput, false);
+            Messages.Message("AWA.ImportMessage".Translate(), MessageTypeDefOf.SilentInput, false);
             Close();
         }
 

@@ -14,7 +14,17 @@ namespace Lomzie.AutomaticWorkAssignment
         private bool AnyIssues => _specsWithIssue.Any();
         private bool AnyCritical => _specsWithIssue.Any(x => x.IsCritical);
 
+        private Cache<AlertReport> _reportCache;
+
         public override AlertReport GetReport()
+        {
+            if (_reportCache == null)
+                _reportCache = new Cache<AlertReport>(CacheReport);
+
+            return _reportCache.Get();
+        }
+
+        private AlertReport CacheReport()
         {
             _specsWithIssue.Clear();
             var maps = Find.Maps;

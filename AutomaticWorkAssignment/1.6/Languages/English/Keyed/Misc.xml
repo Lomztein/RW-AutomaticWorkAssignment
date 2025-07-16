@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <AWA.CriticalWorkUnsatisfied>Critical work unsatisfied!</AWA.CriticalWorkUnsatisfied>
+  <AWA.WorkUnsatisfied>Work unsatisfied</AWA.WorkUnsatisfied>
+  <AWA.WorkAlertExplanation>Work specifications can not be minimally satisfied by applicable pawns. Substitutes may be assigned: {0}</AWA.WorkAlertExplanation>
+  <AWA.SubstituteMessage>{0} has become unable to do their critical {1} work, and {2} has been chosen to substitute.</AWA.SubstituteMessage>
+</LanguageData>

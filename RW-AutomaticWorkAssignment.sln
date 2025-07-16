@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Patch_PerformanceOptimizer"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Addon_AutomaticSurgeries", "Addon_AutomaticSurgeries\Addon_AutomaticSurgeries.csproj", "{93380B52-D483-4C0C-8B8E-587EF53AEA0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patch_CompositableLoadouts", "Patch_CompositableLoadouts\Patch_CompositableLoadouts.csproj", "{34144C75-8D35-4E4D-9D17-FE97977D59D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Patch_CompositableLoadouts", "Patch_CompositableLoadouts\Patch_CompositableLoadouts.csproj", "{34144C75-8D35-4E4D-9D17-FE97977D59D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,15 +32,12 @@ Global
 		{7D4F9C05-C7C3-4B99-90F4-9B0A6C477F42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D4F9C05-C7C3-4B99-90F4-9B0A6C477F42}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CBD10C5F-A3B4-4F5B-9A70-6DDDB4B870CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CBD10C5F-A3B4-4F5B-9A70-6DDDB4B870CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBD10C5F-A3B4-4F5B-9A70-6DDDB4B870CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBD10C5F-A3B4-4F5B-9A70-6DDDB4B870CF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D3162290-0333-498D-89CE-F16559AE62B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3162290-0333-498D-89CE-F16559AE62B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3162290-0333-498D-89CE-F16559AE62B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3162290-0333-498D-89CE-F16559AE62B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6793AD49-96FA-4E44-B7D8-7EE61F1103D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6793AD49-96FA-4E44-B7D8-7EE61F1103D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6793AD49-96FA-4E44-B7D8-7EE61F1103D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6793AD49-96FA-4E44-B7D8-7EE61F1103D8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BBC2423F-6097-48B6-97F6-72DBDAD94BF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -48,7 +45,6 @@ Global
 		{BBC2423F-6097-48B6-97F6-72DBDAD94BF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBC2423F-6097-48B6-97F6-72DBDAD94BF9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED0B68A7-6A94-48B3-B717-CA11D254C2E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED0B68A7-6A94-48B3-B717-CA11D254C2E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED0B68A7-6A94-48B3-B717-CA11D254C2E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED0B68A7-6A94-48B3-B717-CA11D254C2E5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{93380B52-D483-4C0C-8B8E-587EF53AEA0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

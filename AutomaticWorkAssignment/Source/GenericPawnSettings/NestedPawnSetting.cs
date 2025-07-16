@@ -1,9 +1,10 @@
 ﻿using AutomaticWorkAssignment;
+using System.Collections.Generic;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.GenericPawnSettings
 {
-    public abstract class NestedPawnSetting : PawnSetting, IPawnSetting
+    public abstract class NestedPawnSetting : PawnSetting, ICompositePawnSetting
     {
         public IPawnSetting InnerSetting;
 
@@ -17,6 +18,11 @@ namespace Lomzie.AutomaticWorkAssignment.GenericPawnSettings
                 if (InnerSetting != null && !InnerSetting.IsValidAfterLoad())
                     InnerSetting = null;
             }
+        }
+
+        public IEnumerable<IPawnSetting> GetSettings()
+        {
+            yield return InnerSetting;
         }
     }
 }

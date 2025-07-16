@@ -47,17 +47,18 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             // Find applicable pawns.
             var applicable = GetApplicablePawns(allPawns, request);
-            int _applicableCount = applicable.Count();
+            int applicableCount = applicable.Count();
             int minCount = MinWorkers.GetCount(this, request);
-            if (_applicableCount < minCount)
+            if (applicableCount < minCount)
             {
-                int missing = minCount - _applicableCount;
-                var substitutesSorted = allPawns.Where(x => !applicable.Contains(x)).ToArray();
+                int missing = minCount - applicableCount;
+                var substitutesSorted = allPawns.Where(x => !applicable.Contains(x) && CanPawnDoWork(x)).ToArray();
 
                 PawnFitnessComparer comparer = new PawnFitnessComparer(Fitness, this, request);
                 Array.Sort(substitutesSorted, comparer);
 
                 var toSubstitute = substitutesSorted.ToList().GetRange(0, Mathf.Min(missing, substitutesSorted.Length));
+
                 return Enumerable.Concat(applicable, toSubstitute).ToArray();
             }
 
@@ -70,18 +71,25 @@ namespace Lomzie.AutomaticWorkAssignment
             {
                 if (Conditions.All(x => x.IsValid(pawn, this, request)))
                 {
-                    if (RequireFullPawnCapability)
-                    {
-                        if (!pawn.OneOfWorkTypesIsDisabled(Priorities.OrderedPriorities))
-                            yield return pawn;
-                    }
-                    else
-                    {
-                        if (Priorities.OrderedPriorities.Any(x => !pawn.WorkTypeIsDisabled(x)))
-                            yield return pawn;
-                    }
+                    if (CanPawnDoWork(pawn))
+                        yield return pawn;
                 }
             }
+        }
+
+        public bool CanPawnDoWork (Pawn pawn)
+        {
+            if (RequireFullPawnCapability)
+            {
+                if (!pawn.OneOfWorkTypesIsDisabled(Priorities.OrderedPriorities))
+                    return true;
+            }
+            else
+            {
+                if (Priorities.OrderedPriorities.Any(x => !pawn.WorkTypeIsDisabled(x)) || Priorities.OrderedPriorities.Empty())
+                    return true;
+            }
+            return false;
         }
 
         public int GetTargetWorkers (ResolveWorkRequest request)
@@ -173,7 +181,13 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public string GetUniqueLoadID()
         {
-            return $"WorkSpec_{GetHashCode()}";
+            int uniqueId = Name.GetHashCode() * 
+                (Priorities.OrderedPriorities.Count + 6516) * 
+                (Fitness.Count + 4754) * 
+                (Conditions.Count + 7988) * 
+                (PostProcessors.Count + 6874);
+
+            return $"WorkSpec_{uniqueId}";
         }
 
         private class PawnFitnessComparer : IComparer<Pawn>

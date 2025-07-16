@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetBadgePawnPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.Patches.PawnBadge.SetBadgePawnPostProcessor</settingClass>
+    <label>set badge</label>
+    <description>Set the badge of the pawn.</description>
+  </Def>
+</Defs>

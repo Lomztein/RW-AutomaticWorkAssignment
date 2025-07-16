@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_LearnRateFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.LearnRatePawnFitness</settingClass>
+    <label>learning rate</label>
+    <description>Pawn learning rate for related skills.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_SkillLevelFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.SkillLevelPawnFitness</settingClass>
+    <label>skill level</label>
+    <description>Sum of skill level for related skills.</description>
+</Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_StatPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.StatPawnFitness</settingClass>
+    <label>stat</label>
+    <description>The value of the given stat.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_PassionCountPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.PassionCountPawnFitness</settingClass>
+    <label>passion count</label>
+    <description>Total number of a the given pawns passions.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_CommitmentPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CommitmentPawnFitness</settingClass>
+    <label>commitment</label>
+    <description>How much the pawn is already committed.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_OrderingPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.OrderingPawnFitness</settingClass>
+    <label>ordering</label>
+    <description>The index of the pawn when ordered by fitness.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_PassionLevelPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.PassionLevelPawnFitness</settingClass>
+    <label>passion level</label>
+    <description>Priorize pawns with the higher passion levels in relevant skills.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_AgePawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.AgePawnFitness</settingClass>
+    <label>age</label>
+    <description>Priorize older pawns.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_NeedPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.NeedPawnFitness</settingClass>
+    <label>need</label>
+    <description>Prioritize pawn by a given need.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_ConditionPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ConditionPawnFitness</settingClass>
+    <label>condition</label>
+    <description>Priorize pawns with the given condition.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_InvertPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.InvertPawnFitness</settingClass>
+    <label>invert</label>
+    <description>Invert the fitness, so that positive becomes negative.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_StockpilePawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.StockpilePawnFitness</settingClass>
+    <label>stockpile</label>
+    <description>Return stockpile of the filtered items.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_ConstantPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ConstantPawnFitness</settingClass>
+    <label>constant</label>
+    <description>Constant fitness value.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_SumPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.SumPawnFitness</settingClass>
+    <label>sum</label>
+    <description>Sum nested fitness functions.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_ProductPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ProductPawnFitness</settingClass>
+    <label>multiply</label>
+    <description>Multiply nested fitness functions.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_MinPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.MinPawnFitness</settingClass>
+    <label>min</label>
+    <description>Min nested fitness functions.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_MaxPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.MaxPawnFitness</settingClass>
+    <label>max</label>
+    <description>Max nested fitness functions.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_AveragePawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.AveragePawnFitness</settingClass>
+    <label>average</label>
+    <description>Average of nested fitness functions.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_CountPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CountPawnFitness</settingClass>
+    <label>count</label>
+    <description>Count passed pawn conditions.</description>
+  </Def>
+</Defs>

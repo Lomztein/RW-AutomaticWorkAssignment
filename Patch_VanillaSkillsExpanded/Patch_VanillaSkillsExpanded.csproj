@@ -14,15 +14,15 @@
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\Documents\GitHub\RimWorld-Minimods\Source-DLLs\1.5\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="VSE">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\3400246558\1.5\Assemblies\VSE.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\3400246558\1.6\Assemblies\VSE.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)\AutomaticWorkAssignment\1.5\Mods\VanillaSkillsExpanded\Assemblies\Patch_VanillaSkillsExpanded.dll&quot;" />
+    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)\AutomaticWorkAssignment\1.6\Mods\VanillaSkillsExpanded\Assemblies\Patch_VanillaSkillsExpanded.dll&quot;" />
   </Target>
 
 </Project>

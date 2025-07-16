@@ -8,7 +8,7 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.GenericPawnSettings
 {
-    public abstract class CompositePawnSetting : PawnSetting, IPawnSetting
+    public abstract class CompositePawnSetting : PawnSetting, ICompositePawnSetting
     {
         public virtual int MaxSettings => int.MaxValue;
 
@@ -25,5 +25,8 @@ namespace Lomzie.AutomaticWorkAssignment.GenericPawnSettings
                 InnerSettings = InnerSettings.Where(x => x.IsValidAfterLoad()).ToList();
             }
         }
+
+        public IEnumerable<IPawnSetting> GetSettings()
+            => InnerSettings;
     }
 }

@@ -20,11 +20,17 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                 int offset = request.GetVariable<int>("MovePawnInColonistBarOffset");
                 
                 int sign = MoveTo == MoveToSide.Left ? -1 : 1;
-                pawn.playerSettings.displayOrder = (int.MaxValue + offset) * sign / 2;
+                pawn.playerSettings.displayOrder = ((int.MaxValue / 2) - offset) * sign;
 
                 request.SetVariable("MovePawnInColonistBarOffset", offset + 1);
                 Find.ColonistBar.MarkColonistsDirty();
             }
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref MoveTo, "moveTo");
         }
 
         public static IEnumerable<MoveToSide> GetOptions()

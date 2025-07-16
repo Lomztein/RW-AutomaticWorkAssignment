@@ -16,5 +16,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
         {
             pawn?.inventoryStock.SetCountForGroup(InventoryStockGroupDefOf.Medicine, Count);
         }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref Count, "count");
+        }
     }
 }

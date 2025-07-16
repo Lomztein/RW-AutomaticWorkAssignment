@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetLoadoutPawnPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.Patches.CombatExtended.SetLoadoutPawnPostProcessor</settingClass>
+    <label>set loadout</label>
+    <description>Set the Combat Extended loadout of the pawn.</description>
+  </Def>
+</Defs>

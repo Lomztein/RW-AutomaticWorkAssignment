@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_VSEExpertiseCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.Patches.VanillaSkillsExpanded.HasExpertisePawnCondition</settingClass>
+    <label>has expertise</label>
+    <description>Assign to pawn with the given expertise.</description>
+  </Def>
+</Defs>

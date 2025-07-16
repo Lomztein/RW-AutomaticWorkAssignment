@@ -9,15 +9,15 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 {
     public class OrderingPawnFitness : PawnSetting, IPawnFitness
     {
-        private bool ignore = false;
+        private bool _ignore = false;
 
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
-            if (ignore) return 0f;
-            ignore = true;
+            if (_ignore) return 0f;
+            _ignore = true;
             var pawns = specification.GetApplicableOrMinimalPawnsSorted(request.Pawns, request);
             int index = Array.IndexOf(pawns, pawn);
-            ignore = false;
+            _ignore = false;
             return index;
         }
     }

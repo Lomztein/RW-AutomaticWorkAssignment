@@ -20,12 +20,12 @@
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\2890901044\Assemblies\CombatExtended.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\Documents\GitHub\RimWorld-Minimods\Source-DLLs\1.5\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)\AutomaticWorkAssignment\1.5\Mods\CombatExtended\Assemblies\Patch_CombatExtended.dll&quot;" />
+    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)\AutomaticWorkAssignment\1.6\Mods\CombatExtended\Assemblies\Patch_CombatExtended.dll&quot;" />
   </Target>
 
 </Project>
