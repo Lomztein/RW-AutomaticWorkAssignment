@@ -22,6 +22,7 @@
   <AWA.PolicySelect>Select policy</AWA.PolicySelect>
   <AWA.IdeoRoleSelect>Select role</AWA.IdeoRoleSelect>
   <AWA.NeedSelect>Select need</AWA.NeedSelect>
+  <AWA.PlanetLayerSelect>Select planet layer</AWA.PlanetLayerSelect>
   <AWA.Select>Select</AWA.Select>
   <AWA.ScheduleEdit>Edit schedule</AWA.ScheduleEdit>
   <AWA.FilterEdit>Edit filter</AWA.FilterEdit>
@@ -76,6 +77,8 @@
   <AWA.LabelNewPriorityTip>Add priority</AWA.LabelNewPriorityTip>
   <AWA.LabelRequireFullCapability>Require full capability</AWA.LabelRequireFullCapability>
   <AWA.LabelRequireFullCapabilityTip>Require that pawn is capable of all work for assignment?</AWA.LabelRequireFullCapabilityTip>
+  <AWA.LabelInterweavePriorities>Interweave priorities</AWA.LabelInterweavePriorities>
+  <AWA.LabelInterweavePrioritiesTip>Spread out assignees work over the different priorities?</AWA.LabelInterweavePrioritiesTip>
   <AWA.HeaderFitness>Fitness</AWA.HeaderFitness>
   <AWA.HeaderConditions>Conditions</AWA.HeaderConditions>
   <AWA.HeaderPostProcessors>On assignment</AWA.HeaderPostProcessors>
@@ -84,6 +87,10 @@
   <AWA.NoParent>No parent</AWA.NoParent>
   <AWA.ResetManagerToDefault>Reset work specs to default?\nThis replaces all current work specs.</AWA.ResetManagerToDefault>
   <AWA.ResetToDefault>Reset to default</AWA.ResetToDefault>
+  <AWA.SuspendCharacter>S</AWA.SuspendCharacter>
+  <AWA.AlertCharacter>A</AWA.AlertCharacter>
+  <AWA.SuspendWorkTooltip>Suspend work specification: {0}</AWA.SuspendWorkTooltip>
+  <AWA.AlertWorkTooltip>Alert if insufficient assignments: {0}</AWA.AlertWorkTooltip>
 
   <AWA.HeaderExcludedPawns>Excluded Pawns</AWA.HeaderExcludedPawns>
   <AWA.ExcludePawn>Exclude pawn</AWA.ExcludePawn>

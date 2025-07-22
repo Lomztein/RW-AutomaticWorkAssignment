@@ -33,9 +33,12 @@ namespace Lomzie.AutomaticWorkAssignment
                 MapWorkManager manager = MapWorkManager.GetManager(map);
                 foreach (WorkSpecification workSpec in manager.WorkList)
                 {
-                    if (!manager.CanWorkSpecificationBeMinimallySatisfiedWithApplicablePawns(workSpec, manager.MakeDefaultRequest()))
+                    if (workSpec.EnableAlert)
                     {
-                        _specsWithIssue.Add(workSpec);
+                        if (!manager.CanWorkSpecificationBeMinimallySatisfiedWithApplicablePawns(workSpec, manager.MakeDefaultRequest()))
+                        {
+                            _specsWithIssue.Add(workSpec);
+                        }
                     }
                 }
             }
@@ -63,7 +66,7 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             if (AnyCritical)
                 return "AWA.CriticalWorkUnsatisfied".Translate();
-            return "Work unsatisfied".Translate();
+            return "AWA.WorkUnsatisfied".Translate();
         }
 
         public override TaggedString GetExplanation()

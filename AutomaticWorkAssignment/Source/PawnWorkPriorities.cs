@@ -32,6 +32,19 @@ namespace Lomzie.AutomaticWorkAssignment
             return priorities;
         }
 
+        public IEnumerable<WorkTypeDef> GetShifted(int shift)
+        {
+            int count = OrderedPriorities.Count;
+            WorkTypeDef[] shifted = new WorkTypeDef[count];
+            for (int i = 0; i < count; i++)
+            {
+                int index = Utils.Mod(i - shift, count);
+
+                shifted[index] = OrderedPriorities[i];
+            }
+            return shifted;
+        }   
+
         public void RemovePriority(WorkTypeDef priority)
         {
             Find.Root.StartCoroutine(DelayedRemovePriority(priority));

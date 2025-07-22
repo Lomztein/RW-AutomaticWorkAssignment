@@ -346,6 +346,9 @@ namespace Lomzie.AutomaticWorkAssignment
             List<WorkTypeDef> all = new List<WorkTypeDef>(DefDatabase<WorkTypeDef>.AllDefs);
             foreach (var spec in WorkList)
             {
+                if (spec.IsSuspended)
+                    continue;
+
                 List<WorkTypeDef> toRemove = new List<WorkTypeDef>();
                 foreach (WorkTypeDef def in all)
                 {
@@ -396,20 +399,22 @@ namespace Lomzie.AutomaticWorkAssignment
 
                 foreach (var spec in specs)
                 {
-                    for (int i = 0; i < spec.Priorities.OrderedPriorities.Count; i++)
+                    int shift = spec.InterweavePriorities ? GetPawnsAssignedTo(spec).FirstIndexOf(x => x == pawn) : 0;
+                    var priorities = spec.Priorities.GetShifted(shift);
+
+                    foreach (var priority in priorities)
                     {
-                        WorkTypeDef curDef = spec.Priorities.OrderedPriorities[i];
-                        int currentPriority = newPriorities[curDef];
+                        int currentPriority = newPriorities[priority];
 
                         if (currentPriority == 0)
                         {
-                            if (curDef.naturalPriority > lastNatural)
+                            if (priority.naturalPriority > lastNatural)
                                 prioritization++;
-                            lastNatural = curDef.naturalPriority;
+                            lastNatural = priority.naturalPriority;
 
-                            if (!pawn.WorkTypeIsDisabled(curDef))
+                            if (!pawn.WorkTypeIsDisabled(priority))
                             {
-                                newPriorities[curDef] = prioritization;
+                                newPriorities[priority] = prioritization;
                             }
                         }
                     }

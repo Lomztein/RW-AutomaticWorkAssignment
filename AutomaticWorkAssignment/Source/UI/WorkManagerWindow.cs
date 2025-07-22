@@ -9,6 +9,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Xml.Linq;
 using UnityEngine;
@@ -45,7 +46,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         
         // Main section layout
         private const float PriotityListElementWidth = 32;
-        private const float RequireFullCapabilitySize = 24;
+        private float InputSize => AutomaticWorkAssignmentSettings.UIInputSizeBase;
 
         // Advanced section layout
         private const float NewFunctionButtonSize = 32;
@@ -172,8 +173,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 Rect labelRect = Utils.GetSubRectFraction(jobRect, Vector2.zero, new Vector2(1f, 0.5f));
                 Rect assignedRect = Utils.GetSubRectFraction(jobRect, new Vector2(0f, 0.5f), new Vector2(1f, 1f));
 
-                Widgets.Label(labelRect, new GUIContent($"{work.Name}"));
-                Widgets.Label(assignedRect, new GUIContent("AWA.PawnsAssigned".Translate(_workManager.GetCountAssignedTo(work), work.GetTargetWorkers(_workManager.MakeDefaultRequest()))));
+                Widgets.Label(labelRect, new GUIContent($"{ColorizeIf(work.Name, "grey", work.IsSuspended)}"));
+                Widgets.Label(assignedRect, new GUIContent(ColorizeIf("AWA.PawnsAssigned".Translate(_workManager.GetCountAssignedTo(work), work.GetTargetWorkers(_workManager.MakeDefaultRequest())), "grey", work.IsSuspended)));
 
                 if (_current == work)
                     Widgets.DrawHighlight(row);
@@ -182,13 +183,36 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 
                 TooltipHandler.TipRegion(row, () => "AWA.PawnsAssignedTip".Translate("    " + string.Join("\n    ", _workManager.GetPawnsAssignedTo(work))), 10371037);
 
-                Rect rearrangeRect = Utils.GetSubRectFraction(jobRect, new Vector2(0.75f, 0f), new Vector2(0.875f, 1f));
+                (Rect _, Rect right) = Utils.SplitRectHorizontalRight(jobRect, AutomaticWorkAssignmentSettings.UIButtonSizeBase * 2);
+
+                // Suspend / alarm
+                Text.Anchor = TextAnchor.MiddleCenter;
+
+                Rect suspendAlarm = Utils.GetSubRectFraction(right, Vector2.zero, new Vector2(0.33f, 1f));
+                Rect suspend = Utils.GetSubRectFraction(suspendAlarm, Vector2.zero, new Vector2(1f, 0.5f));
+                string suspendIcon = "AWA.SuspendCharacter".Translate();
+                if (Widgets.ButtonText(suspend, work.IsSuspended ? suspendIcon : $"<color=grey>{suspendIcon}</color>"))
+                    work.IsSuspended = !work.IsSuspended;
+                TooltipHandler.TipRegion(suspend, "AWA.SuspendWorkTooltip".Translate(work.IsSuspended.ToString()));
+                
+                Rect alert = Utils.GetSubRectFraction(suspendAlarm, new Vector2(0f, 0.5f), new Vector2(1f, 1f));
+                string alertIcon = "AWA.AlertCharacter".Translate();
+                if (Widgets.ButtonText(alert, work.EnableAlert ? alertIcon : $"<color=grey>{alertIcon}</color>"))
+                    work.EnableAlert = !work.EnableAlert;
+                TooltipHandler.TipRegion(alert, "AWA.AlertWorkTooltip".Translate(work.EnableAlert.ToString()));
+
+                Text.Anchor = TextAnchor.UpperLeft;
+
+                // Rearrange
+                Rect rearrangeRect = Utils.GetSubRectFraction(right, new Vector2(0.33f, 0f), new Vector2(0.66f, 1f));
                 int movement = DoVerticalRearrangeButtons(rearrangeRect);
                 if (movement != 0)
                 {
                     _workManager.MoveWorkSpecification(work, GetMovementAmount(movement));
                 }
-                Rect deleteRect = Utils.GetSubRectFraction(jobRect, new Vector2(0.875f, 0f), new Vector2(1f, 1f));
+
+                // Delete
+                Rect deleteRect = Utils.GetSubRectFraction(right, new Vector2(0.66f, 0f), new Vector2(1f, 1f));
                 if (Widgets.ButtonText(deleteRect, "X"))
                     _workManager.DeleteWorkSpecification(work);
 
@@ -250,6 +274,11 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 Find.WindowStack.Add(new ExcludeColonistsWindow());
             }
         }
+
+        private string Colorize(string text, string colorName)
+            => $"<color={colorName}>{text}</color>";
+        private string ColorizeIf(string text, string colorName, bool value)
+            => value ? Colorize(text, colorName) : text;
 
         private void OpenImportFromSaveWindow()
         {
@@ -452,16 +481,27 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             GUI.EndGroup();
             Widgets.EndScrollView();
 
+            Rect prioritySettingsRect = Utils.GetSubRectFraction(sectionRect, new Vector2(0.5f, 0f), new Vector2(1f, 1f));
+            Rect requireCapabilityRect = new Rect(prioritySettingsRect);
+            requireCapabilityRect.height = InputSize;
+
+            DrawPrioritySettingsToggle(requireCapabilityRect, ref _current.RequireFullPawnCapability, "AWA.LabelRequireFullCapability".Translate(), "AWA.LabelRequireFullCapabilityTip".Translate());
+
+            Rect interweaveRect = new Rect(requireCapabilityRect);
+            interweaveRect.y += InputSize;
+            DrawPrioritySettingsToggle(interweaveRect, ref _current.InterweavePriorities, "AWA.LabelInterweavePriorities".Translate(), "AWA.LabelInterweavePrioritiesTip".Translate());
+        }
+
+        private void DrawPrioritySettingsToggle(Rect rect, ref bool value, string label, string description)
+        {
             Text.Anchor = TextAnchor.MiddleRight;
-            Rect requireCapabilityRect = Utils.GetSubRectFraction(sectionRect, new Vector2(0.5f, 0f), new Vector2(1f, 0.1f));
-            requireCapabilityRect.height = RequireFullCapabilitySize;
-            (Rect labelRect, Rect buttonRect) = Utils.GetLabeledContentWithFixedLabelSize(requireCapabilityRect, requireCapabilityRect.width - RequireFullCapabilitySize);
+            (Rect labelRect, Rect buttonRect) = Utils.GetLabeledContentWithFixedLabelSize(rect, rect.width - InputSize);
             labelRect.width -= MarginSize;
-            Widgets.Label(labelRect, "AWA.LabelRequireFullCapability".Translate());
-            if (Widgets.ButtonImage(buttonRect, _current.RequireFullPawnCapability ? _toggleOnIcon : _toggleOffIcon))
-                _current.RequireFullPawnCapability = !_current.RequireFullPawnCapability;
+            Widgets.Label(labelRect, label);
+            if (Widgets.ButtonImage(buttonRect, value ? _toggleOnIcon : _toggleOffIcon))
+                value = !value;
             Text.Anchor = TextAnchor.UpperLeft;
-            TooltipHandler.TipRegion(requireCapabilityRect, "AWA.LabelRequireFullCapabilityTip".Translate());
+            TooltipHandler.TipRegion(rect, description);
         }
 
         private void DrawPriority(Rect inRect, PawnWorkPriorities priorities, WorkTypeDef workDef)

@@ -35,6 +35,29 @@ namespace Lomzie.AutomaticWorkAssignment
             return newRect;
         }
 
+        public static (Rect left, Rect right) SplitRectHorizontalLeft(Rect inRect, float leftWidth)
+        {
+            Rect left = new Rect(inRect);
+            left.width = leftWidth;
+            Rect right = new Rect(inRect);
+            right.x += leftWidth;
+            right.width = inRect.width - leftWidth;
+            return (left, right);
+        }
+
+        public static (Rect left, Rect right) SplitRectHorizontalRight(Rect inRect, float rightWidth)
+            => SplitRectHorizontalLeft(inRect, inRect.width - rightWidth);
+
+        public static (Rect left, Rect right) SplitRectVerticalLower(Rect inRect, float height)
+        {
+            Rect lower = new Rect(inRect);
+            lower.height = height;
+            Rect upper = new Rect(inRect);
+            upper.y += height;
+            upper.height = inRect.height - height;
+            return (lower, upper);
+        }
+
         public static Rect ShrinkByMargin(Rect inRect, float margin)
         {
             Rect newRect = new Rect(inRect);
@@ -73,6 +96,11 @@ namespace Lomzie.AutomaticWorkAssignment
             if (setting is PawnSetting pawnSetting && pawnSetting.Def == null)
                 return false;
             return true;
+        }
+
+        public static int Mod(int x, int m)
+        {
+            return (x % m + m) % m;
         }
     }
 }

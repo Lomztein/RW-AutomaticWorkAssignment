@@ -1,18 +1,16 @@
 ﻿ - General -
- Rework WorkManager to be per-map (with pocket maps), so that multiple colonies can be supported.
  Group system for work specs, for organization and for interweaving of assignments. Will replace current incremental feature.
  Add support for Float Sub-Menus using https://steamcommunity.com/sharedfiles/filedetails/?id=2864015430
  Change selection UI handler to allow multiple entries.
+ Add some way to persist work specs across tiles when gravship-jumping
+	Colony Manager Fork uses some sort of manager database thing, maybe we could do something similar?
+ Refactor work manager configuration to be stored in seperate class for greater flexibility.
 
  - Bugs - 
 
  - Fitness -
- Royal honor
 
  - Conditions -
- Has royality title
- Has ideoligion
- Has assignment
 
  - Post Processors -
  Do all (list of post processors)

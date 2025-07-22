@@ -16,9 +16,17 @@ namespace Lomzie.AutomaticWorkAssignment
     public class IO
     {
         private const string CONFIG_SAVE_FOLDER = "AutomaticWorkAssignment/Configs";
+        private const string CLIPBOARD_SAVE_FOLDER = "AutomaticWorkAssignment/Clipboard";
+
         public static DirectoryInfo GetConfigDirectory ()
+            => GetOrCreateDirectory (CONFIG_SAVE_FOLDER);
+
+        public static DirectoryInfo GetClipboardDirectory()
+            => GetOrCreateDirectory(CLIPBOARD_SAVE_FOLDER);
+
+        private static DirectoryInfo GetOrCreateDirectory(string saveDataSubfolder)
         {
-            DirectoryInfo directory = new DirectoryInfo(Path.Combine(GenFilePaths.SaveDataFolderPath, CONFIG_SAVE_FOLDER));
+            DirectoryInfo directory = new DirectoryInfo(Path.Combine(GenFilePaths.SaveDataFolderPath, saveDataSubfolder));
             if (!directory.Exists)
             {
                 directory.Create();
@@ -26,7 +34,7 @@ namespace Lomzie.AutomaticWorkAssignment
             return directory;
         }
 
-        public static FileInfo GetConfigFile(string fileName)
+        public static FileInfo GetFile(string fileName, DirectoryInfo directory)
         {
             DirectoryInfo folder = GetConfigDirectory();
             FileInfo file = new FileInfo(Path.ChangeExtension(Path.Combine(folder.FullName, fileName), "xml"));
@@ -39,14 +47,14 @@ namespace Lomzie.AutomaticWorkAssignment
             return directory.GetFiles("*.xml");
         }
 
-        public static void ExportToFile(MapWorkManager fromManager, string fileName)
+        public static void ExportToFile(IExposable exposable, string fileName, DirectoryInfo directory)
         {
             try
             {
-                FileInfo file = GetConfigFile(fileName);
+                FileInfo file = GetFile(fileName, directory);
                 SafeSaver.Save(file.FullName, "workManagerConfig", () => {
                     ScribeMetaHeaderUtility.WriteMetaHeader();
-                    Scribe_Deep.Look(ref fromManager, "workManager");
+                    Scribe_Deep.Look(ref exposable, "workManager");
                 });
             }catch (Exception ex)
             {
@@ -54,16 +62,16 @@ namespace Lomzie.AutomaticWorkAssignment
             }
         }
 
-        public static void ImportFromFile(MapWorkManager toManager, string fileName)
+        public static void ImportFromFile(IExposable exposable, string fileName, DirectoryInfo directory)
         {
             try
             {
-                FileInfo file = GetConfigFile(fileName);
+                FileInfo file = GetFile(fileName, directory);
                 Scribe.loader.InitLoading(file.FullName);
                 ScribeMetaHeaderUtility.LoadGameDataHeader(ScribeMetaHeaderUtility.ScribeHeaderMode.ModList, true);
                 if (Scribe.EnterNode("workManager"))
                 {
-                    toManager.ExposeData();
+                    exposable.ExposeData();
                 }
                 else
                 {

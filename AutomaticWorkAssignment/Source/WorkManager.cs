@@ -1,13 +1,5 @@
-﻿using Lomzie.AutomaticWorkAssignment.Amounts;
-using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
-using Lomzie.AutomaticWorkAssignment.PawnConditions;
-using Lomzie.AutomaticWorkAssignment.PawnFitness;
-using RimWorld;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Verse;
-using UnityEngine;
-using System.Collections;
 
 namespace Lomzie.AutomaticWorkAssignment
 {

@@ -20,7 +20,7 @@ namespace Lomzie.AutomaticWorkAssignment
         public static float ReservationTimeoutDays = 1f;
         public static bool LogEnabled = false;
         private static string _defaultConfigurationFile = null;
-        public static FileInfo DefaultConfigurationFile => string.IsNullOrEmpty(_defaultConfigurationFile) ? null : IO.GetConfigFile(_defaultConfigurationFile);
+        public static FileInfo DefaultConfigurationFile => string.IsNullOrEmpty(_defaultConfigurationFile) ? null : IO.GetFile(_defaultConfigurationFile);
 
         private const float MANAGER_WINDOW_WIDTH_DEFAULT = 1400;
         private static string _managerWindowWidthBuffer;
@@ -40,6 +40,10 @@ namespace Lomzie.AutomaticWorkAssignment
         private const float MANAGER_SETTINGS_SECTION_RATIO_DEFAULT = 0.45f;
         public static float ManagerSettingsSectionRatio = MANAGER_SETTINGS_SECTION_RATIO_DEFAULT;
         public static float ManagerSettingsSectionRatioNormalized => ManagerSettingsSectionRatio / (ManagerListSectionRatio + ManagerMainSectionRatio + ManagerSettingsSectionRatio);
+
+        public static float UIButtonSizeBase = 32;
+        public static float UIHalfButtonSize => UIButtonSizeBase / 2;
+        public static float UIInputSizeBase = 24;
 
         internal void DoWindow(Rect inRect)
         {
