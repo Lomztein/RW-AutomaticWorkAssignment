@@ -20,7 +20,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Dialogs
         protected override void DoFileInteraction(string fileName)
         {
             fileName = GenFile.SanitizedFileName(fileName);
-            IO.ExportToFile(MapWorkManager.GetCurrentMapManager(), fileName);
+            IO.ExportToFile(MapWorkManager.GetCurrentMapManager(), fileName, IO.GetConfigDirectory());
             Messages.Message("AWA.SaveMessage".Translate(), MessageTypeDefOf.SilentInput, false);
             Close();
         }

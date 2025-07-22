@@ -8,15 +8,17 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
     public class AddTagPawnPostProcessor : PawnSetting, IPawnPostProcessor
     {
         public Tag Tag;
+        public LoadoutState State;
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
-            if (pawn != null)
+            if (pawn != null && Tag != null)
             {
                 var loadoutComp = pawn.GetComp<LoadoutComponent>();
-                if (loadoutComp != null && !loadoutComp.Loadout.AllTags.Contains(Tag))
+                var element = loadoutComp.Loadout.AllElements.FirstOrDefault(x => x.Tag == Tag && x.State == State);
+                if (loadoutComp != null && element == null)
                 {
-                    loadoutComp.AddTag(Tag);
+                    loadoutComp.AddElement(new LoadoutElement(Tag, State));
                 }
             }
         }
@@ -25,6 +27,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
         {
             base.ExposeData();
             Scribe_References.Look(ref Tag, "Tag");
+            Scribe_References.Look(ref State, "state");
         }
     }
 }

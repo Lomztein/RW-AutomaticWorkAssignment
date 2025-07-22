@@ -18,7 +18,7 @@
     <li IfModActive="Ludeon.RimWorld.Ideology">1.6/Mods/Ideology</li>
     <li IfModActive="Ludeon.RimWorld.Biotech">1.6/Mods/Biotech</li>
     <li IfModActive="Ludeon.RimWorld.Anomaly">1.6/Mods/Anomaly</li>
-    <!--<li IfModActive="voult.betterpawncontrol">1.6/Mods/BetterPawnControl</li>-->
+    <li IfModActive="voult.betterpawncontrol">1.6/Mods/BetterPawnControl</li>
     <!--<li IfModActive="saucypigeon.pawnbadge">1.6/Mods/PawnBadge</li>-->
     <!--<li IfModActive="ceteam.combatextended">1.6/Mods/CombatExtended</li>-->
     <li IfModActive="vanillaexpanded.skills">1.6/Mods/VanillaSkillsExpanded</li>

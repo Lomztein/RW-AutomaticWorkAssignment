@@ -34,20 +34,7 @@ namespace AutomaticWorkAssignment.UI
             float innerWidth = width - 4;
             if (pawnSetting.InnerSetting != null)
             {
-                Rect labelRect = new Rect(innerPosition.x, position.y, innerWidth, _labelSize);
-                string label = pawnSetting.InnerSetting?.Label ?? "AWA.NestedSettingNoneSelected".Translate();
-                Widgets.Label(labelRect, pawnSetting.InnerSetting.Label);
-
-                Rect deleteButtonRect = new Rect(innerPosition.x + innerWidth - _labelSize, position.y, _labelSize, _labelSize);
-                if (Widgets.ButtonText(deleteButtonRect, "X"))
-                {
-                    Find.Root.StartCoroutine(DelayedRemoveInnerSetting(pawnSetting));
-                }
-
-                innerPosition.y += _labelSize;
-                y += _labelSize;
-
-                y += PawnSettingUIHandlers.Handle(innerPosition, innerWidth, pawnSetting.InnerSetting);
+                y += WorkManagerWindow.DoPawnSetting(innerPosition, innerWidth, pawnSetting.InnerSetting, null, (x) => Find.Root.StartCoroutine(DelayedRemoveInnerSetting(pawnSetting)));
             }
             else
             {

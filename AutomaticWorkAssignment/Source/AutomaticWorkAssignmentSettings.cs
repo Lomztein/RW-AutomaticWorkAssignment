@@ -20,26 +20,23 @@ namespace Lomzie.AutomaticWorkAssignment
         public static float ReservationTimeoutDays = 1f;
         public static bool LogEnabled = false;
         private static string _defaultConfigurationFile = null;
-        public static FileInfo DefaultConfigurationFile => string.IsNullOrEmpty(_defaultConfigurationFile) ? null : IO.GetFile(_defaultConfigurationFile);
+        public static FileInfo DefaultConfigurationFile => string.IsNullOrEmpty(_defaultConfigurationFile) ? null : IO.GetFile(_defaultConfigurationFile, IO.GetConfigDirectory());
 
-        private const float MANAGER_WINDOW_WIDTH_DEFAULT = 1400;
-        private static string _managerWindowWidthBuffer;
-        public static float ManagerWindowWidth = MANAGER_WINDOW_WIDTH_DEFAULT;
-        private const float MANAGER_WINDOW_HEIGHT_DEFAULT = 400;
+        private const float MANAGER_WINDOW_HEIGHT_DEFAULT = 500;
         private static string _managerWindowHeightBuffer;
         public static float ManagerWindowHeight = MANAGER_WINDOW_HEIGHT_DEFAULT;
 
-        private const float MANAGER_LIST_SECTION_RATIO_DEFAULT = 0.15f;
-        public static float ManagerListSectionRatio = MANAGER_LIST_SECTION_RATIO_DEFAULT;
-        public static float ManagerListSectionRatioNormalized => ManagerListSectionRatio / (ManagerListSectionRatio + ManagerMainSectionRatio + ManagerSettingsSectionRatio);
+        private const float MANAGER_LIST_SECTION_WIDTH_DEFAULT = 300f;
+        public static float ManagerListSectionWidth = MANAGER_LIST_SECTION_WIDTH_DEFAULT;
+        private static string _managerListSectionWidthBuffer;
 
-        private const float MANAGER_MAIN_SECTION_RATIO_DEFAULT = 0.4f;
-        public static float ManagerMainSectionRatio = MANAGER_MAIN_SECTION_RATIO_DEFAULT;
-        public static float ManagerMainSectionRatioNormalized => ManagerMainSectionRatio / (ManagerListSectionRatio + ManagerMainSectionRatio + ManagerSettingsSectionRatio);
+        private const float MANAGER_MAIN_SECTION_WIDTH_DEFAULT = 600f;
+        public static float ManagerMainSectionWidth = MANAGER_MAIN_SECTION_WIDTH_DEFAULT;
+        private static string _managerMainSectionWidthBuffer;
 
-        private const float MANAGER_SETTINGS_SECTION_RATIO_DEFAULT = 0.45f;
-        public static float ManagerSettingsSectionRatio = MANAGER_SETTINGS_SECTION_RATIO_DEFAULT;
-        public static float ManagerSettingsSectionRatioNormalized => ManagerSettingsSectionRatio / (ManagerListSectionRatio + ManagerMainSectionRatio + ManagerSettingsSectionRatio);
+        private const float MANAGER_SETTINGS_SECTION_WIDTH_DEFAULT = 800f;
+        public static float ManagerSettingsSectionWidth = MANAGER_SETTINGS_SECTION_WIDTH_DEFAULT;
+        private static string _managerSettingsSectionWidthBuffer;
 
         public static float UIButtonSizeBase = 32;
         public static float UIHalfButtonSize => UIButtonSizeBase / 2;
@@ -75,30 +72,28 @@ namespace Lomzie.AutomaticWorkAssignment
 
             listing.Label("AWA.SettingsHeaderUI".Translate());
 
-            _managerWindowWidthBuffer = ManagerWindowWidth.ToString();
-            listing.TextFieldNumericLabeled("AWA.SettingsManagerWindowWidth".Translate(MANAGER_WINDOW_WIDTH_DEFAULT), ref ManagerWindowWidth, ref _managerWindowWidthBuffer, min: 100);
-            ManagerWindowWidth = int.Parse(_managerWindowWidthBuffer);
-
             _managerWindowHeightBuffer = ManagerWindowHeight.ToString();
             listing.TextFieldNumericLabeled("AWA.SettingsManagerWindowHeight".Translate(MANAGER_WINDOW_HEIGHT_DEFAULT), ref ManagerWindowHeight, ref _managerWindowHeightBuffer, min: 100);
             ManagerWindowHeight = int.Parse(_managerWindowHeightBuffer);
 
-            ManagerListSectionRatio = listing.SliderLabeled("AWA.SettingsManagerListSectionRatio".Translate(Mathf.Round(ManagerListSectionRatioNormalized * 100), MANAGER_LIST_SECTION_RATIO_DEFAULT * 100), ManagerListSectionRatio, 0f, 1f);
-            ManagerListSectionRatio = Mathf.Round(ManagerListSectionRatio * 100f) / 100f;
+            _managerListSectionWidthBuffer = ManagerListSectionWidth.ToString();
+            listing.TextFieldNumericLabeled("AWA.SettingsManagerListSectionWidth".Translate(MANAGER_LIST_SECTION_WIDTH_DEFAULT), ref ManagerListSectionWidth, ref _managerListSectionWidthBuffer, min: 100);
+            ManagerListSectionWidth = int.Parse(_managerListSectionWidthBuffer);
 
-            ManagerMainSectionRatio = listing.SliderLabeled("AWA.SettingsManagerMainSectionRatio".Translate(Mathf.Round(ManagerMainSectionRatioNormalized * 100), MANAGER_MAIN_SECTION_RATIO_DEFAULT * 100), ManagerMainSectionRatio, 0f, 1f);
-            ManagerMainSectionRatio = Mathf.Round(ManagerMainSectionRatio * 100f) / 100f;
+            _managerMainSectionWidthBuffer = ManagerMainSectionWidth.ToString();
+            listing.TextFieldNumericLabeled("AWA.SettingsManagerMainSectionWidth".Translate(MANAGER_MAIN_SECTION_WIDTH_DEFAULT), ref ManagerMainSectionWidth, ref _managerMainSectionWidthBuffer, min: 100);
+            ManagerMainSectionWidth = int.Parse(_managerMainSectionWidthBuffer);
 
-            ManagerSettingsSectionRatio = listing.SliderLabeled("AWA.SettingsManagerSettingsSectionRatio".Translate(Mathf.Round(ManagerSettingsSectionRatioNormalized * 100), MANAGER_SETTINGS_SECTION_RATIO_DEFAULT * 100), ManagerSettingsSectionRatio, 0f, 1f);
-            ManagerSettingsSectionRatio = Mathf.Round(ManagerSettingsSectionRatio * 100f) / 100f;
+            _managerSettingsSectionWidthBuffer = ManagerSettingsSectionWidth.ToString();
+            listing.TextFieldNumericLabeled("AWA.SettingsManagerSettingsSectionWidth".Translate(MANAGER_SETTINGS_SECTION_WIDTH_DEFAULT), ref ManagerSettingsSectionWidth, ref _managerSettingsSectionWidthBuffer, min: 100);
+            ManagerSettingsSectionWidth = int.Parse(_managerSettingsSectionWidthBuffer);
 
             if (listing.ButtonText("AWA.SettingsResetWindowLayout".Translate()))
             {
-                ManagerWindowWidth = MANAGER_WINDOW_WIDTH_DEFAULT;
                 ManagerWindowHeight = MANAGER_WINDOW_HEIGHT_DEFAULT;
-                ManagerListSectionRatio = MANAGER_LIST_SECTION_RATIO_DEFAULT;
-                ManagerMainSectionRatio = MANAGER_MAIN_SECTION_RATIO_DEFAULT;
-                ManagerSettingsSectionRatio = MANAGER_SETTINGS_SECTION_RATIO_DEFAULT;
+                ManagerListSectionWidth = MANAGER_LIST_SECTION_WIDTH_DEFAULT;
+                ManagerMainSectionWidth = MANAGER_MAIN_SECTION_WIDTH_DEFAULT;
+                ManagerSettingsSectionWidth = MANAGER_SETTINGS_SECTION_WIDTH_DEFAULT;
             }
         }
 
@@ -119,11 +114,10 @@ namespace Lomzie.AutomaticWorkAssignment
             Scribe_Values.Look(ref IgnoreUnmanagedWorkTypes, "ignoreUmanagedWorkTypes", true);
             Scribe_Values.Look(ref LogEnabled, "logEnabled", false);
             Scribe_Values.Look(ref _defaultConfigurationFile, "defaultConfigurationFile", null);
-            Scribe_Values.Look(ref ManagerWindowWidth, "managerWindowWidth", MANAGER_WINDOW_WIDTH_DEFAULT);
             Scribe_Values.Look(ref ManagerWindowHeight, "managerWindowHeight", MANAGER_WINDOW_HEIGHT_DEFAULT);
-            Scribe_Values.Look(ref ManagerListSectionRatio, "managerListSectionRatio", MANAGER_LIST_SECTION_RATIO_DEFAULT);
-            Scribe_Values.Look(ref ManagerMainSectionRatio, "managerMainSectionRatio", MANAGER_MAIN_SECTION_RATIO_DEFAULT);
-            Scribe_Values.Look(ref ManagerSettingsSectionRatio, "managerSettingsSectionRatio", MANAGER_SETTINGS_SECTION_RATIO_DEFAULT);
+            Scribe_Values.Look(ref ManagerListSectionWidth, "managerListSectionWidth", MANAGER_LIST_SECTION_WIDTH_DEFAULT);
+            Scribe_Values.Look(ref ManagerMainSectionWidth, "managerMainSectionWidth", MANAGER_MAIN_SECTION_WIDTH_DEFAULT);
+            Scribe_Values.Look(ref ManagerSettingsSectionWidth, "managerSettingsSectionWidth", MANAGER_SETTINGS_SECTION_WIDTH_DEFAULT);
         }
     }
 }

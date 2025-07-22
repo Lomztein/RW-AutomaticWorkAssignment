@@ -73,7 +73,7 @@ namespace Lomzie.AutomaticWorkAssignment
                 }
                 else
                 {
-                    IO.ImportFromFile(this, defaultConfig.Name);
+                    IO.ImportFromFile(this, defaultConfig.Name, IO.GetConfigDirectory());
                     Log.Message($"[AWA] Imported from '{defaultConfig.Name}'.");
                 }
             }
@@ -536,6 +536,11 @@ namespace Lomzie.AutomaticWorkAssignment
             WorkSpecification spec = new WorkSpecification();
             WorkList.Add(spec);
             return spec;
+        }
+
+        public void AddWorkSpecification(WorkSpecification spec)
+        {
+            WorkList.Add(spec);
         }
 
         public void RemoveWorkSpecification(WorkSpecification spec)

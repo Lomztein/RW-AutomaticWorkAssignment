@@ -9,15 +9,17 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
 {
     public class ClearTagsPawnPostProcessor : PawnSetting, IPawnPostProcessor
     {
+        public LoadoutState State;
+
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
             if (pawn != null)
             {
                 var tags = GetTagsSetByAWA(request);
-                foreach (var tag in tags )
+                foreach (var tag in tags)
                 {
                     var loadout = pawn.GetComp<LoadoutComponent>();
-                    var loadoutElement = loadout.Loadout.AllElements.FirstOrDefault(el => el.Tag == tag);
+                    var loadoutElement = loadout.Loadout.AllElements.FirstOrDefault(el => el.Tag == tag && el.State == State);
                     if (loadoutElement != null)
                     {
                         loadout.RemoveTag(loadoutElement);
@@ -55,6 +57,12 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
                         yield return tag;
                 }
             }
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_References.Look(ref State, "state");
         }
     }
 }

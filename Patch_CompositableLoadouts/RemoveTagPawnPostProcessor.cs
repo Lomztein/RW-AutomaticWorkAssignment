@@ -8,16 +8,20 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
     public class RemoveTagPawnPostProcessor : PawnSetting, IPawnPostProcessor
     {
         public Tag Tag;
+        public LoadoutState State;
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
-            if (pawn != null)
+            if (pawn != null && Tag != null)
             {
                 var loadoutComp = pawn.GetComp<LoadoutComponent>();
-                if (loadoutComp != null && loadoutComp.Loadout.AllTags.Contains(Tag))
+                if (loadoutComp != null)
                 {
-                    var element = loadoutComp.Loadout.Elements.FirstOrDefault(x => x.Tag == Tag);
-                    loadoutComp.RemoveTag(element);
+                    var element = loadoutComp.Loadout.AllElements.FirstOrDefault(x => x.Tag == Tag && x.State == State);
+                    if (element != null)
+                    {
+                        loadoutComp.RemoveTag(element);
+                    }
                 }
             }
         }
@@ -26,6 +30,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
         {
             base.ExposeData();
             Scribe_References.Look(ref Tag, "Tag");
+            Scribe_References.Look(ref State, "state");
         }
     }
 }

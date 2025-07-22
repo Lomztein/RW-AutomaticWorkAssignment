@@ -9,31 +9,65 @@ namespace Lomzie.AutomaticWorkAssignment
 {
     public static class Clipboard
     {
-        private static object _clipboardObject;
+        private static IExposable _clipboardObject;
         private static Type _objectType;
 
-        // Using IO to basically do a deep-copy of any exposable is somewhat hacky, but beats manually cloning everything.
+        // Using IO to basically do a deep-copy of any exposable is somewhat hacky, but I'm lazy and this beats manually cloning everything.
         public static void Copy(IExposable obj)
         {
-            IO.ExportToFile(obj, "clipboard", IO.GetClipboardDirectory());
             _objectType = obj.GetType();
-
-            IExposable clipboardObj = Activator.CreateInstance(_objectType) as IExposable;
-            IO.ImportFromFile(clipboardObj, "clipboard", IO.GetClipboardDirectory());
-
-            _clipboardObject = clipboardObj;
+            _clipboardObject = MakeCopy(obj);
         }
 
-        public static bool Contains<T> ()
-            => _objectType.IsAssignableFrom(typeof(T));
-
-        public static T Get<T>()
+        private static IExposable MakeCopy (IExposable obj)
         {
-            if (_objectType.IsAssignableFrom(typeof(T)))
+            IO.ExportToFile(obj, "clipboard", IO.GetClipboardDirectory());
+            IExposable copy = Activator.CreateInstance(_objectType) as IExposable;
+            IO.ImportFromFile(copy, "clipboard", IO.GetClipboardDirectory());
+            return copy;
+        }
+
+        public static bool ContainsAny()
+            => _clipboardObject != null && _objectType != null;
+
+        public static bool Contains<T>()
+            => Contains(typeof(T));
+
+        public static bool Contains(Type type)
+        {
+            if (!ContainsAny())
+                return false;
+            return type.IsAssignableFrom(_objectType);
+        }
+
+        public static IExposable Paste(Type expectedType)
+        {
+            if (!ContainsAny())
+                throw new InvalidOperationException("No object in clipboard.");
+
+            if (expectedType.IsAssignableFrom(_objectType))
             {
-                return (T)_clipboardObject;
+                return MakeCopy(_clipboardObject);
             }
             return default;
+        }
+
+        public static T Paste<T>() where T : IExposable
+            => (T)Paste(typeof(T));
+
+        public static void PasteInto(IExposable exposable)
+        {
+            if (!ContainsAny())
+                throw new InvalidOperationException("No object in clipboard.");
+
+            IO.ExportToFile(_clipboardObject, "clipboard", IO.GetClipboardDirectory());
+            IO.ImportFromFile(exposable, "clipboard", IO.GetClipboardDirectory());
+        }
+
+        public static void Clear ()
+        {
+            _clipboardObject = null;
+            _objectType = null;
         }
     }
 }

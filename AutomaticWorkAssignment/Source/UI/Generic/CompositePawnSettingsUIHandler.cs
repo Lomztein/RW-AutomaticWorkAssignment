@@ -1,5 +1,8 @@
 ﻿using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
+using Lomzie.AutomaticWorkAssignment.PawnConditions;
+using Lomzie.AutomaticWorkAssignment.PawnFitness;
+using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using RimWorld;
 using System;
 using System.Collections;

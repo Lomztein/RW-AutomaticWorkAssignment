@@ -48,7 +48,7 @@ namespace Lomzie.AutomaticWorkAssignment
         public static (Rect left, Rect right) SplitRectHorizontalRight(Rect inRect, float rightWidth)
             => SplitRectHorizontalLeft(inRect, inRect.width - rightWidth);
 
-        public static (Rect left, Rect right) SplitRectVerticalLower(Rect inRect, float height)
+        public static (Rect left, Rect right) SplitRectVerticalUpper(Rect inRect, float height)
         {
             Rect lower = new Rect(inRect);
             lower.height = height;
@@ -57,6 +57,9 @@ namespace Lomzie.AutomaticWorkAssignment
             upper.height = inRect.height - height;
             return (lower, upper);
         }
+
+        public static (Rect upper, Rect lower) SplitRectVerticalLower(Rect inRect, float height)
+            => SplitRectVerticalUpper(inRect, inRect.height - height);
 
         public static Rect ShrinkByMargin(Rect inRect, float margin)
         {

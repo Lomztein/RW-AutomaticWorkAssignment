@@ -43,28 +43,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
 
         private float DrawSetting(Vector2 position, float width, IPawnSetting setting, Action<IPawnSetting> onDelete)
         {
-            float y = 0f;
             position.x += 4;
             width -= 4;
 
-                Rect labelRect = new Rect(position, new Vector2(width, _labelSize));
-                (Rect label, Rect button) = Utils.GetLabeledContentWithFixedLabelSize(labelRect, width - _labelSize);
-                Text.Anchor = TextAnchor.MiddleLeft;
-                Widgets.Label(label, WorkManagerWindow.GetSettingLabel(setting));
-                position.y += _labelSize;
-                y += _labelSize;
-                Text.Anchor = TextAnchor.UpperLeft;
-
-            if (Widgets.ButtonText(button, "X"))
-            {
-                onDelete(setting);
-            }
-            else
-            {
-                y += PawnSettingUIHandlers.Handle(position, width, setting);
-            }
-
-            return y;
+            return WorkManagerWindow.DoPawnSetting(position, width, setting, null, onDelete);
         }
 
         private float DrawNewSettingButton<TDef, TSetting>(Vector2 position, float width, string newLabel, Action<TSetting> onNewSetting) where TDef : PawnSettingDef where TSetting : IPawnSetting
