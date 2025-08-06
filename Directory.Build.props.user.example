@@ -1,0 +1,5 @@
+<Project>
+	<PropertyGroup>
+		<SteamAppsPath>C:\Path\To\steamapps</SteamAppsPath> <!-- Replace the value -->
+	</PropertyGroup>
+</Project>
