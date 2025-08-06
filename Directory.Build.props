@@ -1,0 +1,8 @@
+<Project InitialTargets="CheckBuildConfig">
+	<Import Project="Directory.build.props.user" Condition="Exists('Directory.build.props.user')"/>
+	<Target Name="CheckBuildConfig">
+		<Error
+			Text="Missing SteamAppsPath variable in &quot;Directory.build.props.user&quot;. Create the file if it does not exists"
+			Condition="'$(SteamAppsPath)' == ''" />
+	</Target>
+</Project>
