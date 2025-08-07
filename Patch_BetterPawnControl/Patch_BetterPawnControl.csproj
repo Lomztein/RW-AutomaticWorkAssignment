@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)\AutomaticWorkAssignment\1.6\Mods\BetterPawnControl\Assemblies\Patch_BetterPawnControl.dll&quot;" />
+    <Exec Command="copy /b &quot;$(TargetDir)\$(TargetName).*&quot; &quot;$(SolutionDir)\AutomaticWorkAssignment\1.6\Mods\BetterPawnControl\Assemblies\Patch_BetterPawnControl.dll&quot;" />
   </Target>
 
 </Project>

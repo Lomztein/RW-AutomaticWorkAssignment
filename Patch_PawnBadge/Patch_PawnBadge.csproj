@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)\AutomaticWorkAssignment\1.6\Mods\PawnBadge\Assemblies\Patch_PawnBadge.dll&quot;" />
+    <Exec Command="copy /b &quot;$(TargetDir)\$(TargetName).*&quot; &quot;$(SolutionDir)\AutomaticWorkAssignment\1.6\Mods\PawnBadge\Assemblies\Patch_PawnBadge.dll&quot;" />
   </Target>
 
 </Project>

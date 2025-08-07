@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)\AutomaticWorkAssignment\1.6\Mods\VanillaSkillsExpanded\Assemblies\Patch_VanillaSkillsExpanded.dll&quot;" />
+    <Exec Command="copy /b &quot;$(TargetDir)\$(TargetName).*&quot; &quot;$(SolutionDir)\AutomaticWorkAssignment\1.6\Mods\VanillaSkillsExpanded\Assemblies\Patch_VanillaSkillsExpanded.dll&quot;" />
   </Target>
 
 </Project>
