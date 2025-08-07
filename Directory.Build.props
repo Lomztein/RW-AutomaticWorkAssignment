@@ -1,11 +1,15 @@
-<Project InitialTargets="CheckBuildConfig">
+<Project InitialTargets="CheckSteamApps;CheckRimWorldVersion">
 	<PropertyGroup> <!-- default user-overridable properties -->
 		<SteamAppsPath>C:\Program Files (x86)\Steam\steamapps</SteamAppsPath>
 	</PropertyGroup>
 	
 	<Import Project="Directory.build.props.user" Condition="Exists('Directory.build.props.user')"/>
-	
-	<Target Name="CheckBuildConfig">
+
+	<PropertyGroup>
+		<RootNamespace>Lomzie.AutomaticWorkAssignment</RootNamespace>
+	</PropertyGroup>
+
+	<Target Name="CheckSteamApps">
 		<Error
 			Text="&quot;$(SteamAppsPath)&quot; does not exist. You can override it in &quot;Directory.build.props.user&quot; (create the file if it does not exists)"
 			Condition="!Exists('$(SteamAppsPath)')" />
@@ -13,8 +17,17 @@
 			Text="&quot;$(SteamAppsPath)&quot; is not the installation folder of RimWorld. You can override it in &quot;Directory.build.props.user&quot; (create the file if it does not exists)"
 			Condition="!Exists('$(SteamAppsPath)\common\RimWorld')" />
 	</Target>
-	
+
 	<PropertyGroup>
-		<RootNamespace>Lomzie.AutomaticWorkAssignment</RootNamespace>
+		<RimWorldFullVersion>$([System.IO.File]::ReadAllText('$(SteamAppsPath)\common\RimWorld\Version.txt').TrimEnd())</RimWorldFullVersion>
+		<RimWorldActualVersion>$([System.Version]::Parse('$(RimWorldFullVersion.Split(' ')[0])').ToString(2))</RimWorldActualVersion>
+		<RimWorldVersion>1.6</RimWorldVersion>
 	</PropertyGroup>
+	
+	<Target Name="CheckRimWorldVersion" AfterTargets="CheckSteamApps">
+		<Message Text="Using RimWorld version $(RimWorldVersion) ($(RimWorldFullVersion))" Importance="high" />
+		<Error
+			Text="&quot;$(SteamAppsPath)&quot; contains an unexpected version of RimWorld ($(RimWorldActualVersion)). Expected $(RimWorldVersion)."
+			Condition="'$(RimWorldActualVersion)' != '$(RimWorldVersion)'" />
+	</Target>
 </Project>
