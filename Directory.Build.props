@@ -1,8 +1,16 @@
 <Project InitialTargets="CheckBuildConfig">
+	<PropertyGroup> <!-- default user-overridable properties -->
+		<SteamAppsPath>C:\Program Files (x86)\Steam\steamapps</SteamAppsPath>
+	</PropertyGroup>
+	
 	<Import Project="Directory.build.props.user" Condition="Exists('Directory.build.props.user')"/>
+	
 	<Target Name="CheckBuildConfig">
 		<Error
-			Text="Missing SteamAppsPath variable in &quot;Directory.build.props.user&quot;. Create the file if it does not exists"
-			Condition="'$(SteamAppsPath)' == ''" />
+			Text="&quot;$(SteamAppsPath)&quot; does not exist. You can override it in &quot;Directory.build.props.user&quot; (create the file if it does not exists)"
+			Condition="!Exists('$(SteamAppsPath)')" />
+		<Error
+			Text="&quot;$(SteamAppsPath)&quot; is not the installation folder of RimWorld. You can override it in &quot;Directory.build.props.user&quot; (create the file if it does not exists)"
+			Condition="!Exists('$(SteamAppsPath)\common\RimWorld')" />
 	</Target>
 </Project>
