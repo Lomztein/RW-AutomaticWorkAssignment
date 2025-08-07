@@ -7,6 +7,10 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <InternalsVisibleTo Include="AutomaticWorkAssignment.Test"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>$(SteamAppsPath)\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
     </Reference>
