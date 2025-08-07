@@ -199,7 +199,7 @@ namespace Lomzie.AutomaticWorkAssignment
             return $"WorkSpec_{uniqueId}";
         }
 
-        private class PawnFitnessComparer : IComparer<Pawn>
+        internal class PawnFitnessComparer : IComparer<Pawn>
         {
             private List<IPawnFitness> _fitnessFunctions;
             private WorkSpecification _workSpec;
