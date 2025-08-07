@@ -5,7 +5,7 @@ using System;
 using System.Reflection;
 using Verse;
 
-namespace Patch_PerformanceOptimizer
+namespace Lomzie.AutomaticWorkAssignment.Patches.PerformanceOptimizer
 {
     public class Patch_PerformanceOptimizer : Mod
     {
