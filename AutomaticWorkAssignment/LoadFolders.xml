@@ -22,7 +22,7 @@
     <!--<li IfModActive="saucypigeon.pawnbadge">1.6/Mods/PawnBadge</li>-->
     <!--<li IfModActive="ceteam.combatextended">1.6/Mods/CombatExtended</li>-->
     <li IfModActive="vanillaexpanded.skills">1.6/Mods/VanillaSkillsExpanded</li>
-    <!--<li IfModActive="taranchuk.performanceoptimizer">1.6/Mods/PerformanceOptimizer</li>-->
+    <li IfModActive="taranchuk.performanceoptimizer">1.6/Mods/PerformanceOptimizer</li>
     <li IfModActive="wiri.compositableloadouts">1.6/Mods/CompositableLoadouts</li>
   </v1.6>
 </loadFolders>

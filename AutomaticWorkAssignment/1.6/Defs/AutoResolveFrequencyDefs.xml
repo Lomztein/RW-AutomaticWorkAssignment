@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.AutoResolveFrequencyDef">
+    <defName>AutoResolveFrequency_Never</defName>
+    <label>Never</label>
+    <resolveCalender>None</resolveCalender>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.AutoResolveFrequencyDef">
+    <defName>AutoResolveFrequency_Yearly</defName>
+    <label>Yearly</label>
+    <resolveCalender>Year</resolveCalender>
+    <timeBetweenResolve>1</timeBetweenResolve>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.AutoResolveFrequencyDef">
+    <defName>AutoResolveFrequency_Monthly</defName>
+    <label>Monthly</label>
+    <resolveCalender>Quadrum</resolveCalender>
+    <timeBetweenResolve>1</timeBetweenResolve>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.AutoResolveFrequencyDef">
+    <defName>AutoResolveFrequency_Weekly</defName>
+    <label>Weekly</label>
+    <resolveCalender>Day</resolveCalender>
+    <timeBetweenResolve>5</timeBetweenResolve>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.AutoResolveFrequencyDef">
+    <defName>AutoResolveFrequency_Daily</defName>
+    <label>Daily</label>
+    <resolveCalender>Day</resolveCalender>
+    <timeBetweenResolve>1</timeBetweenResolve>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.AutoResolveFrequencyDef">
+    <defName>AutoResolveFrequency_12Hour</defName>
+    <label>Every 12 hour</label>
+    <resolveCalender>Hour</resolveCalender>
+    <timeBetweenResolve>12</timeBetweenResolve>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.AutoResolveFrequencyDef">
+    <defName>AutoResolveFrequency_8Hour</defName>
+    <label>Every 8 hour</label>
+    <resolveCalender>Hour</resolveCalender>
+    <timeBetweenResolve>8</timeBetweenResolve>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.AutoResolveFrequencyDef">
+    <defName>AutoResolveFrequency_4Hour</defName>
+    <label>Every 4 hour</label>
+    <resolveCalender>Hour</resolveCalender>
+    <timeBetweenResolve>4</timeBetweenResolve>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.AutoResolveFrequencyDef">
+    <defName>AutoResolveFrequency_2Hour</defName>
+    <label>Every 2 hour</label>
+    <resolveCalender>Hour</resolveCalender>
+    <timeBetweenResolve>2</timeBetweenResolve>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.AutoResolveFrequencyDef">
+    <defName>AutoResolveFrequency_Hour</defName>
+    <label>Every hour</label>
+    <resolveCalender>Hour</resolveCalender>
+    <timeBetweenResolve>1</timeBetweenResolve>
+  </Def>
+</Defs>

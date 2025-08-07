@@ -1,4 +1,9 @@
 ﻿using AutomaticWorkAssignment;
+using RimWorld;
+using System;
+using System.Collections;
+using System.Linq;
+using UnityEngine;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
@@ -18,13 +23,19 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 
             Scribe_Values.Look(ref _allowedAreaName, "allowedAreaName");
 
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            if (Scribe.mode == LoadSaveMode.PostLoadInit && _allowedAreaName != null && AllowedArea == null)
+                Find.Root.StartCoroutine(DelayedSetArea());
+        }
+
+        private IEnumerator DelayedSetArea()
+        {
+            // Continuously retry getting area if gravship landing is in progress.
+            do
             {
-                if (AllowedArea == null && _allowedAreaName != null)
-                {
-                    AllowedArea = Find.CurrentMap.areaManager.AllAreas.Find(x => x.Label == _allowedAreaName);
-                }
-            }
+                AllowedArea = MapWorkManager.LastInitializedMap.areaManager.AllAreas.Find(x => x.Label == _allowedAreaName);
+                if (AllowedArea != null) break;
+                yield return new WaitForSeconds(1f);
+            } while (GravshipUtils.LandingInProgress);
         }
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)

@@ -17,8 +17,6 @@ namespace Lomzie.AutomaticWorkAssignment
 
         private void InitializePawnSettingUIHandlers()
         {
-            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<CapacityPawnFitness, PawnCapacityDef>(
-                (m) => DefDatabase<PawnCapacityDef>.AllDefs, x => x.LabelCap, x => x?.CapacityDef?.LabelCap ?? "AWA.CapacitySelect".Translate(), (c, s) => c.CapacityDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<PartEffeciencyPawnFitness, BodyPartRecord>(
                 (m) => BodyDefOf.Human.AllParts, x => x.LabelCap, x => x.BodyPartRecord?.LabelCap ?? "AWA.BodyPartSelect".Translate(), (c, s) => c.BodyPartRecord = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<PartMissingPawnCondition, BodyPartRecord>(

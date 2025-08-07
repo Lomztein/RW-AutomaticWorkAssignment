@@ -60,6 +60,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private const float SettingsLabelSize = 24;
 
         private WorkSpecification _current;
+        public static WorkSpecification CurrentRenderSpec => Instance._current;
+        public static IPawnSetting CurrentRenderSetting { get; private set; }
 
         private WorkTypeDef[] _workTypeDefsSorted;
 
@@ -282,17 +284,22 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             if (Widgets.ButtonImageWithBG(resolveNowButtonRect, _resolveNowIcon, _iconImageSize))
                 _workManager.ResolveWorkAssignments();
-            if (Widgets.ButtonImageWithBG(autoResolveButtonRect, _workManager.RefreshEachDay ? _autoResolveOnIcon : _autoResolveOffIcon, _iconImageSize))
-                _workManager.RefreshEachDay = !_workManager.RefreshEachDay;
+            if (Widgets.ButtonImageWithBG(autoResolveButtonRect, _workManager.DoesAutoResolve ? _autoResolveOnIcon : _autoResolveOffIcon, _iconImageSize))
+                OpenAutoResolveFrequencyOptions();
             if (Widgets.ButtonImageWithBG(excludePawnsButtonRect, _excludePawnsIcon, _iconImageSize))
                 OpenExcludePawnsWindow();
             if (Widgets.ButtonImageWithBG(importFromSaveButtonRect, _openImportExportIcon, _iconImageSize))
                 OpenImportFromSaveWindow();
 
             TooltipHandler.TipRegion(resolveNowButtonRect, "AWA.ResolveAssignmentsNowTip".Translate());
-            TooltipHandler.TipRegion(autoResolveButtonRect, "AWA.AutoResolveTip".Translate(_workManager.RefreshEachDay.ToString()));
+            TooltipHandler.TipRegion(autoResolveButtonRect, "AWA.AutoResolveTip".Translate(_workManager.ResolveFrequencyDef.LabelCap));
             TooltipHandler.TipRegion(excludePawnsButtonRect, "AWA.ExcludePawnsTip".Translate());
             TooltipHandler.TipRegion(importFromSaveButtonRect, "AWA.SaveLoadTip".Translate());
+        }
+
+        private void OpenAutoResolveFrequencyOptions()
+        {
+            FloatMenuUtility.MakeMenu(AutoResolveFrequencyUtils.Defs, x => x.LabelCap, (x) => () => _workManager.ResolveFrequencyDef = x);
         }
 
         private void OpenExcludePawnsWindow()
@@ -713,6 +720,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         public static float DoPawnSetting (Vector2 position, float width, IPawnSetting setting, Action<IPawnSetting, int> onMoveSetting, Action<IPawnSetting> onDeleteSetting)
         {
+            IPawnSetting prevRender = CurrentRenderSetting;
+            CurrentRenderSetting = setting;
+
             Rect labelRect = new Rect(position.x, position.y, width, SettingsLabelSize);
 
             Text.Anchor = TextAnchor.MiddleLeft;
@@ -747,6 +757,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Widgets.DrawHighlightIfMouseover(row);
             TooltipHandler.TipRegion(row, setting.Description);
 
+            CurrentRenderSetting = prevRender;
             return labelRect.height + rowHeight;
         }
 

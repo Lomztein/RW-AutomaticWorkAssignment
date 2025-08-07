@@ -9,7 +9,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
         {
             if (pawn != null)
             {
-                return pawn?.skills?.PassionCount ?? 0;
+                return pawn?.skills.skills.Count(x => Utils.HasPassionIn(pawn, x.def)) ?? 0;
             }
             return 0f;
         }

@@ -28,7 +28,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.BetterPawnControl
 
         static BetterPawnControlPatch() 
         {
-            _harmony = new Harmony("Lomzie.AutomaticWorkAssignment_BetterPawnControl");
+            _harmony = new Harmony("Lomzie.AutomaticWorkAssignment.BetterPawnControl");
             Do(_harmony);
         }
 

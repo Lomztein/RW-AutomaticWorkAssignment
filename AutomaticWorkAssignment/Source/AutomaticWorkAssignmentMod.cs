@@ -6,13 +6,13 @@ using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using Lomzie.AutomaticWorkAssignment.UI;
 using Lomzie.AutomaticWorkAssignment.UI.Generic;
+using Lomzie.AutomaticWorkAssignment.UI.Modular;
 using Lomzie.AutomaticWorkAssignment.UI.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.UI.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor;
 using Lomzie.AutomaticWorkAssignment.UI.Windows;
 using RimWorld;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -39,14 +39,14 @@ namespace Lomzie.AutomaticWorkAssignment
         public override string SettingsCategory()
             => "Automatic Work Assignment";
 
-        private void InitializePawnSettingUIHandlers ()
+        private void InitializePawnSettingUIHandlers()
         {
             // Initialize fitness UI handlers.
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<PassionCountPawnFitness>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<CommitmentPawnFitness>());
-            PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<PassionLevelPawnFitness>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<OrderingPawnFitness>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<AgePawnFitness>());
+            PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<HealthPawnFitness>());
             PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<StockpilePawnFitness>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));
 
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<StatPawnFitness, StatDef>(
@@ -55,16 +55,31 @@ namespace Lomzie.AutomaticWorkAssignment
                 (m) => new SkillDef[] { null }.Concat(DefDatabase<SkillDef>.AllDefs), x => x?.LabelCap ?? "AWA.Auto".Translate(), x => x.SkillDef?.LabelCap ?? "AWA.Auto".Translate(), (f, s) => f.SkillDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SkillLevelPawnFitness, SkillDef>(
                 (m) => new SkillDef[] { null }.Concat(DefDatabase<SkillDef>.AllDefs), x => x?.LabelCap ?? "AWA.Auto".Translate(), x => x.SkillDef?.LabelCap ?? "AWA.Auto".Translate(), (f, s) => f.SkillDef = s));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<PassionLevelPawnFitness, SkillDef>(
+                (m) => new SkillDef[] { null }.Concat(DefDatabase<SkillDef>.AllDefs), x => x?.LabelCap ?? "AWA.Auto".Translate(), x => x.SkillDef?.LabelCap ?? "AWA.Auto".Translate(), (f, s) => f.SkillDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<NeedPawnFitness, NeedDef>(
                 (m) => DefDatabase<NeedDef>.AllDefs, x => x.LabelCap, x => x.NeedDef?.LabelCap ?? "AWA.NeedSelect".Translate(), (f, s) => f.NeedDef = s));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<CapacityPawnFitness, PawnCapacityDef>(
+                (m) => DefDatabase<PawnCapacityDef>.AllDefs, x => x.LabelCap, x => x?.CapacityDef?.LabelCap ?? "AWA.CapacitySelect".Translate(), (c, s) => c.CapacityDef = s));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<ImmunityMarginPawnFitness, HediffDef>(
+                (m) => new HediffDef[] { null }.Concat(ImmunityMarginPawnFitness.GetApplicableHediffDefs()), x => x?.LabelCap ?? "AWA.WorstCase".Translate(), x => x?.Hediff?.LabelCap ?? "AWA.WorstCase".Translate(), (c, s) => c.Hediff = s));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<TendProgressPawnFitness, HediffDef>(
+                (m) => new HediffDef[] { null }.Concat(TendProgressPawnFitness.GetApplicableHediffDefs()), x => x?.LabelCap ?? "AWA.WorstCase".Translate(), x => x?.Hediff?.LabelCap ?? "AWA.WorstCase".Translate(), (c, s) => c.Hediff = s));
 
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<InvertPawnFitness, PawnFitnessDef>());
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<ConditionPawnFitness, PawnConditionDef>());
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<CountPawnFitness, PawnConditionDef>("AWA.ConditionAdd".Translate(), false));
+            PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<CountPawnsPawnFitness, PawnConditionDef>("AWA.ConditionAdd".Translate(), false));
             PawnSettingUIHandlers.AddHandler(new ConstantPawnFitnessUIHandler());
 
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<AggregatePawnFitness, PawnFitnessDef>("AWA.FunctionAdd".Translate(), false));
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<AveragePawnFitness, PawnFitnessDef>("AWA.FunctionAdd".Translate(), false));
+
+            PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<ModulusPawnFitness>(
+                new Nested<ModulusPawnFitness, PawnFitnessDef>(x => x.LeftHandSide, (x, setting) => x.LeftHandSide = setting as IPawnFitness),
+                new Label<ModulusPawnFitness>(x => "%"),
+                new Nested<ModulusPawnFitness, PawnFitnessDef>(x => x.RightHandSide, (x, setting) => x.RightHandSide = setting as IPawnFitness)
+            ));
 
             // Initialize condition UI handlers.
             PawnSettingUIHandlers.AddHandler(new CommitmentLimitPawnConditionUIHandler());
@@ -79,6 +94,8 @@ namespace Lomzie.AutomaticWorkAssignment
                 (m) => DefDatabase<HediffDef>.AllDefs, x => x.LabelCap, x => x?.HediffDef?.LabelCap ?? "AWA.ConditionSelect".Translate(), (c, s) => c.HediffDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<PassionPawnCondition, SkillDef>(
                 (m) => DefDatabase<SkillDef>.AllDefs, x => x.LabelCap, x => x?.SkillDef?.LabelCap ?? "AWA.SkillSelect".Translate(), (c, s) => c.SkillDef = s));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<LearningSaturatedPawnCondition, SkillDef>(
+                (m) => DefDatabase<SkillDef>.AllDefs, x => x.LabelCap, x => x?.SkillDef?.LabelCap ?? "AWA.SkillSelect".Translate(), (c, s) => c.SkillDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SpecificPawnCondition, Pawn>(
                 (m) => MapWorkManager.GetManager(m).GetAllPawns(), x => x.Name.ToString(), x => x?.Pawn?.Name.ToString() ?? "AWA.PawnSelect".Translate(), (c, s) => c.Pawn = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<TraitPawnCondition, TraitDef>(
@@ -86,15 +103,19 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<WeaponClassPawnCondition, WeaponClassDef>(
                 (m) => DefDatabase<WeaponClassDef>.AllDefs, x => x.LabelCap, x => x.WeaponClassDef?.LabelCap ?? "AWA.ClassSelect".Translate(), (c, s) => c.WeaponClassDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<AssignmentPawnCondition, WorkSpecification>(
-                (m) => MapWorkManager.GetManager(m).WorkList, x => x.Name, x => x.WorkSpec?.Name ?? "AWA.WorkSpecSelect".Translate(), (c, s) => c.WorkSpec = s));
+                (m) => MapWorkManager.GetManager(m).WorkList.Where(x => MapWorkManager.GetManager(m).WorkList.IndexOf(x) < MapWorkManager.GetManager(m).WorkList.IndexOf(WorkManagerWindow.CurrentRenderSpec)), x => x.Name, x => x.WorkSpec?.Name ?? "AWA.WorkSpecSelect".Translate(), (c, s) => c.WorkSpec = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<PlanetLayerPawnCondition, PlanetLayerDef>(
                 (m) => DefDatabase<PlanetLayerDef>.AllDefs, x => x.LabelCap, x => x.LayerDef?.LabelCap ?? "AWA.PlanetLayerSelect".Translate(), (c, s) => c.LayerDef = s));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<GenderPawnCondition, Gender>(
+                (m) => (Gender[])Enum.GetValues(typeof(Gender)), (x) => GenderUtility.GetLabel(x), (x) => GenderUtility.GetLabel(x.Gender), (pp, po) => pp.Gender = po));
 
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<AnyPawnCondition, PawnConditionDef>("AWA.ConditionSelect".Translate(), false));
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<AllPawnCondition, PawnConditionDef>("AWA.ConditionSelect".Translate(), false));
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<NotPawnCondition, PawnConditionDef>());
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<AnyPawnPawnCondition, PawnConditionDef>());
             PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<StockpilePawnCondition>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));
+            PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<ApparelPawnCondition>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));
+            PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<WeaponPawnCondition>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));
 
             // Initialize post processor UI handlers.
             PawnSettingUIHandlers.AddHandler(new SetTitlePawnPostProcessorUIHandler());

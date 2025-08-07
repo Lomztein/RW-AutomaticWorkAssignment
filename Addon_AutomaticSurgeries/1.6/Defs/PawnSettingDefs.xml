@@ -2,12 +2,6 @@
 <Defs>
   <!-- Fitness -->
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
-    <defName>Lomzie_CapacityPawnFitness</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CapacityPawnFitness</settingClass>
-    <label>capacity</label>
-    <description>The given capacity of the pawn.</description>
-  </Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_PartEffeciencyPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.PartEffeciencyPawnFitness</settingClass>
     <label>part effeciency</label>

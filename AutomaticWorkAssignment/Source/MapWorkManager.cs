@@ -1,4 +1,6 @@
-﻿using RimWorld;
+﻿using Lomzie.AutomaticWorkAssignment.Defs;
+using RimWorld;
+using RimWorld.Planet;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,19 +18,29 @@ namespace Lomzie.AutomaticWorkAssignment
         public Map Map { get; private set; }
         public Map ParentMap;
 
+        public static MapWorkManager LastInitialized { get; private set; }
+        public static Map LastInitializedMap => LastInitialized?.Map;
+
+        private enum DefaultLoadType { Procedural, File, Gravship }
+
         public static MapWorkManager GetManager(Map map)
             => map.GetComponent<MapWorkManager>();
         public static MapWorkManager GetCurrentMapManager()
             => GetManager(Find.CurrentMap);
 
         public List<WorkSpecification> WorkList = new List<WorkSpecification>();
-        public List<Pawn> ExcludePawns = new List<Pawn>();
 
-        public bool RefreshEachDay = false;
+        private List<Pawn> _legacyExcludedPawns;
+        public List<PawnRef> ExcludedPawns;
+
+        private bool _refreshEachDayLegacy = false;
 
         public Dictionary<Pawn, List<WorkAssignment>> PawnAssignments = new Dictionary<Pawn, List<WorkAssignment>>();
 
-        private int _lastResolveDay;
+        private int _lastResolveTick;
+
+        public AutoResolveFrequencyDef ResolveFrequencyDef;
+        public bool DoesAutoResolve => ResolveFrequencyDef != AutoResolveFrequencyUtils.None;
 
         private Cache<IEnumerable<Pawn>> _cachedPawns = new Cache<IEnumerable<Pawn>>();
         private Cache<IEnumerable<Map>> _allMaps = new Cache<IEnumerable<Map>>();
@@ -44,52 +56,101 @@ namespace Lomzie.AutomaticWorkAssignment
         public MapWorkManager(Map map) : base(map)
         {
             Map = map;
+            LastInitialized = this;
             LongEventHandler.QueueLongEvent(InitializeManager(), "AWA.InitializeManager");
         }
 
         private IEnumerable InitializeManager()
         {
             yield return new WaitForEndOfFrame();
-            ResetToDefaults();
+
+            TryLoadLegacy();
+
+            if (WorkList.Count == 0)
+                ResetToDefaults();
+
+            EnsureSanity();
         }
 
-        public void ResetToDefaults ()
+        private void EnsureSanity ()
+        {
+            if (WorkList == null) WorkList = new List<WorkSpecification>();
+            if (ExcludedPawns == null) ExcludedPawns = new List<PawnRef>();
+            if (Reservations == null) Reservations = new Reservations();
+            if (ResolveFrequencyDef == null) ResolveFrequencyDef = AutoResolveFrequencyUtils.None;
+
+            ExcludedPawns = ExcludedPawns.Where(x => x != null && x.Pawn != null).ToList();
+
+            foreach (WorkSpecification spec in WorkList)
+            {
+                spec.Map = Map;
+            }
+        }
+
+        private void TryLoadLegacy ()
         {
             WorkManager legacyManager = WorkManager.GetLegacyManager();
             if (legacyManager != null && legacyManager.WorkList.Count > 0)
             {
                 WorkList = new List<WorkSpecification>(legacyManager.WorkList);
-                ExcludePawns = new List<Pawn>(legacyManager.ExcludePawns);
-                RefreshEachDay = legacyManager.RefreshEachDay;
+                ExcludedPawns = new List<PawnRef>(legacyManager.ExcludePawns.Select(x => new PawnRef(x)));
+                _refreshEachDayLegacy = legacyManager.RefreshEachDay;
                 Log.Message("[AWA] Migrated legacy work specs to map components.");
             }
-            else if (WorkList.Count == 0)
+        }
+
+        public void ResetToDefaults()
+        {
+            DefaultLoadType loadType = DetermineDefaultLoadType();
+            if (loadType == DefaultLoadType.Procedural)
+            {
+                WorkList = Defaults.GenerateDefaultWorkSpecifications().ToList();
+                ExcludedPawns = new List<PawnRef>();
+                ResolveFrequencyDef = AutoResolveFrequencyUtils.None;
+                Log.Message("[AWA] Generated default work specs.");
+            }
+            if (loadType == DefaultLoadType.File)
             {
                 FileInfo defaultConfig = AutomaticWorkAssignmentSettings.DefaultConfigurationFile;
-                if (defaultConfig == null)
-                {
-                    WorkList = Defaults.GenerateDefaultWorkSpecifications().ToList();
-                    Log.Message("[AWA] Generated default work specs.");
-                }
-                else
-                {
-                    IO.ImportFromFile(this, defaultConfig.Name, IO.GetConfigDirectory());
-                    Log.Message($"[AWA] Imported from '{defaultConfig.Name}'.");
-                }
+                IO.ImportFromFile(this, defaultConfig.Name, IO.GetConfigDirectory());
+                Log.Message($"[AWA] Imported from '{defaultConfig.Name}'.");
             }
+            if (loadType == DefaultLoadType.Gravship)
+            {
+                string fileName = GravshipUtils.GravshipConfigMigrationFileName;
+                IO.ImportFromFile(this, fileName, IO.GetGravshipConfigDirectory());
+                Log.Message($"[AWA] Imported gravship file '{fileName}'.");
+                GravshipUtils.GravshipConfigMigrationFileName = null;
+            }
+
+            EnsureSanity();
+        }
+
+        private DefaultLoadType DetermineDefaultLoadType ()
+        {
+            if (AutomaticWorkAssignmentSettings.AutoMigrateOnGravshipJump && Map.wasSpawnedViaGravShipLanding && GravshipUtils.GravshipConfigMigrationFileExists())
+                return DefaultLoadType.Gravship;
+
+            FileInfo defaultConfig = AutomaticWorkAssignmentSettings.DefaultConfigurationFile;
+            if (defaultConfig != null)
+                return DefaultLoadType.File;
+
+            return DefaultLoadType.Procedural;
         }
 
         public override void MapComponentTick()
         {
             base.MapComponentTick();
 
-            if (RefreshEachDay && ParentMap == null)
+            if (ParentMap == null)
             {
-                int currentDay = GenDate.DaysPassed;
-                if (currentDay > _lastResolveDay)
+                bool shouldResolve = AutoResolveFrequencyUtils.ShouldResolveNow(ResolveFrequencyDef, _lastResolveTick, map);
+                if(shouldResolve)
                 {
-                    _lastResolveDay = currentDay;
+                    _lastResolveTick = GenTicks.TicksAbs;
                     ResolveWorkAssignments();
+
+                    Logger.Message("[AWA] Resolved work assignments.");
                 }
             }
         }
@@ -236,7 +297,7 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             if (pawn == null) return false;
             if (pawn.Dead) return false;
-            if (ExcludePawns.Contains(pawn)) return false;
+            if (ExcludedPawns.Any(x => x.Is(pawn))) return false;
             return true;
         }
 
@@ -509,18 +570,24 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public override void ExposeData()
         {
-            Scribe_Values.Look(ref RefreshEachDay, "refreshEachDay", false);
+            Scribe_Defs.Look(ref ResolveFrequencyDef, "resolveFrequencyDef");
             Scribe_Collections.Look(ref WorkList, "workSpecifications", LookMode.Deep);
-            Scribe_Collections.Look(ref ExcludePawns, "excludePawns", LookMode.Reference);
+            Scribe_Collections.Look(ref ExcludedPawns, "excludedPawns", LookMode.Deep);
             Scribe_Deep.Look(ref Reservations, "reservations");
             Scribe_References.Look(ref ParentMap, "parentMap");
 
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            if (Scribe.mode != LoadSaveMode.Saving)
             {
-                if (WorkList == null) WorkList = new List<WorkSpecification>();
-                if (ExcludePawns == null) ExcludePawns = new List<Pawn>();
-                if (Reservations == null) Reservations = new Reservations();
+                Scribe_Collections.Look(ref _legacyExcludedPawns, "excludePawns", LookMode.Reference);
+                if (_legacyExcludedPawns != null && _legacyExcludedPawns.Count > 0)
+                    ExcludedPawns = new List<PawnRef>(_legacyExcludedPawns.Where(x => x != null).Select(x => new PawnRef(x)));
+
+                Scribe_Values.Look(ref _refreshEachDayLegacy, "refreshEachDay", false);
+                if (_refreshEachDayLegacy)
+                    ResolveFrequencyDef = AutoResolveFrequencyUtils.Daily;
             }
+
+            EnsureSanity();
         }
 
         public void RemoveAssignmentFromPawn(WorkAssignment assignment, Pawn pawn)
@@ -534,12 +601,14 @@ namespace Lomzie.AutomaticWorkAssignment
         public WorkSpecification CreateNewWorkSpecification()
         {
             WorkSpecification spec = new WorkSpecification();
+            spec.Map = Map;
             WorkList.Add(spec);
             return spec;
         }
 
         public void AddWorkSpecification(WorkSpecification spec)
         {
+            spec.Map = Map;
             WorkList.Add(spec);
         }
 
@@ -565,7 +634,7 @@ namespace Lomzie.AutomaticWorkAssignment
         private IEnumerator DelayedDeleteWorkSpecification(WorkSpecification spec)
         {
             yield return new WaitForEndOfFrame();
-            WorkList.Remove(spec); ;
+            WorkList.Remove(spec);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
-            string title = string.IsNullOrEmpty(Title) ? workSpecification.Name : Title;
+            string title = string.IsNullOrEmpty(Title) ? pawn.story.TitleDefaultCap : Title;
             pawn.story.title = title;
         }
 

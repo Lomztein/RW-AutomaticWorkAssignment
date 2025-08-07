@@ -13,6 +13,12 @@
     <description>Assign to pawns with any passion in the given skill.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>LomzieLearningSaturatedCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.LearningSaturatedPawnCondition</settingClass>
+    <label>learning saturated</label>
+    <description>Check if pawn has a particular skill learning saturated.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_HasHediffCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.HediffPawnCondition</settingClass>
     <label>health condition</label>
@@ -43,6 +49,12 @@
     <description>Assign to guest pawns.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_IsGender</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.GenderPawnCondition</settingClass>
+    <label>is gender</label>
+    <description>Check if pawn is of a given gender.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_CommitmentLimit</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.CommitmentLimitPawnCondition</settingClass>
     <label>commitment limit</label>
@@ -53,6 +65,18 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.StockpilePawnCondition</settingClass>
     <label>has stockpile</label>
     <description>Check if any of the allowed items are available.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_HasApparel</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.ApparelPawnCondition</settingClass>
+    <label>has apparel</label>
+    <description>Check if the pawn is wearing the given apparel.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_HasWeapon</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.WeaponPawnCondition</settingClass>
+    <label>has weapon</label>
+    <description>Check if the pawn is carrying the given weapon.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_PlanetLayer</defName>

@@ -16,6 +16,7 @@ namespace Lomzie.AutomaticWorkAssignment
     public class IO
     {
         private const string CONFIG_SAVE_FOLDER = "AutomaticWorkAssignment/Configs";
+        private const string GRAVSHIP_CONFIG_SAVE_FOLDER = "AutomaticWorkAssignment/GravshipConfigs";
         private const string CLIPBOARD_SAVE_FOLDER = "AutomaticWorkAssignment/Clipboard";
 
         public static DirectoryInfo GetConfigDirectory ()
@@ -23,6 +24,9 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public static DirectoryInfo GetClipboardDirectory()
             => GetOrCreateDirectory(CLIPBOARD_SAVE_FOLDER);
+
+        public static DirectoryInfo GetGravshipConfigDirectory()
+            => GetOrCreateDirectory(GRAVSHIP_CONFIG_SAVE_FOLDER);
 
         private static DirectoryInfo GetOrCreateDirectory(string saveDataSubfolder)
         {
@@ -36,8 +40,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public static FileInfo GetFile(string fileName, DirectoryInfo directory)
         {
-            DirectoryInfo folder = GetConfigDirectory();
-            FileInfo file = new FileInfo(Path.ChangeExtension(Path.Combine(folder.FullName, fileName), "xml"));
+            FileInfo file = new FileInfo(Path.ChangeExtension(Path.Combine(directory.FullName, fileName), "xml"));
             return file;
         }
 

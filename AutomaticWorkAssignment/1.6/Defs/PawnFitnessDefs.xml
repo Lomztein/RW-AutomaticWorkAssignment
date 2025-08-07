@@ -61,6 +61,30 @@
     <description>Priorize pawns with the given condition.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_CapacityPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CapacityPawnFitness</settingClass>
+    <label>capacity</label>
+    <description>The given capacity of the pawn.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_HealthPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.HealthPawnFitness</settingClass>
+    <label>health</label>
+    <description>The overall health percentage of the pawn.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_ImmunityMarginPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ImmunityMarginPawnFitness</settingClass>
+    <label>immunity margin</label>
+    <description>The margin between severity and immunity, either min of all, or a select condition.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_TendProgressPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.TendProgressPawnFitness</settingClass>
+    <label>tend progress</label>
+    <description>How far tending has progress for the worst case, or a select condition.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_InvertPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.InvertPawnFitness</settingClass>
     <label>invert</label>
@@ -91,6 +115,12 @@
     <description>Multiply nested fitness functions.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_ModulusPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ModulusPawnFitness</settingClass>
+    <label>modulus</label>
+    <description>Modulus two fitness functions.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_MinPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.MinPawnFitness</settingClass>
     <label>min</label>
@@ -113,5 +143,11 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CountPawnFitness</settingClass>
     <label>count</label>
     <description>Count passed pawn conditions.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_CountPawnsPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CountPawnsPawnFitness</settingClass>
+    <label>count colonists</label>
+    <description>Count amount of colonists that pass given conditions, or number of colonists if empty.</description>
   </Def>
 </Defs>

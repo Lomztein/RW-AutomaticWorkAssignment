@@ -10,6 +10,9 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
         public Tag Tag;
         public LoadoutState State;
 
+        private string _tagName;
+        private string _stateName;
+
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
             if (pawn != null && Tag != null)
@@ -28,6 +31,23 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
             base.ExposeData();
             Scribe_References.Look(ref Tag, "Tag");
             Scribe_References.Look(ref State, "state");
+
+            if (Scribe.mode == LoadSaveMode.Saving)
+            {
+                _tagName = Tag?.name;
+                _stateName = State?.name;
+            }
+
+            Scribe_Values.Look(ref _tagName, "tagName");
+            Scribe_Values.Look(ref _stateName, "stateName");
+
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if (_tagName != null && Tag == null)
+                    Tag = LoadoutManager.Tags.FirstOrDefault(x => x.name == _tagName);
+                if (_stateName != null & State == null)
+                    State = LoadoutManager.States.FirstOrDefault(x => x.name == _stateName);
+            }
         }
     }
 }

@@ -24,6 +24,8 @@ namespace Lomzie.AutomaticWorkAssignment
         public bool IsSuspended;
         public bool EnableAlert = true;
         public float Commitment; // 0 = Occasional, 0.5 = part-time work, 1.0 = full-time work.
+        
+        public Map Map;
 
         public List<IPawnCondition> Conditions = new List<IPawnCondition>(); // Conditions required for a pawn to be valid. All conditions must be met.
         public List<IPawnFitness> Fitness = new List<IPawnFitness>(); // Used to sort pawns, later elements are used to break earlier ties.
@@ -185,11 +187,14 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public string GetUniqueLoadID()
         {
-            int uniqueId = Name.GetHashCode() * 
-                (Priorities.OrderedPriorities.Count + 6516) * 
-                (Fitness.Count + 4754) * 
-                (Conditions.Count + 7988) * 
+            int uniqueId = Name.GetHashCode() *
+                (Priorities.OrderedPriorities.Count + 6516) *
+                (Fitness.Count + 4754) *
+                (Conditions.Count + 7988) *
                 (PostProcessors.Count + 6874);
+
+            if (Map != null)
+                uniqueId += Map.uniqueID;
 
             return $"WorkSpec_{uniqueId}";
         }

@@ -10,6 +10,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
     public class ClearTagsPawnPostProcessor : PawnSetting, IPawnPostProcessor
     {
         public LoadoutState State;
+        private string _stateName;
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
@@ -63,6 +64,17 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
         {
             base.ExposeData();
             Scribe_References.Look(ref State, "state");
+
+            if (Scribe.mode == LoadSaveMode.Saving)
+                _stateName = State?.name;
+
+            Scribe_Values.Look(ref _stateName, "stateName");
+
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if (_stateName != null & State == null)
+                    State = LoadoutManager.States.FirstOrDefault(x => x.name == _stateName);
+            }
         }
     }
 }

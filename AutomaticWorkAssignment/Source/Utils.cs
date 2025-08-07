@@ -105,5 +105,18 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             return (x % m + m) % m;
         }
+
+        public static bool HasPassionIn(Pawn pawn, SkillDef skillDef)
+        {
+            if (pawn != null && pawn.skills != null)
+            {
+                var skill = pawn.skills.GetSkill(skillDef);
+                bool passion = skill.passion != Passion.None;
+                float learnRate = skill.LearnRateFactor(true);
+                float threshold = AutomaticWorkAssignmentSettings.PassionLearnRateThreshold;
+                return passion && learnRate >= threshold;
+            }
+            return false;
+        }
     }
 }

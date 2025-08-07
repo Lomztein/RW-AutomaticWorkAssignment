@@ -22,6 +22,7 @@
   <AWA.PolicySelect>Select policy</AWA.PolicySelect>
   <AWA.IdeoRoleSelect>Select role</AWA.IdeoRoleSelect>
   <AWA.NeedSelect>Select need</AWA.NeedSelect>
+  <AWA.CapacitySelect>Select capacity</AWA.CapacitySelect>
   <AWA.PlanetLayerSelect>Select planet layer</AWA.PlanetLayerSelect>
   <AWA.Select>Select</AWA.Select>
   <AWA.ScheduleEdit>Edit schedule</AWA.ScheduleEdit>
@@ -33,6 +34,7 @@
   <AWA.WorkSpecSelect>Select spec</AWA.WorkSpecSelect>
   <AWA.SelectTitle>Select title</AWA.SelectTitle>
   <AWA.SelectSave>Select save</AWA.SelectSave>
+  <AWA.WorstCase>Worst case</AWA.WorstCase>
   <AWA.True>True</AWA.True>
   <AWA.False>False</AWA.False>
   <AWA.Default>Default</AWA.Default>
@@ -100,9 +102,14 @@
   <AWA.SettingsMaxCommitment>Max commitment: {0}</AWA.SettingsMaxCommitment>
   <AWA.SettingsMaxCommitmentTooltip>The maximum commitment that a pawn may have.</AWA.SettingsMaxCommitmentTooltip>
   <AWA.SettingsMaxHoursForMentalBreak>Hour threshold for mental break</AWA.SettingsMaxHoursForMentalBreak>
+  <AWA.SettingsPassionLearnRateThreshold>Learn rate requirement for passion</AWA.SettingsPassionLearnRateThreshold>
   <AWA.SettingsIgnoreUnmanagedWork>Ignore unmanaged work types</AWA.SettingsIgnoreUnmanagedWork>
   <AWA.SettingsAdditionalLogging>Additional logging</AWA.SettingsAdditionalLogging>
   <AWA.SettingsAdditionalLoggingTooltip>Might provide additional information in console, as to why things are not working.</AWA.SettingsAdditionalLoggingTooltip>
+  <AWA.SettingsRedCriticalAlert>Red alert for insufficient critical workers</AWA.SettingsRedCriticalAlert>
+  <AWA.SettingsRedCriticalAlertTooltip>If on, insufficient critical workers alert will be flashing red.</AWA.SettingsRedCriticalAlertTooltip>
+  <AWA.SettingsAutoMigrateOnGravshipJump>Auto migrate on gravship jump</AWA.SettingsAutoMigrateOnGravshipJump>
+  <AWA.SettingsAutoMigrateOnGravshipJumpTooltip>Automatically migrate work specifications to new map when performing a gravship jump. If disabled, default configuration will be used instead.</AWA.SettingsAutoMigrateOnGravshipJumpTooltip>
   <AWA.SettingsDefaultConfigurationFile>Default configuration file</AWA.SettingsDefaultConfigurationFile>
   <AWA.SettingsDefaultConfigurationFileNoneSelected>Default</AWA.SettingsDefaultConfigurationFileNoneSelected>
   

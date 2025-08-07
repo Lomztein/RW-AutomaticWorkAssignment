@@ -1,5 +1,7 @@
-﻿using PerformanceOptimizer;
+﻿using HarmonyLib;
+using PerformanceOptimizer;
 using RimWorld;
+using System;
 using System.Reflection;
 using Verse;
 
@@ -9,15 +11,18 @@ namespace Patch_PerformanceOptimizer
     {
         public Patch_PerformanceOptimizer(ModContentPack content) : base(content)
         {
-            LongEventHandler.ExecuteWhenFinished(ApplyPatch);
+            Harmony harmony = new Harmony("Lomzie.AutomaticWorkAssignment.PerfOptimizer");
+            var init = AccessTools.Method("PerformanceOptimizerSettings:Initialize");
+            harmony.Patch(init, postfix: new Action(Settings_Initialize_PostFix));
         }
 
-        private void ApplyPatch ()
+        private static void Settings_Initialize_PostFix ()
         {
             var learnRateOptimization = PerformanceOptimizerSettings.optimizations.Find(x => x is Optimization_SkillRecord_LearnRateFactor);
             FieldInfo enabledField = typeof(Optimization_SkillRecord_LearnRateFactor).GetField("enabled", BindingFlags.NonPublic | BindingFlags.Instance);
             enabledField.SetValue(learnRateOptimization, false);
-            Log.Message("[Automatic Work Assignment] Disabled Performance Optimizers SkillRecord.LearnRateFactor optimization.");
+            learnRateOptimization.Apply();
+            Log.Message("[AWA] Disabled Performance Optimizers SkillRecord.LearnRateFactor optimization.");
         }
     }
 }
