@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)\1.6\Assemblies\AutomaticWorkAssignment.dll&quot; /y&#xD;&#xA;$(SolutionDir)copy.bat &quot;$(SolutionDir)&quot; AutomaticWorkAssignment &quot;$(SteamAppsPath)\common\RimWorld\Mods&quot;" />
+    <Exec Command="copy /b &quot;$(TargetDir)\$(TargetName).*&quot; &quot;$(SolutionDir)\AutomaticWorkAssignment\1.6\Assemblies&quot; /y&#xD;&#xA;$(SolutionDir)copy.bat &quot;$(SolutionDir)&quot; AutomaticWorkAssignment &quot;$(SteamAppsPath)\common\RimWorld\Mods&quot;" />
   </Target>
 
 </Project>
