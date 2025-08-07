@@ -4,6 +4,7 @@
     <TargetFramework>net472</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>$(RootNamespace).Patches.PerformanceOptimizer</RootNamespace>
+    <AutomaticWorkAssignmentPatchOf>AutomaticWorkAssignment</AutomaticWorkAssignmentPatchOf>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,9 +25,5 @@
       <HintPath>$(SteamAppsPath)\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /b &quot;$(TargetDir)\$(TargetName).*&quot; &quot;$(SolutionDir)\AutomaticWorkAssignment\1.6\Mods\PerformanceOptimizer\Assemblies\Patch_PerformanceOptimizer.dll&quot;" />
-  </Target>
 
 </Project>
