@@ -5,12 +5,12 @@
     <li IfModActive="Ludeon.RimWorld.Ideology">1.5/Mods/Ideology</li>
     <li IfModActive="Ludeon.RimWorld.Biotech">1.5/Mods/Biotech</li>
     <li IfModActive="Ludeon.RimWorld.Anomaly">1.5/Mods/Anomaly</li>
-    <li IfModActive="voult.betterpawncontrol">1.5/Mods/BetterPawnControl</li>
-    <li IfModActive="saucypigeon.pawnbadge">1.5/Mods/PawnBadge</li>
-    <li IfModActive="ceteam.combatextended">1.5/Mods/CombatExtended</li>
-    <li IfModActive="vanillaexpanded.skills">1.5/Mods/VanillaSkillsExpanded</li>
-    <li IfModActive="taranchuk.performanceoptimizer">1.5/Mods/PerformanceOptimizer</li>
-    <li IfModActive="wiri.compositableloadouts">1.5/Mods/CompositableLoadouts</li>
+    <li IfModActive="voult.betterpawncontrol">1.5/Mods/Patch_BetterPawnControl</li>
+    <li IfModActive="saucypigeon.pawnbadge">1.5/Mods/Patch_PawnBadge</li>
+    <li IfModActive="ceteam.combatextended">1.5/Mods/Patch_CombatExtended</li>
+    <li IfModActive="vanillaexpanded.skills">1.5/Mods/Patch_VanillaSkillsExpanded</li>
+    <li IfModActive="taranchuk.performanceoptimizer">1.5/Mods/Patch_PerformanceOptimizer</li>
+    <li IfModActive="wiri.compositableloadouts">1.5/Mods/Patch_CompositableLoadouts</li>
   </v1.5>
   <v1.6>
     <li>1.6</li>
@@ -18,11 +18,11 @@
     <li IfModActive="Ludeon.RimWorld.Ideology">1.6/Mods/Ideology</li>
     <li IfModActive="Ludeon.RimWorld.Biotech">1.6/Mods/Biotech</li>
     <li IfModActive="Ludeon.RimWorld.Anomaly">1.6/Mods/Anomaly</li>
-    <li IfModActive="voult.betterpawncontrol">1.6/Mods/BetterPawnControl</li>
-    <!--<li IfModActive="saucypigeon.pawnbadge">1.6/Mods/PawnBadge</li>-->
-    <!--<li IfModActive="ceteam.combatextended">1.6/Mods/CombatExtended</li>-->
-    <li IfModActive="vanillaexpanded.skills">1.6/Mods/VanillaSkillsExpanded</li>
-    <li IfModActive="taranchuk.performanceoptimizer">1.6/Mods/PerformanceOptimizer</li>
-    <li IfModActive="wiri.compositableloadouts">1.6/Mods/CompositableLoadouts</li>
+    <li IfModActive="voult.betterpawncontrol">1.6/Mods/Patch_BetterPawnControl</li>
+    <!--<li IfModActive="saucypigeon.pawnbadge">1.6/Mods/Patch_PawnBadge</li>-->
+    <!--<li IfModActive="ceteam.combatextended">1.6/Mods/Patch_CombatExtended</li>-->
+    <li IfModActive="vanillaexpanded.skills">1.6/Mods/Patch_VanillaSkillsExpanded</li>
+    <li IfModActive="taranchuk.performanceoptimizer">1.6/Mods/Patch_PerformanceOptimizer</li>
+    <li IfModActive="wiri.compositableloadouts">1.6/Mods/Patch_CompositableLoadouts</li>
   </v1.6>
 </loadFolders>

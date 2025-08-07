@@ -30,4 +30,23 @@
 			Text="&quot;$(SteamAppsPath)&quot; contains an unexpected version of RimWorld ($(RimWorldActualVersion)). Expected $(RimWorldVersion)."
 			Condition="'$(RimWorldActualVersion)' != '$(RimWorldVersion)'" />
 	</Target>
+
+	<Target Name="CopyMod" AfterTargets="PostBuildEvent" Condition="'$(AutomaticWorkAssignmentPatchOf)' == ''">
+		<Exec
+			WorkingDirectory="$(SolutionDir)"
+			Command="
+				xcopy &quot;$(TargetDir)\$(TargetName).*&quot; &quot;$(MSBuildProjectDirectory)\$(RimWorldVersion)\Assemblies&quot; /y /I
+				copyMod.bat      &quot;$(TargetName)&quot; &quot;$(SteamAppsPath)\common\RimWorld\Mods&quot;
+			"
+			LogStandardErrorAsError="true" />
+	</Target>
+	<Target Name="CopyModPatch" AfterTargets="PostBuildEvent" Condition="'$(AutomaticWorkAssignmentPatchOf)' != ''">
+		<Exec
+			WorkingDirectory="$(SolutionDir)"
+			Command="
+				xcopy &quot;$(TargetDir)\$(TargetName).*&quot; &quot;$(MSBuildProjectDirectory)\$(RimWorldVersion)\Assemblies&quot; /y /I
+				copyModPatch.bat &quot;$(TargetName)&quot; &quot;$(SteamAppsPath)\common\RimWorld\Mods\$(AutomaticWorkAssignmentPatchOf)&quot; &quot;$(AutomaticWorkAssignmentPatchOf)&quot;
+			"
+			LogStandardErrorAsError="true" />
+	</Target>
 </Project>
