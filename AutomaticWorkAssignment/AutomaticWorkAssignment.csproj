@@ -1,8 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <OutputType>Library</OutputType>
+    <RootNamespace>$(RootNamespace)</RootNamespace>
   </PropertyGroup>
   
   <ItemGroup>

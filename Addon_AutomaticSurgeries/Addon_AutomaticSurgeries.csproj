@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <OutputType>Library</OutputType>
+    <RootNamespace>$(RootNamespace)</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

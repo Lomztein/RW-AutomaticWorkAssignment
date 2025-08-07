@@ -13,4 +13,8 @@
 			Text="&quot;$(SteamAppsPath)&quot; is not the installation folder of RimWorld. You can override it in &quot;Directory.build.props.user&quot; (create the file if it does not exists)"
 			Condition="!Exists('$(SteamAppsPath)\common\RimWorld')" />
 	</Target>
+	
+	<PropertyGroup>
+		<RootNamespace>Lomzie.AutomaticWorkAssignment</RootNamespace>
+	</PropertyGroup>
 </Project>
