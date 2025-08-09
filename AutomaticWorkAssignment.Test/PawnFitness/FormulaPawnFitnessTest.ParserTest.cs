@@ -188,7 +188,7 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                     #region Function calls
                     new FormulaTestCase("Call Tick",
                         formula: "TICK()",
-                        linqExpr: "tick()",
+                        linqExpr: "Tick()",
                         syntheticTokens: ["TICK", OpenGroup, CloseGroup],
                         evaluationResult: 0
                     ),
@@ -204,17 +204,17 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                         syntheticTokens: ["AVG", OpenGroup, 1, ArgSep, 3, CloseGroup],
                         evaluationResult: 2
                     ),
-                    new FormulaTestCase("Nested Average call on 2 values",
-                        formula: "AVG(AVG(0, 2), 3)",
-                        linqExpr: "new [] {new []{ 0, 2}.Average(), 3}.Average()",
-                        syntheticTokens: ["AVG", OpenGroup, "AVG", OpenGroup, 0, ArgSep, 2, CloseGroup, ArgSep, 3, CloseGroup],
-                        evaluationResult: 2
-                    ),
                     new FormulaTestCase("Call Average on 3 values",
                         formula: "AVG(1, 3, 5)",
                         linqExpr: "new [] {1, 3, 5}.Average()",
                         syntheticTokens: ["AVG", OpenGroup, 1, ArgSep, 3, ArgSep, 5, CloseGroup],
                         evaluationResult: 3
+                    ),
+                    new FormulaTestCase("Nested Average call on 2 values",
+                        formula: "AVG(AVG(0, 2), 3)",
+                        linqExpr: "new [] {new [] {0, 2}.Average(), 3}.Average()",
+                        syntheticTokens: ["AVG", OpenGroup, "AVG", OpenGroup, 0, ArgSep, 2, CloseGroup, ArgSep, 3, CloseGroup],
+                        evaluationResult: 2
                     ),
                     new FormulaTestCase("Call Average on 2 values with expressions within",
                         formula: "AVG(1 + 1, 3+2-1)",
@@ -228,11 +228,23 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                         syntheticTokens: ["SQRT", OpenGroup, 4, CloseGroup],
                         evaluationResult: 2
                     ),
-                    new FormulaTestCase("Call Root",
+                    new FormulaTestCase("Call ROOT",
                         formula: "ROOT(16, 4)",
-                        linqExpr: "ROOT(16, 4)",
+                        linqExpr: "(16 ** (1 / 4))",
                         syntheticTokens: ["ROOT", OpenGroup, 16, ArgSep, 4, CloseGroup],
                         evaluationResult: 2
+                    ),
+                    new FormulaTestCase("Call MIN",
+                        formula: "MIN(1, 42, -1, 2)",
+                        linqExpr: "new [] {1, 42, -1, 2}.Min()",
+                        syntheticTokens: ["MIN", OpenGroup, 1, ArgSep, 42, ArgSep, Subtract, 1, ArgSep, 2, CloseGroup],
+                        evaluationResult: -1
+                    ),
+                    new FormulaTestCase("Call MAX",
+                        formula: "MAX(1, 42, -1, 2)",
+                        linqExpr: "new [] {1, 42, -1, 2}.Max()",
+                        syntheticTokens: ["MAX", OpenGroup, 1, ArgSep, 42, ArgSep, Subtract, 1, ArgSep, 2, CloseGroup],
+                        evaluationResult: 42
                     ),
                     #endregion
                 ];

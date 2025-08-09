@@ -224,85 +224,121 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 private static readonly ParameterExpression requestParameter = Expression.Parameter(typeof(ResolveWorkRequest), "request");
                 private Expression? root;
 
-                private interface INpnNode { }
-                private interface INpnOutput: INpnNode { }
-                private interface INpnValue : INpnOutput { }
-                private interface INpnGroup: INpnNode {
-
-                    List<INpnNode> Children { get; }
-
-                    INpnNode Complete();
+                interface IAstNode
+                {
+                    IAstExpression? Parent { get; }
                 }
-                private readonly struct NpnLiteral: INpnNode, INpnValue
+                interface IAstExpression: IAstNode
+                {
+                    IEnumerable<IAstNode> Children { get; }
+                    void Append(IAstNode node);
+                    void Complete(ref IAstExpression current);
+                    void Replace(IAstNode previous, IAstNode replacement);
+                }
+                private class AstNode: IAstNode
+                {
+                    public AstNode(IAstExpression? parent)
+                    {
+                        Parent = parent;
+                    }
+
+                    public IAstExpression? Parent { get; }
+                }
+                private class AstLiteral: AstNode
                 {
                     public readonly NumberToken Token;
+                    public double Value => Token.Value;
 
-                    public NpnLiteral(NumberToken token)
+                    public AstLiteral(IAstExpression? parent, NumberToken token) : base(parent)
                     {
                         Token = token;
                     }
                 }
-                private class NpnGroup : INpnGroup, INpnValue
+                private abstract class AstExpression<TNode> : AstNode, IAstExpression where TNode : AstNode
                 {
-                    public List<INpnNode> Children { get; private set; }
+                    protected readonly List<TNode> children = new List<TNode>();
+                    public virtual IReadOnlyList<TNode> Children => children;
+                    IEnumerable<IAstNode> IAstExpression.Children => Children;
 
-                    public NpnGroup(List<INpnNode>? children = null)
+                    public AstExpression(IAstExpression? parent) : base(parent) { }
+
+                    public virtual void Append(IAstNode node) => Append((TNode)node);
+                    public virtual void Append(TNode node)
                     {
-                        Children = children ?? new();
+                        children.Add(node);
                     }
 
-                    public INpnNode Complete()
+                    public void Replace(IAstNode previous, IAstNode replacement) => Replace((TNode)previous, (TNode)replacement);
+                    public void Replace(TNode previous, TNode replacement)
                     {
+                        if (children.Replace(previous, replacement) == 0)
+                        {
+                            throw new InvalidOperationException("Failed to replace");
+                        }
+                    }
+
+                    public virtual void Complete(ref IAstExpression current) {
+                        if(current != this)
+                        {
+                            throw new InvalidOperationException("Desynced");
+                        }
+                    }
+                }
+                private class AstCompositeArithmeticExpression : AstExpression<AstNode>
+                {
+                    public AstCompositeArithmeticExpression(IAstExpression? parent) : base(parent){}
+
+                    public override void Complete(ref IAstExpression current)
+                    {
+                        base.Complete(ref current);
                         // Handle negative unary
-                        List<INpnNode> negated = new(Children.Count);
+                        List<AstNode> negated = new(Children.Count);
                         for (var i = 0; i < Children.Count; i++)
                         {
                             if (
                                 Children.Count >= i + 2 &&
-                                Children[i] is NpnOperator npnOperation && npnOperation.Token.Value == Operator.Subtract &&
-                                (i == 0 || Children[i - 1] is NpnOperator)
+                                Children[i] is AstArithmeticExpression arithmeticExpression && arithmeticExpression.Token.Value == Operator.Subtract &&
+                                (i == 0 || Children[i - 1] is AstArithmeticExpression)
                             )
                             {
-                                if (Children[i + 1] is NpnLiteral literal)
+                                if (Children[i + 1] is AstLiteral literalExpression)
                                 {
-                                    negated.Add(new NpnLiteral(new NumberToken(-literal.Token.Value)));
+                                    negated.Add(new AstLiteral(this, new NumberToken(-literalExpression.Token.Value)));
                                 }
-                                else if (Children[i + 1] is INpnValue value)
+                                else
                                 {
-                                    negated.Add(new NpnUnaryOperation(npnOperation.Token, value));
-                                } else
-                                {
-                                    negated.Add(npnOperation);
+                                    negated.Add(arithmeticExpression);
                                     negated.Add(Children[i + 1]);
                                 }
                                 i++;
-                            } else
+                            }
+                            else
                             {
                                 negated.Add(Children[i]);
                             }
                         }
 
                         // Verify alternated expressions / operators
-                        var operators = new List<(NpnOperator op, int index)>();
+                        var operators = new List<(AstArithmeticExpression op, int index)>();
                         for (var i = 0; i < negated.Count; i++)
                         {
                             var expectedOperator = i % 2 == 1;
-                            if (!(expectedOperator ? negated[i] is NpnOperator : negated[i] is INpnValue))
+                            if (!(!expectedOperator || negated[i] is AstArithmeticExpression))
                             {
                                 throw new InvalidOperationException();
                             }
-                            if(expectedOperator)
+                            if (expectedOperator)
                             {
-                                operators.Add(((NpnOperator)negated[i], i));
+                                operators.Add(((AstArithmeticExpression)negated[i], i));
                             }
                         }
 
                         var orderedOperators = operators.OrderBy(pair => pair.op.Token.Value, new OperatorOrderComparer()).ToList();
 
-                        var last = (INpnValue)negated[0];
-                        foreach(var (orderedOperator, index) in orderedOperators)
+                        var last = negated[0];
+                        foreach (var (orderedOperator, index) in orderedOperators)
                         {
-                            var npnOperator = new NpnBinaryOperation(orderedOperator.Token, (INpnValue)negated[index - 1], (INpnValue)negated[index + 1]);
+                            var npnOperator = new AstBinaryExpression(Parent, orderedOperator.Token, negated[index - 1], negated[index + 1]);
                             last = npnOperator;
                             negated = negated
                                 .Take(index - 1)
@@ -310,62 +346,109 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                 .Concat(negated.Skip(index + 2))
                                 .ToList();
                         }
-                        return last;
+
+                        Parent.Replace(this, last);
+                        current = Parent;
                     }
                 }
-                private readonly struct NpnCall : INpnGroup, INpnValue
+                private class AstCallExpressionArg : AstCompositeArithmeticExpression
                 {
-                    public readonly NameToken Name;
-                    public List<INpnNode> Children { get; }
-
-                    public NpnCall(NameToken name, List<INpnNode> children)
+                    public new AstCallExpression Parent { get => (AstCallExpression)base.Parent; }
+                    public static AstCallExpressionArg Init(AstCallExpression parent, ref IAstExpression context)
                     {
-                        Name = name;
-                        Children = children;
+                        var arg = new AstCallExpressionArg(parent);
+                        context = arg;
+                        return arg;
                     }
-                    public INpnNode Complete()
+                    private AstCallExpressionArg(AstCallExpression? parent) : base(parent) { }
+
+                    public override void Complete(ref IAstExpression current)
                     {
-                        return this;
+                        // Functions are always initialized with a placeholder arg.
+                        // Normalize arithmetic operation only for functions with args.
+                        if(Children.Count != 0 || Parent.Children.Count != 1)
+                        {
+                            base.Complete(ref current);
+                        }
+                        current = Parent;
+                        current.Complete(ref current);
+                    }
+                    public void CompleteForNewArg(ref IAstExpression current)
+                    {
+                        base.Complete(ref current);
                     }
                 }
-                private class NpnOperator : INpnGroup
+                private class AstCallExpression : AstExpression<AstNode>
                 {
-                    public readonly OperatorToken Token;
-                    public List<INpnNode> Children { get; }
+                    public readonly NameToken Token;
+                    public string Name => Token.Value;
 
-                    public NpnOperator(OperatorToken token, List<INpnNode>? children = null)
+                    public static void Init(ref IAstExpression context, NameToken name)
+                    {
+                        var callExpression = new AstCallExpression(context, name);
+                        context.Append(callExpression);
+                        context = callExpression;
+                        var arg = AstCallExpressionArg.Init(callExpression, ref context);
+                        callExpression.Append(arg);
+                    }
+
+                    private AstCallExpression(IAstExpression? parent, NameToken token): base(parent)
                     {
                         Token = token;
-                        Children = children ?? new();
                     }
-                    public INpnNode Complete()
+                    public override void Complete(ref IAstExpression current)
                     {
-                        return this;
+                        base.Complete(ref current);
+                        // Remove empty arg
+                        if(Children.Count == 1 && Children[0] is AstCallExpressionArg arg && arg.Children.Count == 0)
+                        {
+                            children.Clear();
+                        }
+                        current = Parent;
+                    }
+                    public void NewArg(ref IAstExpression currentGroup)
+                    {
+                        if(currentGroup is not AstCallExpressionArg arg) {
+                            throw new InvalidOperationException();
+                        }
+                        arg.CompleteForNewArg(ref currentGroup);
+                        var nextArgGroup = AstCallExpressionArg.Init(this, ref currentGroup);
+                        children.Add(nextArgGroup);
+                        currentGroup = nextArgGroup;
                     }
                 }
-                private class NpnAnyOperator : NpnOperator, INpnOutput, INpnValue
+                private class AstArithmeticExpression : AstExpression<AstNode>
                 {
-                    public NpnAnyOperator(NpnOperator @operator) : this(@operator.Token, @operator.Children) { }
-                    public NpnAnyOperator(OperatorToken @operator, List<INpnNode>? children = null) : base(@operator, children) { }
-                }
-                private class NpnUnaryOperation : NpnAnyOperator
-                {
-                    public INpnValue Child => (INpnValue)Children.Single();
+                    public readonly OperatorToken Token;
+                    public Operator Operator => Token.Value;
 
-                    public NpnUnaryOperation(OperatorToken @operator, INpnValue child) : base(@operator, new() { child }) { }
+                    public AstArithmeticExpression(IAstExpression? parent, OperatorToken token, List<AstNode>? children = null): base(parent)
+                    {
+                        Token = token;
+                        if(children != null)
+                        {
+                            this.children.AddRange(children);
+                        }
+                    }
                 }
-                private class NpnBinaryOperation : NpnAnyOperator
+                private class AstUnaryExpression : AstArithmeticExpression
                 {
-                    public INpnValue Left => (INpnValue)Children[0];
-                    public INpnValue Right => (INpnValue)Children[1];
+                    public AstNode Child => Children.Single();
 
-                    public NpnBinaryOperation(OperatorToken @operator, INpnValue left, INpnValue right) : base(@operator, new() { left, right }) { }
+                    public AstUnaryExpression(IAstExpression? parent, OperatorToken @operator, AstNode child) : base(parent, @operator, new() { child }) { }
                 }
-                private static INpnNode ToPolishNotation(IEnumerable<IToken> tokens)
+                private class AstBinaryExpression : AstArithmeticExpression
                 {
-                    INpnGroup root = new NpnGroup(new());
-                    INpnGroup currentGroup = root;
-                    Stack<INpnGroup> parentGroup = new();
+                    public AstNode Left => Children[0];
+                    public AstNode Right => Children[1];
+
+                    public AstBinaryExpression(IAstExpression? parent, OperatorToken @operator, AstNode left, AstNode right) : base(parent, @operator, new() { left, right }) { }
+                }
+                private static AstNode ToAst(IEnumerable<IToken> tokens)
+                {
+                    var rootExpression = new AstCompositeArithmeticExpression(null);
+                    IAstExpression currentExpression = new AstCompositeArithmeticExpression(rootExpression);
+                    rootExpression.Append(currentExpression);
                     var enumerator = tokens.GetEnumerator();
                     while (enumerator.MoveNext())
                     {
@@ -373,35 +456,24 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                         switch (currentToken)
                         {
                             case NumberToken numberToken:
-                                currentGroup.Children.Add(new NpnLiteral(numberToken));
+                                currentExpression.Append(new AstLiteral(currentExpression, numberToken));
                                 break;
                             case OperatorToken operatorToken:
                                 if (operatorToken.Value == Operator.OpenGroup)
                                 {
-                                    var newGroup = new NpnGroup();
-                                    parentGroup.Push(currentGroup);
-                                    currentGroup.Children.Add(newGroup);
-                                    currentGroup = newGroup;
+                                    var newGroup = new AstCompositeArithmeticExpression(currentExpression);
+                                    currentExpression.Append(newGroup);
+                                    currentExpression = newGroup;
                                 }
                                 else if (operatorToken.Value == Operator.CloseGroup)
                                 {
-                                    var parent = parentGroup.Pop();
-                                    if (parent.Children.Replace(currentGroup, currentGroup.Complete()) == 0)
-                                    {
-                                        throw new InvalidOperationException("Failed to replace");
-                                    }
-                                    currentGroup = parent;
+                                    currentExpression.Complete(ref currentExpression);
                                 }
                                 else if (operatorToken.Value == Operator.ArgSep)
                                 {
-                                    if (parentGroup.ElementAt(parentGroup.Count - 2) is NpnCall)
+                                    if (currentExpression is AstCallExpressionArg callArg)
                                     {
-                                        var callGroup = (NpnCall)parentGroup.Pop();
-                                        callGroup.Children.Replace(currentGroup, currentGroup.Complete());
-                                        NpnGroup nextArgGroup = new(new());
-                                        callGroup.Children.Add(nextArgGroup);
-                                        parentGroup.Push(callGroup);
-                                        currentGroup = nextArgGroup;
+                                        callArg.Parent.NewArg(ref currentExpression);
                                     }
                                     else
                                     {
@@ -410,7 +482,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                 }
                                 else
                                 {
-                                    currentGroup.Children.Add(new NpnOperator(operatorToken));
+                                    currentExpression.Append(new AstArithmeticExpression(currentExpression, operatorToken));
                                 }
                                 break;
                             case NameToken nameToken:
@@ -419,12 +491,10 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                     var next = enumerator.Current;
                                     if(next is OperatorToken operatorToken && operatorToken.Value == Operator.OpenGroup)
                                     {
-                                        NpnGroup firstArgGroup = new(new());
-                                        var callGroup = new NpnCall(nameToken, new List<INpnNode>{firstArgGroup});
-                                        currentGroup.Children.Add(callGroup);
-                                        parentGroup.Push(currentGroup);
-                                        parentGroup.Push(callGroup);
-                                        currentGroup = firstArgGroup;
+                                        AstCallExpression.Init(ref currentExpression, nameToken);
+                                    } else
+                                    {
+                                        throw new NotImplementedException();
                                     }
                                 }
                                 break;
@@ -432,33 +502,43 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                 throw new NotImplementedException();
                         }
                     }
-                    return currentGroup.Complete();
+                    currentExpression.Complete(ref currentExpression);
+                    if (currentExpression != rootExpression)
+                    {
+                        throw new InvalidOperationException("Desynced AST");
+                    }
+
+                    return rootExpression;
+                }
+
+                static double Tick()
+                {
+                    return 0;
                 }
 
                 internal Context ParseTokens(IEnumerable<IToken> tokens)
                 {                    
-                    var npnGrammar = ToPolishNotation(tokens);
-                    var queue = new List<INpnNode>(new[] { npnGrammar });
+                    var ast = ToAst(tokens);
+                    var queue = new List<AstNode>(new[] { ast });
 
                     // Collect all, deep first
                     for(var i = 0; i < queue.Count; i++) {
                         var cursor = queue[i];
                         switch (cursor)
                         {
-                            case NpnLiteral literal:
+                            case AstLiteral literal:
                                 break;
-
-                            case NpnCall call:
-                                queue.AddRange(call.Children.Cast<INpnNode>());
+                            case AstCallExpression call:
+                                queue.AddRange(call.Children);
                                 break;
-                            case INpnGroup group:
+                            case IAstExpression expr:
                                 // Flatten empty groups (eg: `(1)`, `(-4.2)`, `(foo())`
-                                if (group.Children.Count == 1 && group is not NpnOperator)
+                                if (expr.Children.Count() == 1 && expr is not AstArithmeticExpression)
                                 {
                                     queue.Remove(cursor);
                                     i--;
                                 }
-                                queue.AddRange(group.Children.Cast<INpnNode>());
+                                queue.AddRange(expr.Children.Cast<AstNode>());
                                 break;
 
                             default:
@@ -468,16 +548,16 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     }
 
                     queue.Reverse();
-                    var npnExpr = new Dictionary<INpnNode, Expression>();
+                    var npnExpr = new Dictionary<AstNode, Expression>();
                     foreach (var cursor in queue)
                     {
                         switch (cursor)
                         {
-                            case NpnLiteral literal:
+                            case AstLiteral literal:
                                 root = Expression.Constant(literal.Token.Value, typeof(double));
                                 break;
 
-                            case NpnAnyOperator anyOperator:
+                            case AstArithmeticExpression anyOperator:
                                 switch (anyOperator.Token.Value)
                                 {
                                     case Operator.Exp:
@@ -485,7 +565,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                         break;
                                     case Operator.Root:
                                         root = null;
-                                        if (anyOperator.Children[1] is NpnLiteral lit)
+                                        if (anyOperator.Children[1] is AstLiteral lit)
                                         {
                                             if (lit.Token.Value == 2)
                                             {
@@ -528,25 +608,51 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                 }
                                 break;
 
-                            case NpnCall call:
+                            case AstCallExpression call:
                                 var callParams = call.Children.Select(child => npnExpr[child]).ToList();
-                                switch (call.Name.Value)
+                                switch (call.Token.Value)
                                 {
                                     case "AVG":
                                         root = Expression.Call(((Func<IEnumerable<double>, double>)Enumerable.Average).Method, Expression.NewArrayInit(typeof(double), callParams));
                                         break;
 
                                     case "TICK":
-                                        root = Expression.Call(((Func<double>)(() => 0)).Method);
+                                        root = Expression.Call(((Func<double>)Tick).Method);
+                                        break;
+
+                                    case "ROOT":
+                                        if (callParams.Count != 2)
+                                        {
+                                            throw new InvalidOperationException("Bad call signature");
+                                        }
+                                        root = Expression.Power(
+                                            callParams[0],
+                                            Expression.Divide(
+                                                Expression.Constant((double)1, typeof(double)),
+                                                callParams[1]
+                                            )
+                                        );
+                                        break;
+
+                                    case "SQRT":
+                                        root = Expression.Call(((Func<double, double>)Math.Sqrt).Method, callParams.Single());
+                                        break;
+
+                                    case "MIN":
+                                        root = Expression.Call(((Func<IEnumerable<double>, double>)Enumerable.Min).Method, Expression.NewArrayInit(typeof(double), callParams));
+                                        break;
+
+                                    case "MAX":
+                                        root = Expression.Call(((Func<IEnumerable<double>, double>)Enumerable.Max).Method, Expression.NewArrayInit(typeof(double), callParams));
                                         break;
 
                                     default:
-                                        throw new NotImplementedException($"Method call \"{call.Name.Value}\" is not implemented");
+                                        throw new NotImplementedException($"Method call \"{call.Token.Value}\" is not implemented");
                                 }
                                 break;
 
                             default:
-                                throw new ArgumentException("Invalid token type", nameof(cursor));
+                                throw new ArgumentException($"Invalid token type {cursor.GetType().Name}", nameof(cursor));
 
                         }
                         npnExpr.SetOrAdd(cursor, root);
