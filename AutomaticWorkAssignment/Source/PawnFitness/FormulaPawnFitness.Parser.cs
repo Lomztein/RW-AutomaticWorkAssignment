@@ -230,6 +230,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 private interface INpnGroup: INpnNode {
 
                     List<INpnNode> Children { get; }
+
+                    INpnNode Complete();
                 }
                 private readonly struct NpnLiteral: INpnNode, INpnValue
                 {
@@ -249,7 +251,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                         Children = children ?? new();
                     }
 
-                    public INpnValue Sort()
+                    public INpnNode Complete()
                     {
                         // Handle negative unary
                         List<INpnNode> negated = new(Children.Count);
@@ -311,7 +313,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                         return last;
                     }
                 }
-                private readonly struct NpnCall: INpnGroup, INpnValue
+                private readonly struct NpnCall : INpnGroup, INpnValue
                 {
                     public readonly NameToken Name;
                     public List<INpnNode> Children { get; }
@@ -320,6 +322,10 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     {
                         Name = name;
                         Children = children;
+                    }
+                    public INpnNode Complete()
+                    {
+                        return this;
                     }
                 }
                 private class NpnOperator : INpnGroup
@@ -331,6 +337,10 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     {
                         Token = token;
                         Children = children ?? new();
+                    }
+                    public INpnNode Complete()
+                    {
+                        return this;
                     }
                 }
                 private class NpnAnyOperator : NpnOperator, INpnOutput, INpnValue
@@ -351,13 +361,15 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 
                     public NpnBinaryOperation(OperatorToken @operator, INpnValue left, INpnValue right) : base(@operator, new() { left, right }) { }
                 }
-                private static INpnValue ToPolishNotation(IEnumerable<IToken> tokens)
+                private static INpnNode ToPolishNotation(IEnumerable<IToken> tokens)
                 {
-                    NpnGroup root = new(new());
-                    NpnGroup currentGroup = root;
-                    Stack<NpnGroup> parentGroup = new();
-                    foreach (var currentToken in tokens)
+                    INpnGroup root = new NpnGroup(new());
+                    INpnGroup currentGroup = root;
+                    Stack<INpnGroup> parentGroup = new();
+                    var enumerator = tokens.GetEnumerator();
+                    while (enumerator.MoveNext())
                     {
+                        var currentToken = enumerator.Current;
                         switch (currentToken)
                         {
                             case NumberToken numberToken:
@@ -370,23 +382,57 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                     parentGroup.Push(currentGroup);
                                     currentGroup.Children.Add(newGroup);
                                     currentGroup = newGroup;
-                                } else if (operatorToken.Value == Operator.CloseGroup) {
+                                }
+                                else if (operatorToken.Value == Operator.CloseGroup)
+                                {
                                     var parent = parentGroup.Pop();
-                                    if(parent.Children.Replace(currentGroup, currentGroup.Sort()) == 0)
+                                    if (parent.Children.Replace(currentGroup, currentGroup.Complete()) == 0)
                                     {
                                         throw new InvalidOperationException("Failed to replace");
                                     }
                                     currentGroup = parent;
-                                } else
+                                }
+                                else if (operatorToken.Value == Operator.ArgSep)
+                                {
+                                    if (parentGroup.ElementAt(parentGroup.Count - 2) is NpnCall)
+                                    {
+                                        var callGroup = (NpnCall)parentGroup.Pop();
+                                        callGroup.Children.Replace(currentGroup, currentGroup.Complete());
+                                        NpnGroup nextArgGroup = new(new());
+                                        callGroup.Children.Add(nextArgGroup);
+                                        parentGroup.Push(callGroup);
+                                        currentGroup = nextArgGroup;
+                                    }
+                                    else
+                                    {
+                                        throw new InvalidOperationException("Found invalid `,` in non function call");
+                                    }
+                                }
+                                else
                                 {
                                     currentGroup.Children.Add(new NpnOperator(operatorToken));
+                                }
+                                break;
+                            case NameToken nameToken:
+                                if (enumerator.MoveNext())
+                                {
+                                    var next = enumerator.Current;
+                                    if(next is OperatorToken operatorToken && operatorToken.Value == Operator.OpenGroup)
+                                    {
+                                        NpnGroup firstArgGroup = new(new());
+                                        var callGroup = new NpnCall(nameToken, new List<INpnNode>{firstArgGroup});
+                                        currentGroup.Children.Add(callGroup);
+                                        parentGroup.Push(currentGroup);
+                                        parentGroup.Push(callGroup);
+                                        currentGroup = firstArgGroup;
+                                    }
                                 }
                                 break;
                             default:
                                 throw new NotImplementedException();
                         }
                     }
-                    return currentGroup.Sort();
+                    return currentGroup.Complete();
                 }
 
                 internal Context ParseTokens(IEnumerable<IToken> tokens)
@@ -401,7 +447,10 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                         {
                             case NpnLiteral literal:
                                 break;
-                            
+
+                            case NpnCall call:
+                                queue.AddRange(call.Children.Cast<INpnNode>());
+                                break;
                             case INpnGroup group:
                                 // Flatten empty groups (eg: `(1)`, `(-4.2)`, `(foo())`
                                 if (group.Children.Count == 1 && group is not NpnOperator)
@@ -476,6 +525,23 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                         break;
                                     default:
                                         throw new NotImplementedException($"Operator {Enum.GetName(typeof(Operator), anyOperator.Token.Value)} not supported");
+                                }
+                                break;
+
+                            case NpnCall call:
+                                var callParams = call.Children.Select(child => npnExpr[child]).ToList();
+                                switch (call.Name.Value)
+                                {
+                                    case "AVG":
+                                        root = Expression.Call(((Func<IEnumerable<double>, double>)Enumerable.Average).Method, Expression.NewArrayInit(typeof(double), callParams));
+                                        break;
+
+                                    case "TICK":
+                                        root = Expression.Call(((Func<double>)(() => 0)).Method);
+                                        break;
+
+                                    default:
+                                        throw new NotImplementedException($"Method call \"{call.Name.Value}\" is not implemented");
                                 }
                                 break;
 
