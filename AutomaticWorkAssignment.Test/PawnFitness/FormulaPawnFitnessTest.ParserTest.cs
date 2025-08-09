@@ -186,21 +186,45 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                     #endregion Priorities
 
                     #region Function calls
+                    new FormulaTestCase("Call Tick",
+                        formula: "TICK()",
+                        linqExpr: "tick()",
+                        syntheticTokens: ["TICK", OpenGroup, CloseGroup],
+                        evaluationResult: 0
+                    ),
+                    new FormulaTestCase("Call Average on 1 value",
+                        formula: "AVG(42)",
+                        linqExpr: "new [] {42}.Average()",
+                        syntheticTokens: ["AVG", OpenGroup, 42, CloseGroup],
+                        evaluationResult: 42
+                    ),
                     new FormulaTestCase("Call Average on 2 values",
                         formula: "AVG(1, 3)",
-                        linqExpr: "AVG(1, 3)",
+                        linqExpr: "new [] {1, 3}.Average()",
                         syntheticTokens: ["AVG", OpenGroup, 1, ArgSep, 3, CloseGroup],
+                        evaluationResult: 2
+                    ),
+                    new FormulaTestCase("Nested Average call on 2 values",
+                        formula: "AVG(AVG(0, 2), 3)",
+                        linqExpr: "new [] {new []{ 0, 2}.Average(), 3}.Average()",
+                        syntheticTokens: ["AVG", OpenGroup, "AVG", OpenGroup, 0, ArgSep, 2, CloseGroup, ArgSep, 3, CloseGroup],
                         evaluationResult: 2
                     ),
                     new FormulaTestCase("Call Average on 3 values",
                         formula: "AVG(1, 3, 5)",
-                        linqExpr: "AVG(1, 3, 5)",
+                        linqExpr: "new [] {1, 3, 5}.Average()",
                         syntheticTokens: ["AVG", OpenGroup, 1, ArgSep, 3, ArgSep, 5, CloseGroup],
+                        evaluationResult: 3
+                    ),
+                    new FormulaTestCase("Call Average on 2 values with expressions within",
+                        formula: "AVG(1 + 1, 3+2-1)",
+                        linqExpr: "new [] {(1 + 1), ((3 + 2) - 1)}.Average()",
+                        syntheticTokens: ["AVG", OpenGroup, 1, Sum, 1, ArgSep, 3, Sum, 2, Subtract, 1, CloseGroup],
                         evaluationResult: 3
                     ),
                     new FormulaTestCase("Call SQRT",
                         formula: "SQRT(4)",
-                        linqExpr: "SQRT(4)",
+                        linqExpr: "Sqrt(4)",
                         syntheticTokens: ["SQRT", OpenGroup, 4, CloseGroup],
                         evaluationResult: 2
                     ),
