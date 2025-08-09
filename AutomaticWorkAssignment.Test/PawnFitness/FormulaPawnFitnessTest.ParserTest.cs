@@ -1,62 +1,222 @@
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
+using static Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser.Operator;
 using IToken = Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser.IToken;
 using NameToken = Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser.NameToken;
 using NumberToken = Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser.NumberToken;
 using Operator = Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser.Operator;
 using OperatorToken = Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser.OperatorToken;
-using static Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser.Operator;
 
 namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
 {
-    public class FormulaPawnFitnessTest
+    public partial class FormulaPawnFitnessTest
     {
-        public class ParserTest
+        public partial class ParserTest
         {
-            public class OperatorOrderComparerTest
+            class FormulaTestCase(
+                string description,
+                string formula,
+                string linqExpr,
+                object[] syntheticTokens,
+                double evaluationResult
+            )
             {
-                [
-                    Theory,
-                    InlineData(
-                        new Operator[] { Sum, Subtract },
-                        new int[] {      0,   1 }
-                    ),
-                    InlineData(
-                        new Operator[] { Subtract, Sum },
-                        new int[] {      0,        1 }
-                    ),
-                    InlineData(
-                        new Operator[] { Sum, Divide },
-                        new int[] {      1,   0 }
-                    ),
-                    InlineData(
-                        new Operator[] { Divide, Sum },
-                        new int[] {      0,      1 }
-                    ),
-                    InlineData(
-                        new Operator[] { Exp, Factor },
-                        new int[] {      0,   1 }
-                    ),
-                    InlineData(
-                        new Operator[] { Factor, Exp },
-                        new int[] {      1,      0 }
-                    ),
-                    InlineData(
-                        new Operator[] { Exp, Exp },
-                        new int[] {      1,      0 }
-                    ),
-                ]
-                internal void ShouldTokenizeValidFormula(Operator[] source, int[] expected)
-                {
-                    var comparer = new FormulaPawnFitness.Parser.OperatorOrderComparer();
-                    var actual = source
-                        .Select((op, index) => (op, index))
-                        .OrderBy(op => op.op, comparer)
-                        .Select(op => op.index);
-                    Assert.Equal(expected, actual);
-                }
+                public string Description { get; } = description;
+                public string Formula { get; } = formula;
+                public string LinqExpr { get; } = linqExpr;
+                public object[] SyntheticTokens { get; } = syntheticTokens;
+                public double EvaluationResult { get; } = evaluationResult;
             }
 
-            private static IEnumerable<object> NormalizeTestObjects(IEnumerable<object> objects) =>
+            private static readonly FormulaTestCase[] formulaTestCases;
+
+            static ParserTest()
+            {
+                formulaTestCases =
+                [
+                    #region Literals
+                    new FormulaTestCase("Literal",
+                        formula: "1",
+                        linqExpr: "1",
+                        syntheticTokens: [1],
+                        evaluationResult: 1
+                    ),
+                    new FormulaTestCase("Parenthized literal",
+                        formula: "(1)",
+                        linqExpr: "1",
+                        syntheticTokens: [OpenGroup, 1, CloseGroup],
+                        evaluationResult: 1
+                    ),
+                    new FormulaTestCase("Double literal",
+                        formula: "2.3",
+                        linqExpr: "2.3",
+                        syntheticTokens: [2.3],
+                        evaluationResult: 2.3
+                    ),
+                    new FormulaTestCase("Double literal addition",
+                        formula: "2 + 3.3",
+                        linqExpr: "(2 + 3.3)",
+                        syntheticTokens: [2, Sum, 3.3],
+                        evaluationResult: 5.3
+                    ),
+                    #endregion
+                    new FormulaTestCase("Dumb addition",
+                        formula: "1+ 1",
+                        linqExpr: "(1 + 1)",
+                        syntheticTokens: [1, Sum, 1],
+                        evaluationResult: 2
+                    ),
+                    #region Unary negative
+                    new FormulaTestCase("Negated literal",
+                        formula: "-1",
+                        linqExpr: "-1",
+                        syntheticTokens: [Subtract, 1],
+                        evaluationResult: -1
+                    ),
+                    new FormulaTestCase("Negated literal in parenthesis",
+                        formula: "( -1)",
+                        linqExpr: "-1",
+                        syntheticTokens: [OpenGroup, Subtract, 1, CloseGroup],
+                        evaluationResult: -1
+                    ),
+                    #endregion Unary negative
+
+                    #region Priorities
+                    new FormulaTestCase("Multiplication > Addition",
+                        formula: "2+ 3 * 4",
+                        linqExpr: "(2 + (3 * 4))",
+                        syntheticTokens: [2, Sum, 3, Factor, 4],
+                        evaluationResult: 14
+                    ),
+                    new FormulaTestCase("Same as above",
+                        formula: "3 * 2+4",
+                        linqExpr: "((3 * 2) + 4)",
+                        syntheticTokens: [3, Factor, 2, Sum, 4],
+                        evaluationResult: 10
+                    ),
+                    new FormulaTestCase("Exponentiation",
+                        formula: "2**3",
+                        linqExpr: "(2 ** 3)",
+                        syntheticTokens: [2, Exp, 3],
+                        evaluationResult: 8
+                    ),
+                    new FormulaTestCase("Parentheses override precedence",
+                        formula: "(2+ 3)*4",
+                        linqExpr: "((2 + 3) * 4)",
+                        syntheticTokens: [OpenGroup, 2, Sum, 3, CloseGroup, Factor, 4],
+                        evaluationResult: 20
+                    ),
+                    new FormulaTestCase("Parentheses and modulo",
+                        formula: "83 % (6-4)",
+                        linqExpr: "(83 % (6 - 4))",
+                        syntheticTokens: [83, Modulus, OpenGroup, 6, Subtract, 4, CloseGroup],
+                        evaluationResult: 1
+                    ),
+                    new FormulaTestCase("Multiplication before subtraction",
+                        formula: "10 - 5*2",
+                        linqExpr: "(10 - (5 * 2))",
+                        syntheticTokens: [10, Subtract, 5, Factor, 2],
+                        evaluationResult: 0
+                    ),
+                    new FormulaTestCase("Parentheses again",
+                        formula: "(5+ 3)  *2",
+                        linqExpr: "((5 + 3) * 2)",
+                        syntheticTokens: [OpenGroup, 5, Sum, 3, CloseGroup, Factor, 2],
+                        evaluationResult: 16
+                    ),
+                    new FormulaTestCase("Exponentiation > Addition",
+                        formula: "2+3**2",
+                        linqExpr: "(2 + (3 ** 2))",
+                        syntheticTokens: [2, Sum, 3, Exp, 2],
+                        evaluationResult: 11
+                    ),
+                    new FormulaTestCase("Multiplication and division > addition",
+                        formula: "2*3+4/2",
+                        linqExpr: "((2 * 3) + (4 / 2))",
+                        syntheticTokens: [2, Factor, 3, Sum, 4, Divide, 2],
+                        evaluationResult: 8
+                    ),
+                    new FormulaTestCase("Right-to-left exponentiation",
+                        formula: "2**3**2",
+                        linqExpr: "(2 ** (3 ** 2))",
+                        syntheticTokens: [2, Exp, 3, Exp, 2],
+                        evaluationResult: 512
+                    ),
+                    new FormulaTestCase("Square root",
+                        formula: "4//2",
+                        linqExpr: "Sqrt(4)",
+                        syntheticTokens: [4, Root, 2],
+                        evaluationResult: 2
+                    ),
+                    new FormulaTestCase("Cubic root",
+                        formula: "8//3",
+                        linqExpr: "(8 ** (1 / 3))",
+                        syntheticTokens: [8, Root, 3],
+                        evaluationResult: 2
+                    ),
+                    new FormulaTestCase("Exponentiation and root > addition",
+                        formula: "2**3 + 4//2",
+                        linqExpr: "((2 ** 3) + Sqrt(4))",
+                        syntheticTokens: [2, Exp, 3, Sum, 4, Root, 2],
+                        evaluationResult: 10
+                    ),
+                    new FormulaTestCase("Parentheses and exponentiation",
+                        formula: "(2+3) ** (4-2)",
+                        linqExpr: "((2 + 3) ** (4 - 2))",
+                        syntheticTokens: [OpenGroup, 2, Sum, 3, CloseGroup, Exp, OpenGroup, 4, Subtract, 2, CloseGroup],
+                        evaluationResult: 25
+                    ),
+                    new FormulaTestCase("Mixed operations",
+                        formula: "(4//2) + (3*2)",
+                        linqExpr: "(Sqrt(4) + (3 * 2))",
+                        syntheticTokens: [OpenGroup, 4, Root, 2, CloseGroup, Sum, OpenGroup, 3, Factor, 2, CloseGroup],
+                        evaluationResult: 8
+                    ),
+                    new FormulaTestCase("Exponentiation with parentheses",
+                        formula: "2**(3+1)",
+                        linqExpr: "(2 ** (3 + 1))",
+                        syntheticTokens: [2, Exp, OpenGroup, 3, Sum, 1, CloseGroup],
+                        evaluationResult: 16
+                    ),
+                    new FormulaTestCase("Complex",
+                        formula: "(2 + 3) ** 4 // (3 -1)",
+                        linqExpr: "((2 + 3) ** (4 ** (1 / (3 - 1))))",
+                        syntheticTokens: [OpenGroup, 2, Sum, 3, CloseGroup, Exp, 4, Root, OpenGroup, 3, Subtract, 1, CloseGroup],
+                        evaluationResult: 25
+                    ),
+                    #endregion Priorities
+
+                    #region Function calls
+                    new FormulaTestCase("Call Average on 2 values",
+                        formula: "AVG(1, 3)",
+                        linqExpr: "AVG(1, 3)",
+                        syntheticTokens: ["AVG", OpenGroup, 1, ArgSep, 3, CloseGroup],
+                        evaluationResult: 2
+                    ),
+                    new FormulaTestCase("Call Average on 3 values",
+                        formula: "AVG(1, 3, 5)",
+                        linqExpr: "AVG(1, 3, 5)",
+                        syntheticTokens: ["AVG", OpenGroup, 1, ArgSep, 3, ArgSep, 5, CloseGroup],
+                        evaluationResult: 3
+                    ),
+                    new FormulaTestCase("Call SQRT",
+                        formula: "SQRT(4)",
+                        linqExpr: "SQRT(4)",
+                        syntheticTokens: ["SQRT", OpenGroup, 4, CloseGroup],
+                        evaluationResult: 2
+                    ),
+                    new FormulaTestCase("Call Root",
+                        formula: "ROOT(16, 4)",
+                        linqExpr: "ROOT(16, 4)",
+                        syntheticTokens: ["ROOT", OpenGroup, 16, ArgSep, 4, CloseGroup],
+                        evaluationResult: 2
+                    ),
+                    #endregion
+                ];
+            }
+
+            private static IEnumerable<object> NormalizeSyntheticTokens(
+                IEnumerable<object> objects
+            ) =>
                 objects.Select<object, object>(token =>
                     token switch
                     {
@@ -68,8 +228,8 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                     }
                 );
 
-            private static IEnumerable<IToken> TokensFromTestObjects(IEnumerable<object> objects) =>
-                NormalizeTestObjects(objects)
+            private static IEnumerable<IToken> TokensFromSynthetic(IEnumerable<object> objects) =>
+                NormalizeSyntheticTokens(objects)
                     .Select<object, IToken>(token =>
                         token switch
                         {
@@ -80,7 +240,7 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                         }
                     );
 
-            private static IEnumerable<object> TestObjectFromTokens(IEnumerable<IToken> tokens) =>
+            private static IEnumerable<object> SyntheticFromTokens(IEnumerable<IToken> tokens) =>
                 tokens.Select<IToken, object>(token =>
                     token switch
                     {
@@ -91,59 +251,20 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                     }
                 );
 
-            [
-                Theory,
-                InlineData("1", new object[] { 1 }),
-                InlineData("2.3", new object[] { 2.3 }),
-                InlineData("2 + 3.3", new object[] { 2, Sum, 3.3 }),
-                InlineData("8 / 6", new object[] { 8, Divide, 6 }),
-                InlineData(
-                    "83 % (6-4)",
-                    new object[]
-                    {
-                        83,
-                        Modulus,
-                        OpenGroup,
-                        6,
-                        Subtract,
-                        4,
-                        CloseGroup,
-                    }
-                ),
-                InlineData(
-                    "AVG(6, 3)",
-                    new object[]
-                    {
-                        "AVG",
-                        OpenGroup,
-                        6,
-                        ArgSep,
-                        3,
-                        CloseGroup,
-                    }
-                ),
-                InlineData("6** 3", new object[] { 6, Exp, 3 }),
-                InlineData(
-                    "SQRT(2)",
-                    new object[] { "SQRT", OpenGroup, 2, CloseGroup }
-                ),
-                InlineData(
-                    "ROOT(2, 2)",
-                    new object[]
-                    {
-                        "ROOT",
-                        OpenGroup,
-                        2,
-                        ArgSep,
-                        2,
-                        CloseGroup,
-                    }
-                ),
-            ]
-            public void ShouldTokenizeValidFormula(string formula, object[] expected)
+            public static IEnumerable<object[]> GetTokenizeFormulaData() =>
+                formulaTestCases.Select(test =>
+                    new object[] { test.Description, test.Formula, test.SyntheticTokens }
+                );
+
+            [Theory, MemberData(nameof(GetTokenizeFormulaData))]
+            public void ShouldTokenizeValidFormula(
+                string description,
+                string formula,
+                object[] expected
+            )
             {
                 var returned = FormulaPawnFitness.Parser.TokenizeFormula(formula);
-                Assert.Equal(NormalizeTestObjects(expected), TestObjectFromTokens(returned));
+                Assert.Equal(NormalizeSyntheticTokens(expected), SyntheticFromTokens(returned));
             }
 
             [
@@ -159,44 +280,16 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 );
             }
 
-            [
-                Theory,
-                InlineData(new object[] { 1 }, 1),
-                InlineData(new object[] { 1, Sum, 1 }, 2),
-                #region Unary negative
-                InlineData(new object[] { Subtract, 1 }, -1),
-                InlineData(new object[] { OpenGroup, Subtract, 1, CloseGroup }, -1),
-                #endregion Unary negative
+            public static IEnumerable<object[]> GetParseTokensData() =>
+                formulaTestCases.Select(test =>
+                    new object[] { test.Description, test.SyntheticTokens, test.EvaluationResult }
+                );
 
-                #region Priorities
-                InlineData(new object[] { 2, Sum, 3, Factor, 4 }, 14),                                                                                                                             // Multiplication > Addition  
-                InlineData(new object[] { 3, Factor, 2, Sum, 4 }, 10),                                                                                                                             // Same as above  
-                InlineData(new object[] { 2, Exp, 3 }, 8, Skip = "TODO"),                                                                                                                                                  // Exponentiation  
-                InlineData(new object[] { OpenGroup, 2, Sum, 3, CloseGroup, Factor, 4 }, 20, Skip = "TODO"),                                                                                    // Parentheses override precedence  
-                InlineData(new object[] { 83, Modulus, OpenGroup, 6, Subtract, 4, CloseGroup }, 1, Skip = "TODO"),                                                                              // Parentheses and modulo  
-                InlineData(new object[] { 10, Subtract, 5, Factor, 2 }, 0, Skip = "TODO"),                                                                                                                        // Multiplication before subtraction  
-                InlineData(new object[] { OpenGroup, 5, Sum, 3, CloseGroup, Factor, 2 }, 16, Skip = "TODO"),                                                                                    // Parentheses again  
-                InlineData(new object[] { 2, Sum, 3, Exp, 2 }, 11, Skip = "TODO"),                                                                                                                                // Exponentiation > Addition  
-                InlineData(new object[] { 2, Factor, 3, Sum, 4, Divide, 2 }, 10, Skip = "TODO"),                                                                                                         // Multiplication and division > addition  
-                InlineData(new object[] { OpenGroup, 2, Sum, 3, CloseGroup, Root, 5 }, 1, Skip = "TODO"),                                                                                       // Integer division  
-                InlineData(new object[] { 2, Exp, 3, Exp, 2 }, 512, Skip = "TODO"),                                                                                                                               // Right-to-left exponentiation  
-                InlineData(new object[] { 4, Root, 2 }, 2, Skip = "TODO"),                                                                                                                                                 // Integer division  
-                InlineData(new object[] { 2, Exp, 3, Sum, 4, Root, 2 }, 10, Skip = "TODO"),                                                                                                              // Exponentiation and division > addition  
-                InlineData(new object[] { OpenGroup, 2, Sum, 3, CloseGroup, Exp, OpenGroup, 4, Subtract, 2, CloseGroup }, 25, Skip = "TODO"),                        // Parentheses and exponentiation  
-                InlineData(new object[] { OpenGroup, 8, Root, 2, CloseGroup, Sum, OpenGroup, 3, Factor, 2, CloseGroup }, 8, Skip = "TODO"),                          // Mixed operations  
-                InlineData(new object[] { 100, Root, 3 }, 33, Skip = "TODO"),                                                                                                                                              // Integer division with remainder  
-                InlineData(new object[] { 2, Exp, OpenGroup, 3, Sum, 4, Root, 2, CloseGroup, }, 10, Skip = "TODO"),                                                                    // Exponentiation and division > addition  
-                InlineData(new object[] { 2, Exp, OpenGroup, 3, Sum, 1, CloseGroup }, 16, Skip = "TODO"),                                                                                       // Exponentiation with parentheses  
-                InlineData(new object[] { OpenGroup, 2, Sum, 3, CloseGroup, Factor, OpenGroup, 4, Subtract, 2, CloseGroup, Factor, 2 }, 20, Skip = "TODO"), // Parentheses with underscores (interpreted as parentheses)  
-                InlineData(new object[]{"(2 + 3) ** 2 // (3 + 2)"}, 5, Skip = "TODO"),                                                                                                                                              // Division with parentheses
-                #endregion Priorities
-
-                InlineData(new object[] { OpenGroup, 1, CloseGroup }, 1),
-            ]
-            public void ShouldParseTokens(object[] tokens, float expected)
+            [Theory, MemberData(nameof(GetParseTokensData))]
+            public void ShouldParseTokens(string description, object[] tokens, float expected)
             {
                 var context = new FormulaPawnFitness.Parser.Context();
-                var result = context.ParseTokens(TokensFromTestObjects(tokens)).ToFormula();
+                var result = context.ParseTokens(TokensFromSynthetic(tokens)).ToFormula();
                 Assert.Equal(expected, result.Calc(null, null, null));
             }
 
@@ -215,7 +308,7 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 var context = new FormulaPawnFitness.Parser.Context();
                 var exception = Assert.Throws(
                     expectedError,
-                    () => context.ParseTokens(TokensFromTestObjects(tokens)).ToFormula()
+                    () => context.ParseTokens(TokensFromSynthetic(tokens)).ToFormula()
                 );
                 if (message != null)
                 {
@@ -223,49 +316,30 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 }
             }
 
-            [
-                Theory(),
-                #region Priorities
-                InlineData("2 + 3 * 4", 14),                 // Multiplication > Addition
-                InlineData("3 * 2 + 4", 10),                 // Same as above
-                InlineData("2 ** 3", 8),                     // Exponentiation
-                InlineData("(2 + 3) * 4", 20),               // Parentheses override precedence
-                InlineData("83 % (6 - 4)", 1),               // Parentheses and modulo
-                InlineData("10 - 5 * 2", 0),                 // Multiplication before subtraction
-                InlineData("(5 + 3) * 2", 16),               // Parentheses again
-                InlineData("2 + 3 ** 2", 11),                // Exponentiation > Addition
-                InlineData("2 * 3 + 4 / 2", 8),              // Multiplication and division > addition
-                InlineData("(2 + 3) // 5", 1),               // Integer division
-                InlineData("2 ** 3 ** 2", 512),              // Right-to-left exponentiation
-                InlineData("4 // 2", 2),                     // Integer division
-                InlineData("2 ** 3 + 4 // 2", 10),           // Exponentiation and division > addition
-                InlineData("(2 + 3) ** (4 - 2)", 25),        // Parentheses and exponentiation
-                InlineData("(8 // 2) + (3 * 2)", 8),         // Mixed operations
-                InlineData("100 // 3", 33),                  // Integer division with remainder
-                InlineData("2 ** (3 + 1)", 16),              // Exponentiation with parentheses
-                InlineData("(2 + 3) * (4 - 2) ** 2", 20),    // Nested parentheses and exponentiation
-                InlineData("(6 - 4) ** 2", 4),               // Exponentiation after subtraction
-                InlineData("(5 + 2) // 3", 2),               // Integer division with parentheses
-                InlineData("(2 + 3) ** (4 // 2)", 12),       // Exponentiation and division
-                InlineData("16 // (4 - 2) ** 2", 3),         // Parentheses and exponentiation
-                InlineData("2 ** 3 ** 4 // 2", 512),         // Right-to-left exponentiation and root
-                InlineData("(2 ** 3) ** 2", 64),             // Exponentiation grouping
-                InlineData("(2 * 3) + (4 / 2)", 8),          // Multiplication and division
-                InlineData("(5 + 2) // 3 + 4", 6),           // Integer division and addition
-                InlineData("(2 + 3) * 2 ** 3", 40),          // Parentheses and exponentiation
-                InlineData("(2 + 3) * (4 // 2) ** 2", 50),   // Parentheses and nested operations
-                InlineData("(2 + 3) ** (4 // 2) ** 2", 625), // Right-to-left exponentiation with parentheses
-                InlineData("(6 + 2) ** 2 // 3", 4),          // Exponentiation and root
-                InlineData("(10 - 2) ** (4 // 2)", 64),      // Integer division and exponentiation
-                InlineData("(2 ** 3) ** 2 // 3", 170),       // Exponentiation and division
-                InlineData("(2 + 3) ** 2 // (3 + 2)", 5),    // Division with parentheses
-                #endregion
-            ]
-            public void ShouldReturnCorrectValue(string formula, float expected) {
+            public static IEnumerable<object[]> GetEvaluateFormulaData() =>
+                formulaTestCases.Select(test =>
+                    new object[] { test.Description, test.Formula, test.EvaluationResult }
+                );
+
+            [Theory, MemberData(nameof(GetEvaluateFormulaData))]
+            public void ShouldEvaluateFormula(string description, string formula, float expected)
+            {
                 var formulaExpression = FormulaPawnFitness.Parser.ParseFormula(formula);
-                var linqExpr = formulaExpression.Expression.ToString();
                 var result = formulaExpression.Calc(null, null, null);
                 Assert.Equal(expected, result);
+            }
+
+            public static IEnumerable<object[]> GetFormulaToExprData() =>
+                formulaTestCases.Select(test =>
+                    new object[] { test.Description, test.Formula, test.LinqExpr }
+                );
+
+            [Theory, MemberData(nameof(GetFormulaToExprData))]
+            public void ShouldFormulaToExpr(string description, string formula, string expected)
+            {
+                var formulaExpression = FormulaPawnFitness.Parser.ParseFormula(formula);
+                var linqExpr = formulaExpression.Expression.ToString();
+                Assert.Equal($"(pawn, specification, request) => {expected}", linqExpr);
             }
         }
     }

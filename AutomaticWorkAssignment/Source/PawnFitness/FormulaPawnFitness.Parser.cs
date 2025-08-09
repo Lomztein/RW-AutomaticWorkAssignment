@@ -448,13 +448,16 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                                 // root = Expression.Call(((Func<double, double>)Math.Cbrt).Method, npnExpr[anyOperator.Children[0]]);
                                             }
                                         }
-                                        root = Expression.Power(
-                                            npnExpr[anyOperator.Children[0]],
-                                            Expression.Divide(
-                                                Expression.Constant((double)1, typeof(double)),
-                                                npnExpr[anyOperator.Children[1]]
-                                            )
-                                        );
+                                        if (root == null)
+                                        {
+                                            root = Expression.Power(
+                                                npnExpr[anyOperator.Children[0]],
+                                                Expression.Divide(
+                                                    Expression.Constant((double)1, typeof(double)),
+                                                    npnExpr[anyOperator.Children[1]]
+                                                )
+                                            );
+                                        }
                                         break;
                                     case Operator.Factor:
                                         root = Expression.Multiply(npnExpr[anyOperator.Children[0]], npnExpr[anyOperator.Children[1]]);
