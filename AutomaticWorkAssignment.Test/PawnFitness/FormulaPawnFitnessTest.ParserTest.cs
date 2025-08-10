@@ -1,4 +1,5 @@
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
+using static Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser;
 using static Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser.Operator;
 using IToken = Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser.IToken;
 using NameToken = Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser.NameToken;
@@ -17,7 +18,8 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 string formula,
                 string linqExpr,
                 object[] syntheticTokens,
-                double evaluationResult
+                double evaluationResult,
+                FormulaBindings? bindings = null
             )
             {
                 public string Description { get; } = description;
@@ -25,13 +27,19 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 public string LinqExpr { get; } = linqExpr;
                 public object[] SyntheticTokens { get; } = syntheticTokens;
                 public double EvaluationResult { get; } = evaluationResult;
+                public FormulaBindings? Bindings { get; } = bindings;
             }
-
-            private static readonly FormulaTestCase[] formulaTestCases;
+            private static FormulaBindings GetTestBindings(string label) =>
+                setsMap.Values.SelectMany(set => set)
+                    .Single(test => test.Description == label)
+                    .Bindings ?? [];
+            private static readonly FormulaTestCase[] basicTestCases;
+            private static readonly FormulaTestCase[] bindingsTestCases;
+            private static readonly Dictionary<string, FormulaTestCase[]> setsMap;
 
             static ParserTest()
             {
-                formulaTestCases =
+                basicTestCases =
                 [
                     #region Literals
                     new FormulaTestCase("Literal",
@@ -77,6 +85,12 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                         linqExpr: "-1",
                         syntheticTokens: [OpenGroup, Subtract, 1, CloseGroup],
                         evaluationResult: -1
+                    ),
+                    new FormulaTestCase("Negated parenthesis",
+                        formula: "-( -1 + 3)",
+                        linqExpr: "(-(-1 + 3))",
+                        syntheticTokens: [Subtract, OpenGroup, Subtract, 1, Sum, 3, CloseGroup],
+                        evaluationResult: -2
                     ),
                     #endregion Unary negative
 
@@ -248,6 +262,29 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                     ),
                     #endregion
                 ];
+                bindingsTestCases = [
+                    #region vars binding
+                    new FormulaTestCase("Bind 1 variable",
+                        formula: "response",
+                        linqExpr: "response(pawn)",
+                        syntheticTokens: ["response"],
+                        evaluationResult: 42,
+                        bindings: new(){{"response", (_,_,_) => 42}}
+                    ),
+                    new FormulaTestCase("Bind 2 variable",
+                        formula: "response + bestTime",
+                        linqExpr: "(response(pawn) + bestTime(pawn))",
+                        syntheticTokens: ["response", Sum, "bestTime"],
+                        evaluationResult: 42 + 420,
+                        bindings: new(){ { "response", (_, _, _) => 42 }, {"bestTime", (_,_,_) => 420} }
+                    ),
+                    #endregion
+                ];
+                setsMap = new()
+                {
+                    { "basic", basicTestCases },
+                    { "bindings", bindingsTestCases }
+                };
             }
 
             private static IEnumerable<object> NormalizeSyntheticTokens(
@@ -287,19 +324,19 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                     }
                 );
 
-            public static IEnumerable<object[]> GetTokenizeFormulaData() =>
-                formulaTestCases.Select(test =>
+            public static IEnumerable<object[]> GetTokenizeFormulaData(params string[] sets) =>
+                sets.SelectMany(set => setsMap[set]).Select(test =>
                     new object[] { test.Description, test.Formula, test.SyntheticTokens }
                 );
 
-            [Theory, MemberData(nameof(GetTokenizeFormulaData))]
+            [Theory, MemberData(nameof(GetTokenizeFormulaData), parameters: [new[] { "basic", "bindings" }])]
             public void ShouldTokenizeValidFormula(
                 string description,
                 string formula,
                 object[] expected
             )
             {
-                var returned = FormulaPawnFitness.Parser.TokenizeFormula(formula);
+                var returned = TokenizeFormula(formula);
                 Assert.Equal(NormalizeSyntheticTokens(expected), SyntheticFromTokens(returned));
             }
 
@@ -312,21 +349,22 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
             {
                 var ex = Assert.Throws(
                     exceptionType,
-                    () => FormulaPawnFitness.Parser.TokenizeFormula(formula).ToList()
+                    () => TokenizeFormula(formula).ToList()
                 );
             }
 
-            public static IEnumerable<object[]> GetParseTokensData() =>
-                formulaTestCases.Select(test =>
+            public static IEnumerable<object[]> GetParseTokensData(params string[] sets) =>
+                sets.SelectMany(set => setsMap[set]).Select(test =>
                     new object[] { test.Description, test.SyntheticTokens, test.EvaluationResult }
                 );
 
-            [Theory, MemberData(nameof(GetParseTokensData))]
+            [Theory, MemberData(nameof(GetParseTokensData), parameters: [new[] { "basic", "bindings" }])]
             public void ShouldParseTokens(string description, object[] tokens, float expected)
             {
                 var context = new FormulaPawnFitness.Parser.Context();
-                var result = context.ParseTokens(TokensFromSynthetic(tokens)).ToFormula();
-                Assert.Equal(expected, result.Calc(null, null, null));
+                var bindings = GetTestBindings(description);
+                var result = context.ParseTokens(ToAst(TokensFromSynthetic(tokens)));
+                Assert.Equal(expected, result.Calc(null, null, null, bindings));
             }
 
             [
@@ -341,10 +379,10 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 string? message = null
             )
             {
-                var context = new FormulaPawnFitness.Parser.Context();
+                var context = new Context();
                 var exception = Assert.Throws(
                     expectedError,
-                    () => context.ParseTokens(TokensFromSynthetic(tokens)).ToFormula()
+                    () => context.ParseTokens(ToAst(TokensFromSynthetic(tokens)))
                 );
                 if (message != null)
                 {
@@ -352,30 +390,31 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 }
             }
 
-            public static IEnumerable<object[]> GetEvaluateFormulaData() =>
-                formulaTestCases.Select(test =>
+            public static IEnumerable<object[]> GetEvaluateFormulaData(params string[] sets) =>
+                sets.SelectMany(set => setsMap[set]).Select(test =>
                     new object[] { test.Description, test.Formula, test.EvaluationResult }
                 );
 
-            [Theory, MemberData(nameof(GetEvaluateFormulaData))]
+            [Theory, MemberData(nameof(GetEvaluateFormulaData), parameters: [new[] { "basic", "bindings" }])]
             public void ShouldEvaluateFormula(string description, string formula, float expected)
             {
-                var formulaExpression = FormulaPawnFitness.Parser.ParseFormula(formula);
-                var result = formulaExpression.Calc(null, null, null);
+                var formulaExpression = new FormulaPawnFitness.Parser().ParseFormula(formula);
+                var bindings = GetTestBindings(description);
+                var result = formulaExpression.Calc(null, null, null, bindings);
                 Assert.Equal(expected, result);
             }
 
-            public static IEnumerable<object[]> GetFormulaToExprData() =>
-                formulaTestCases.Select(test =>
+            public static IEnumerable<object[]> GetFormulaToExprData(params string[] sets) =>
+                sets.SelectMany(set => setsMap[set]).Select(test =>
                     new object[] { test.Description, test.Formula, test.LinqExpr }
                 );
 
-            [Theory, MemberData(nameof(GetFormulaToExprData))]
+            [Theory, MemberData(nameof(GetFormulaToExprData), parameters: [new[] { "basic" }])]
             public void ShouldFormulaToExpr(string description, string formula, string expected)
             {
-                var formulaExpression = FormulaPawnFitness.Parser.ParseFormula(formula);
+                var formulaExpression = new FormulaPawnFitness.Parser().ParseFormula(formula);
                 var linqExpr = formulaExpression.Expression.ToString();
-                Assert.Equal($"(pawn, specification, request) => {expected}", linqExpr);
+                Assert.Equal($"(pawn, specification, request, bindings) => {expected}", linqExpr);
             }
         }
     }

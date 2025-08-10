@@ -44,18 +44,18 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 }
             }
 
-            interface IAstNode
+            internal interface IAstNode
             {
                 IAstExpression? Parent { get; }
             }
-            interface IAstExpression : IAstNode
+            internal interface IAstExpression : IAstNode
             {
                 IEnumerable<IAstNode> Children { get; }
                 void Append(IAstNode node);
                 void Complete(ref IAstExpression astCursor);
                 void Replace(IAstNode previous, IAstNode replacement);
             }
-            private class AstNode : IAstNode
+            internal class AstNode : IAstNode
             {
                 public AstNode(IAstExpression? parent)
                 {
@@ -257,15 +257,26 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 
                 public AstBinaryExpression(IAstExpression? parent, OperatorToken @operator, AstNode left, AstNode right) : base(parent, @operator, new() { left, right }) { }
             }
-            private static AstNode ToAst(IEnumerable<IToken> tokens)
+            private class AstBindingExpression : AstNode
+            {
+                public readonly NameToken Token;
+                public string Name => Token.Value;
+
+                public AstBindingExpression(IAstExpression? parent, NameToken token): base(parent)
+                {
+                    Token = token;
+                }
+            }
+
+            internal static AstNode ToAst(IEnumerable<IToken> tokens)
             {
                 var rootExpression = new AstCompositeArithmeticExpression(null);
                 IAstExpression astCursor = new AstCompositeArithmeticExpression(rootExpression);
                 rootExpression.Append(astCursor);
-                var enumerator = tokens.GetEnumerator();
-                while (enumerator.MoveNext())
+                var allTokens = tokens.ToArray();
+                for(var i = 0; i < allTokens.Length; i++)
                 {
-                    var currentToken = enumerator.Current;
+                    var currentToken = allTokens[i];
                     switch (currentToken)
                     {
                         case NumberToken numberToken:
@@ -299,11 +310,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                             }
                             break;
                         case NameToken nameToken:
-                            if (enumerator.MoveNext())
                             {
-                                var next = enumerator.Current;
-                                if (next is OperatorToken operatorToken && operatorToken.Value == Operator.OpenGroup)
+                                // Name are either function calls `foo(1+2)` or variable binding
+                                if (i + 1 < allTokens.Length && allTokens[i + 1] is OperatorToken operatorToken && operatorToken.Value == Operator.OpenGroup)
                                 {
+                                    i++;
                                     var callExpression = new AstCallExpression(astCursor, nameToken);
                                     astCursor.Append(callExpression);
                                     astCursor = callExpression;
@@ -313,7 +324,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                 }
                                 else
                                 {
-                                    throw new NotImplementedException();
+                                    var newNode = new AstBindingExpression(astCursor, nameToken);
+                                    astCursor.Append(newNode);
                                 }
                             }
                             break;
