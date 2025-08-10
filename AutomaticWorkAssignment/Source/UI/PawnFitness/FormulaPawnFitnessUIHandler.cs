@@ -23,25 +23,32 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
             localPosition.y += rect.height;
             if (newFormula != pawnSetting.sourceString)
             {
-                Logger.Message($"[AWA:core] New text: {newFormula}");
                 pawnSetting.sourceString = newFormula;
             }
             Rect buttonRect = new Rect(localPosition, new Vector2(width, _buttonSize));
             if (Widgets.ButtonText(buttonRect, "Commit"))
             {
-                Logger.Message($"[AWA:core] Commit: {pawnSetting.sourceString}");
                 pawnSetting.Commit();
             }
             localPosition.y += _buttonSize;
             if (pawnSetting.InnerFormula != null)
             {
-                localPosition.x += 4;
-                width -= 4;
-                foreach (var bindingName in pawnSetting.InnerFormula.BindingNames)
+                localPosition.x += 8;
+                width -= 8;
+                for (var i = 0; i < pawnSetting.InnerFormula.BindingNames.Length; i++)
                 {
+                    if (i > 0) {
+                        localPosition.y += 4;
+                        Widgets.DrawLineHorizontal(localPosition.x, localPosition.y, width);
+                        localPosition.y += 5;
+                    }
+
+                    var bindingName = pawnSetting.InnerFormula.BindingNames[i];
+
                     Rect labelRect = new Rect(localPosition, new Vector2(width, _labelSize));
                     localPosition.y += _labelSize;
                     Widgets.Label(labelRect, bindingName);
+
                     if (pawnSetting.bindingSettings.TryGetValue(bindingName, out var setting))
                     {
                         localPosition.y += WorkManagerWindow.DoPawnSetting(

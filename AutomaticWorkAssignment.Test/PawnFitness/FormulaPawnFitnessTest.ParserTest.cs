@@ -1,4 +1,5 @@
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
+using static Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness;
 using static Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser;
 using static Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser.Operator;
 using IToken = Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser.IToken;
@@ -19,7 +20,7 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 string linqExpr,
                 object[] syntheticTokens,
                 double evaluationResult,
-                FormulaBindings? bindings = null
+                Formula.Bindings? bindings = null
             )
             {
                 public string Description { get; } = description;
@@ -27,9 +28,9 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 public string LinqExpr { get; } = linqExpr;
                 public object[] SyntheticTokens { get; } = syntheticTokens;
                 public double EvaluationResult { get; } = evaluationResult;
-                public FormulaBindings? Bindings { get; } = bindings;
+                public Formula.Bindings? Bindings { get; } = bindings;
             }
-            private static FormulaBindings GetTestBindings(string label) =>
+            private static Formula.Bindings GetTestBindings(string label) =>
                 setsMap.Values.SelectMany(set => set)
                     .Single(test => test.Description == label)
                     .Bindings ?? [];

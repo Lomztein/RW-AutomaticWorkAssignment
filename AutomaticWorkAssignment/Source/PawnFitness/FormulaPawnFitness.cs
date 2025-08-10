@@ -38,13 +38,21 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
-            return InnerFormula.Calc(
-                pawn,
-                specification,
-                request,
-                new(bindingSettings.ToDictionary(
-                    (kvp) => kvp.Key,
-                    kvp => (Func<Pawn, WorkSpecification, ResolveWorkRequest, float>)kvp.Value.CalcFitness)));
+            try
+            {
+                return InnerFormula.Calc(
+                    pawn,
+                    specification,
+                    request,
+                    new(bindingSettings.ToDictionary(
+                        (kvp) => kvp.Key,
+                        kvp => (Func<Pawn, WorkSpecification, ResolveWorkRequest, float>)kvp.Value.CalcFitness)));
+            }
+            catch (Exception ex) when (ex is InvalidOperationException)
+            {
+                Logger.Message($"[AWA:core:Formula] Failed to evaluate: {ex.Message}");
+                return 0;
+            }
         }
         public override void ExposeData()
         {
