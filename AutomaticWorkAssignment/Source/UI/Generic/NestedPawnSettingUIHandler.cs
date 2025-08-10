@@ -30,7 +30,14 @@ namespace AutomaticWorkAssignment.UI
             float innerWidth = width - 4;
             if (pawnSetting.InnerSetting != null)
             {
-                y += WorkManagerWindow.DoPawnSetting(innerPosition, innerWidth, pawnSetting.InnerSetting, null, (x) => Find.Root.StartCoroutine(DelayedRemoveInnerSetting(pawnSetting)));
+                y += WorkManagerWindow.DoPawnSetting(
+                    innerPosition,
+                    innerWidth,
+                    pawnSetting.InnerSetting,
+                    canMoveUp: false,
+                    canMoveDown: false,
+                    null,
+                    (x) => Find.Root.StartCoroutine(DelayedRemoveInnerSetting(pawnSetting)));
             }
             else
             {
