@@ -37,9 +37,10 @@ namespace Lomzie.AutomaticWorkAssignment
         private const float MANAGER_SETTINGS_SECTION_WIDTH_DEFAULT = 800f;
         public static float ManagerSettingsSectionWidth = MANAGER_SETTINGS_SECTION_WIDTH_DEFAULT;
 
-        public static float UIButtonSizeBase = 32;
-        public static float UIHalfButtonSize => UIButtonSizeBase / 2;
-        public static float UIInputSizeBase = 24;
+        public const float UIButtonSizeBase = 32;
+        public const float UIHalfButtonSize = UIButtonSizeBase / 2;
+        public const float UIInputSizeBase = 24;
+        public const float UILabelSizeBase = 24;
 
         private static string _inputBuffer;
 
