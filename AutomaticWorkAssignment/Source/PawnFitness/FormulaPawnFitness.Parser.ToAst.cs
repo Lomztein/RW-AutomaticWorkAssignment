@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Verse;
+using static Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 {
@@ -74,22 +75,22 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     Token = token;
                 }
             }
-            private abstract class AstExpression<TNode> : AstNode, IAstExpression where TNode : AstNode
+            private abstract class AstExpression : AstNode, IAstExpression
             {
-                protected readonly List<TNode> children = new List<TNode>();
-                public virtual IReadOnlyList<TNode> Children => children;
+                protected readonly List<AstNode> children = new List<AstNode>();
+                public virtual IReadOnlyList<AstNode> Children => children;
                 IEnumerable<IAstNode> IAstExpression.Children => Children;
 
                 public AstExpression(IAstExpression? parent) : base(parent) { }
 
-                public virtual void Append(IAstNode node) => Append((TNode)node);
-                public virtual void Append(TNode node)
+                public virtual void Append(IAstNode node) => Append((AstNode)node);
+                public virtual void Append(AstNode node)
                 {
                     children.Add(node);
                 }
 
-                public void Replace(IAstNode previous, IAstNode replacement) => Replace((TNode)previous, (TNode)replacement);
-                public void Replace(TNode previous, TNode replacement)
+                public void Replace(IAstNode previous, IAstNode replacement) => Replace((AstNode)previous, (AstNode)replacement);
+                public void Replace(AstNode previous, AstNode replacement)
                 {
                     if (children.Replace(previous, replacement) == 0)
                     {
@@ -105,7 +106,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     }
                 }
             }
-            private class AstCompositeArithmeticExpression : AstExpression<AstNode>
+            private class AstCompositeArithmeticExpression : AstExpression
             {
                 public AstCompositeArithmeticExpression(IAstExpression? parent) : base(parent) { }
 
@@ -124,7 +125,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                         {
                             if (Children[i + 1] is AstLiteral literalExpression)
                             {
-                                negated.Add(new AstLiteral(this, new NumberToken(-literalExpression.Token.Value)));
+                                negated.Add(new AstLiteral(this, new NumberToken(-literalExpression.Value)));
+                            }
+                            else if (Children[i+1] is AstExpression subExpression)
+                            {
+                                negated.Add(new AstUnaryExpression(this, arithmeticExpression.Token, subExpression));
                             }
                             else
                             {
@@ -199,7 +204,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     base.Complete(ref astCursor);
                 }
             }
-            private class AstCallExpression : AstExpression<AstNode>
+            private class AstCallExpression : AstExpression
             {
                 public readonly NameToken Token;
                 public string Name => Token.Value;
@@ -230,7 +235,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     astCursor = nextArgGroup;
                 }
             }
-            private class AstArithmeticExpression : AstExpression<AstNode>
+            private class AstArithmeticExpression : AstExpression
             {
                 public readonly OperatorToken Token;
                 public Operator Operator => Token.Value;
