@@ -4,7 +4,7 @@
 
 @echo Copying mod %name% to RimWorld mods (%dest%)
 
-@(robocopy "./%name%" "%dest%" /xd "obj" "bin" /xf "*.csproj" "*.cs" /s /r:0 /w:1)
+@(robocopy "./%name%" "%dest%" /xd "obj" "bin" /xf "*.csproj" "*.cs" /s /r:15 /w:1)
 @if %ERRORLEVEL% GEQ 8 (
     @echo Copy failed 1>&2
     @exit 1

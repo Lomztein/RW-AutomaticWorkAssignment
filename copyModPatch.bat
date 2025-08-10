@@ -7,7 +7,7 @@
 
 @cd "./%name%"
 @for /f %%d in ('dir /b /ad ^| sort /r ^|  findstr /E /R "[0-9]\.[0-9]"') do (
-    @(robocopy ".\%%d" "%dest:"=%\%%d\Mods\%name:"=%" /s /r:0 /w:1)
+    @(robocopy ".\%%d" "%dest:"=%\%%d\Mods\%name:"=%" /s /r:15 /w:1)
     @if %ERRORLEVEL% GEQ 8 (
         @echo Copy failed 1>&2
         @exit 1
