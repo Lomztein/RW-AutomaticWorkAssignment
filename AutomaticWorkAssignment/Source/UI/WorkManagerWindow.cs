@@ -637,36 +637,42 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 );
         }
 
-        private static Rect DoAdvancedSectionMoveDeleteButtons(Rect inRect, Action<int> onMovement, Action onDelete)
+        private static void DoAdvancedSectionMoveDeleteButtons(
+            ref RectDivider labelRect,
+            bool canMoveUp,
+            bool canMoveDown,
+            Action<int> onMovement,
+            Action onDelete)
         {
-            (Rect remainder, Rect buttonsRect) = Utils.SplitRectHorizontalRight(inRect, InputSize * 3);
-            (Rect movementRect, Rect deleteRect) = Utils.SplitRectHorizontalRight(buttonsRect, InputSize);
-            (Rect upRect, Rect downRect) = Utils.SplitRectHorizontalRight(movementRect, InputSize);
+            Text.Anchor = TextAnchor.MiddleCenter;
+            if (onDelete != null)
+            {
+                var deleteRect = labelRect.NewCol(InputSize, HorizontalJustification.Right);
+                if (Widgets.ButtonText(deleteRect, "✕"))
+                    onDelete();
+            }
 
             if (onMovement != null)
             {
-                if (Widgets.ButtonText(upRect, "/\\"))
-                    onMovement(GetMovementAmount(-1));
-                if (Widgets.ButtonText(downRect, "\\/"))
-                    onMovement(GetMovementAmount(1));
+                if (canMoveUp)
+                {
+                    var upRect = labelRect.NewCol(InputSize, HorizontalJustification.Right);
+                    if (Widgets.ButtonText(upRect, "⇑"))
+                        onMovement(GetMovementAmount(-1));
+                }
+                if (canMoveDown)
+                {
+                    var downRect = labelRect.NewCol(InputSize, HorizontalJustification.Right);
+                    if (Widgets.ButtonText(downRect, "⇓"))
+                        onMovement(GetMovementAmount(1));
+                }
             }
-            else
-                remainder.width += movementRect.width;
-
-            if (onDelete != null)
-            {
-                if (Widgets.ButtonText(deleteRect, "X"))
-                    onDelete();
-            }
-            else
-                remainder.width += deleteRect.width;
-
-            return remainder;
+            Text.Anchor = TextAnchor.UpperLeft;
         }
 
         public static void DoPawnSettingList(Rect inRect, Type settingDefType, string newSettingLabel, ref float listHeight, ref Vector2 listPosition, Func<IEnumerable<IPawnSetting>> settingGetter, Action<IPawnSetting> onNewSetting, Action<IPawnSetting, int> onMoveSetting, Action<IPawnSetting> onDeleteSetting)
         {
-            var settings = settingGetter();
+            var settings = settingGetter().ToList();
 
             var height = listHeight;
             var scrollView = new Rect(0f, 0f, inRect.width, height);
@@ -678,20 +684,23 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             Widgets.BeginGroup(scrollContent);
             var cur = Vector2.zero;
-            var i = 0;
 
-            foreach (IPawnSetting setting in settings)
+            for (var i = 0; i < settings.Count; i++)
             {
+                var setting = settings[i];
                 float x = MarginSize / 2f;
                 float width = scrollView.width - MarginSize / 2;
 
-                float rowHeight = DoPawnSetting(new Vector2(x, cur.y), width, setting, onMoveSetting, onDeleteSetting);
+                float rowHeight = DoPawnSetting(
+                    new Vector2(x, cur.y), width, setting,
+                    canMoveUp: i > 0,
+                    canMoveDown: i < settings.Count,
+                    onMoveSetting, onDeleteSetting);
 
                 Rect row = new Rect(x, cur.y, width, rowHeight);
                 if (i % 2 == 1) Widgets.DrawAltRect(row);
 
                 cur.y += rowHeight;
-                i++;
             }
 
             if (onNewSetting != null)
@@ -699,7 +708,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 // row for new function.
                 var newRect = new Rect(0f, cur.y, inRect.width, NewFunctionButtonSize);
                 Widgets.DrawHighlightIfMouseover(newRect);
-                if (i % 2 == 1) Widgets.DrawAltRect(newRect);
+                if (settings.Count % 2 == 1) Widgets.DrawAltRect(newRect);
 
                 Text.Anchor = TextAnchor.MiddleCenter;
                 Widgets.Label(newRect, new GUIContent(newSettingLabel));
@@ -721,14 +730,20 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Widgets.EndScrollView();
         }
 
-        public static float DoPawnSetting(Vector2 position, float width, IPawnSetting setting, Action<IPawnSetting, int> onMoveSetting, Action<IPawnSetting> onDeleteSetting)
+        public static float DoPawnSetting(Vector2 position,
+            float width,
+            IPawnSetting setting,
+            bool canMoveUp,
+            bool canMoveDown,
+            Action<IPawnSetting, int> onMoveSetting,
+            Action<IPawnSetting> onDeleteSetting)
         {
+            var agg = new RectAggregator(new Rect(position, new(width, 0)), Instance.GetHashCode(), new(1, 1));
             IPawnSetting prevRender = CurrentRenderSetting;
             CurrentRenderSetting = setting;
 
-            Rect labelRect = new Rect(position.x, position.y, width, SettingsLabelSize);
-
             Text.Anchor = TextAnchor.MiddleLeft;
+            var labelRect = agg.NewRow(SettingsLabelSize);
             Widgets.Label(labelRect, GetSettingLabel(setting));
             Text.Anchor = TextAnchor.UpperLeft;
 
@@ -740,28 +755,27 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             if (onDeleteSetting != null)
                 onDelete = () => onDeleteSetting(setting);
 
-            Rect remainder = DoAdvancedSectionMoveDeleteButtons(labelRect, onMove, onDelete);
-
-            (Rect _, Rect copyPaste) = Utils.SplitRectHorizontalRight(remainder, InputSize * 2);
-            (Rect paste, Rect copy) = Utils.SplitRectHorizontalRight(copyPaste, InputSize);
+            DoAdvancedSectionMoveDeleteButtons(ref labelRect, canMoveUp, canMoveDown, onMove, onDelete);
 
             if (Clipboard.Contains(setting.GetType()))
             {
-                if (Widgets.ButtonImage(paste, TexButton.Paste))
+                var pasteRect = labelRect.NewCol(InputSize, HorizontalJustification.Right);
+                if (Widgets.ButtonImage(pasteRect, TexButton.Paste))
                     Clipboard.PasteInto(setting);
             }
 
-            if (Widgets.ButtonImage(copy, TexButton.Copy))
+            var copyRect = labelRect.NewCol(InputSize, HorizontalJustification.Right);
+            if (Widgets.ButtonImage(copyRect, TexButton.Copy))
                 Clipboard.Copy(setting);
 
-            float rowHeight = PawnSettingUIHandlers.Handle(new Vector2(position.x, position.y + labelRect.height), width, setting);
+            float rowHeight = PawnSettingUIHandlers.Handle(new Vector2(agg.Rect.x, agg.Rect.yMax), width, setting);
 
-            var row = new Rect(position.x, position.y, width, rowHeight + labelRect.height);
+            var row = agg.NewRow(rowHeight);
             Widgets.DrawHighlightIfMouseover(row);
             TooltipHandler.TipRegion(row, setting.Description);
 
             CurrentRenderSetting = prevRender;
-            return labelRect.height + rowHeight;
+            return agg.Rect.height;
         }
 
         public static string GetSettingLabel(IPawnSetting setting)

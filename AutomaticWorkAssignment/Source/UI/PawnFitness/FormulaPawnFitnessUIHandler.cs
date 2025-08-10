@@ -56,6 +56,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
                             position: localPosition,
                             width: width,
                             setting: setting,
+                            canMoveUp: false,
+                            canMoveDown: false,
                             onMoveSetting: null,
                             onDeleteSetting: (x) => Find.Root.StartCoroutine(DelayedRemoveInnerSetting(bindingName, pawnSetting)));
                     }
