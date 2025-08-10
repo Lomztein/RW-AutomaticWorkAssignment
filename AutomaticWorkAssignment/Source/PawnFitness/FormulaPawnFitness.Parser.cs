@@ -26,6 +26,23 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
             {
                 public FormulaBindings() { }
 
+                public FormulaBindings(
+                    IDictionary<
+                        string,
+                        Func<Pawn, WorkSpecification, ResolveWorkRequest, float>
+                    > source
+                )
+                    : this(
+                        source.ToDictionary(
+                            kvp => kvp.Key,
+                            kvp =>
+                                (CalcFitnessFunction)(
+                                    (pawn, specification, request) =>
+                                        (double)kvp.Value(pawn, specification, request)
+                                )
+                        )
+                    ) { }
+
                 public FormulaBindings(IDictionary<string, CalcFitnessFunction> source)
                 {
                     this.AddRange(source);
@@ -131,10 +148,40 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     }
                 }
 
+                #region Custom functions
                 static double Tick()
                 {
                     return 0;
                 }
+                #endregion
+                #region Standard functions
+                Expression SqrtExpression(Expression value) =>
+                    Expression.Call(((Func<double, double>)Math.Sqrt).Method, value);
+
+                private static BinaryExpression RootExpression(Expression left, Expression right) =>
+                    Expression.Power(
+                        left,
+                        Expression.Divide(Expression.Constant((double)1, typeof(double)), right)
+                    );
+
+                private static MethodCallExpression MaxExpression(List<Expression> callParams) =>
+                    Expression.Call(
+                        ((Func<IEnumerable<double>, double>)Enumerable.Max).Method,
+                        Expression.NewArrayInit(typeof(double), callParams)
+                    );
+
+                private static MethodCallExpression MinExpression(List<Expression> callParams) =>
+                    Expression.Call(
+                        ((Func<IEnumerable<double>, double>)Enumerable.Min).Method,
+                        Expression.NewArrayInit(typeof(double), callParams)
+                    );
+
+                private static MethodCallExpression AvgExpression(List<Expression> callParams) =>
+                    Expression.Call(
+                        ((Func<IEnumerable<double>, double>)Enumerable.Average).Method,
+                        Expression.NewArrayInit(typeof(double), callParams)
+                    );
+                #endregion
 
                 internal Formula ParseTokens(AstNode ast)
                 {
@@ -175,7 +222,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     }
 
                     queue.Reverse();
-                    var npnExpr = new Dictionary<AstNode, Expression>();
+                    var astExprMap = new Dictionary<AstNode, Expression>();
                     var bindings = new HashSet<string>();
                     Expression last = null;
                     foreach (var cursor in queue)
@@ -190,9 +237,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                 {
                                     if (unaryExpr.Operator == Operator.Subtract)
                                     {
-                                        last = Expression.Negate(
-                                            npnExpr[unaryExpr.Child]
-                                        );
+                                        last = Expression.Negate(astExprMap[unaryExpr.Child]);
                                     }
                                     else
                                     {
@@ -209,8 +254,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                     {
                                         case Operator.Exp:
                                             last = Expression.Power(
-                                                npnExpr[binaryExpr.Children[0]],
-                                                npnExpr[binaryExpr.Children[1]]
+                                                astExprMap[binaryExpr.Children[0]],
+                                                astExprMap[binaryExpr.Children[1]]
                                             );
                                             break;
                                         case Operator.Root:
@@ -219,9 +264,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                             {
                                                 if (lit.Token.Value == 2)
                                                 {
-                                                    last = Expression.Call(
-                                                        ((Func<double, double>)Math.Sqrt).Method,
-                                                        npnExpr[binaryExpr.Children[0]]
+                                                    last = SqrtExpression(
+                                                        astExprMap[binaryExpr.Children[0]]
                                                     );
                                                 }
                                                 else if (lit.Token.Value == 3)
@@ -230,42 +274,39 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                                     // root = Expression.Call(((Func<double, double>)Math.Cbrt).Method, npnExpr[anyOperator.Children[0]]);
                                                 }
                                             }
-                                            last ??= Expression.Power(
-                                                npnExpr[binaryExpr.Children[0]],
-                                                Expression.Divide(
-                                                    Expression.Constant((double)1, typeof(double)),
-                                                    npnExpr[binaryExpr.Children[1]]
-                                                )
+                                            last ??= RootExpression(
+                                                astExprMap[binaryExpr.Children[0]],
+                                                astExprMap[binaryExpr.Children[1]]
                                             );
                                             break;
                                         case Operator.Factor:
                                             last = Expression.Multiply(
-                                                npnExpr[binaryExpr.Children[0]],
-                                                npnExpr[binaryExpr.Children[1]]
+                                                astExprMap[binaryExpr.Children[0]],
+                                                astExprMap[binaryExpr.Children[1]]
                                             );
                                             break;
                                         case Operator.Divide:
                                             last = Expression.Divide(
-                                                npnExpr[binaryExpr.Children[0]],
-                                                npnExpr[binaryExpr.Children[1]]
+                                                astExprMap[binaryExpr.Children[0]],
+                                                astExprMap[binaryExpr.Children[1]]
                                             );
                                             break;
                                         case Operator.Sum:
                                             last = Expression.Add(
-                                                npnExpr[binaryExpr.Children[0]],
-                                                npnExpr[binaryExpr.Children[1]]
+                                                astExprMap[binaryExpr.Children[0]],
+                                                astExprMap[binaryExpr.Children[1]]
                                             );
                                             break;
                                         case Operator.Subtract:
                                             last = Expression.Subtract(
-                                                npnExpr[binaryExpr.Children[0]],
-                                                npnExpr[binaryExpr.Children[1]]
+                                                astExprMap[binaryExpr.Children[0]],
+                                                astExprMap[binaryExpr.Children[1]]
                                             );
                                             break;
                                         case Operator.Modulus:
                                             last = Expression.Modulo(
-                                                npnExpr[binaryExpr.Children[0]],
-                                                npnExpr[binaryExpr.Children[1]]
+                                                astExprMap[binaryExpr.Children[0]],
+                                                astExprMap[binaryExpr.Children[1]]
                                             );
                                             break;
                                         default:
@@ -279,18 +320,12 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                             case AstCallExpression call:
                                 {
                                     var callParams = call
-                                        .Children.Select(child => npnExpr[child])
+                                        .Children.Select(child => astExprMap[child])
                                         .ToList();
                                     switch (call.Token.Value)
                                     {
                                         case "AVG":
-                                            last = Expression.Call(
-                                                (
-                                                    (Func<IEnumerable<double>, double>)
-                                                        Enumerable.Average
-                                                ).Method,
-                                                Expression.NewArrayInit(typeof(double), callParams)
-                                            );
+                                            last = AvgExpression(callParams);
                                             break;
 
                                         case "TICK":
@@ -304,40 +339,29 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                                     "Bad call signature"
                                                 );
                                             }
-                                            last = Expression.Power(
-                                                callParams[0],
-                                                Expression.Divide(
-                                                    Expression.Constant((double)1, typeof(double)),
-                                                    callParams[1]
-                                                )
-                                            );
+                                            if (
+                                                callParams[1] is ConstantExpression constExpr
+                                                && (double)constExpr.Value == 2
+                                            )
+                                            {
+                                                last = SqrtExpression(callParams[0]);
+                                            }
+                                            else
+                                            {
+                                                last = RootExpression(callParams[0], callParams[1]);
+                                            }
                                             break;
 
                                         case "SQRT":
-                                            last = Expression.Call(
-                                                ((Func<double, double>)Math.Sqrt).Method,
-                                                callParams.Single()
-                                            );
+                                            last = SqrtExpression(callParams.Single());
                                             break;
 
                                         case "MIN":
-                                            last = Expression.Call(
-                                                (
-                                                    (Func<IEnumerable<double>, double>)
-                                                        Enumerable.Min
-                                                ).Method,
-                                                Expression.NewArrayInit(typeof(double), callParams)
-                                            );
+                                            last = MinExpression(callParams);
                                             break;
 
                                         case "MAX":
-                                            last = Expression.Call(
-                                                (
-                                                    (Func<IEnumerable<double>, double>)
-                                                        Enumerable.Max
-                                                ).Method,
-                                                Expression.NewArrayInit(typeof(double), callParams)
-                                            );
+                                            last = MaxExpression(callParams);
                                             break;
 
                                         default:
@@ -368,7 +392,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                     nameof(cursor)
                                 );
                         }
-                        npnExpr.SetOrAdd(cursor, last);
+                        astExprMap.SetOrAdd(cursor, last);
                     }
 
                     if (last == null)

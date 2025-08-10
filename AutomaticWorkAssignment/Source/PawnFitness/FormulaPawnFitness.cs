@@ -38,7 +38,13 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
-            return 0f;
+            return Formula.Calc(
+                pawn,
+                specification,
+                request,
+                new(bindingSettings.ToDictionary(
+                    (kvp) => kvp.Key,
+                    kvp => (Func<Pawn, WorkSpecification, ResolveWorkRequest, float>)kvp.Value.CalcFitness)));
         }
         public override void ExposeData()
         {
