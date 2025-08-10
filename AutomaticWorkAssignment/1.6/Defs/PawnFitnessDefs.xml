@@ -139,6 +139,12 @@
     <description>Average of nested fitness functions.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_FormulaPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness</settingClass>
+    <label>formula</label>
+    <description>Use a custom formula.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_CountPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CountPawnFitness</settingClass>
     <label>count</label>
