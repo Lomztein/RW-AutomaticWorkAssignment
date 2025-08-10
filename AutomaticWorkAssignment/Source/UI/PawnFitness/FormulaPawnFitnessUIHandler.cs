@@ -1,8 +1,6 @@
 ﻿using Lomzie.AutomaticWorkAssignment.Defs;
-using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using RimWorld;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,40 +10,25 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
 {
     public class FormulaPawnFitnessUIHandler : PawnSettingUIHandler<FormulaPawnFitness>
     {
-        private FormulaPawnFitness.ParseException? lastException;
-
         protected override float Handle(Vector2 position, float width, FormulaPawnFitness pawnSetting)
         {
             var localPosition = position;
 
             Rect rect = new Rect(localPosition, new Vector2(width, AutomaticWorkAssignmentSettings.UIInputSizeBase));
-            var newFormula = Widgets.TextField(rect, pawnSetting.sourceString);
+            var newFormula = Widgets.TextField(rect, pawnSetting.SourceString);
             localPosition.y += rect.height;
-            if (newFormula != pawnSetting.sourceString)
-            {
-                lastException = null;
-                pawnSetting.sourceString = newFormula;
-            }
+            pawnSetting.SourceString = newFormula;
 
             Rect buttonRect = new Rect(localPosition, new Vector2(width, AutomaticWorkAssignmentSettings.UILabelSizeBase));
             localPosition.y += buttonRect.height;
-            if (Widgets.ButtonText(buttonRect, "AWA.CommitSetting".Translate()))
+            if (Widgets.ButtonText(buttonRect, "AWA.CommitSetting".Translate(), active: pawnSetting.LastException == null))
             {
-                try
-                {
-                    pawnSetting.Commit();
-                }
-                catch (FormulaPawnFitness.ParseException e)
-                {
-                    lastException = e;
-                }
+                pawnSetting.Commit();
             }
 
-            if (lastException != null)
+            if (pawnSetting.LastException != null)
             {
-                Rect labelRect = new Rect(localPosition, new Vector2(width, AutomaticWorkAssignmentSettings.UILabelSizeBase));
-                localPosition.y += labelRect.height;
-                Widgets.Label(labelRect, lastException.Message);
+                Widgets.LongLabel(localPosition.x, width, pawnSetting.LastException, ref localPosition.y);
             }
 
             if (pawnSetting.InnerFormula != null)
