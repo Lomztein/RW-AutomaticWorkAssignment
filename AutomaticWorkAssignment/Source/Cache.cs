@@ -1,7 +1,5 @@
-﻿using RimWorld;
-using System;
+﻿using System;
 using UnityEngine;
-using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment
 {

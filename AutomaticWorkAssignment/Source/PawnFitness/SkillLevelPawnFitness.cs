@@ -1,6 +1,4 @@
-﻿using AutomaticWorkAssignment;
-using RimWorld;
-using System.Linq;
+﻿using RimWorld;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnFitness

@@ -1,7 +1,5 @@
 using AutomaticWorkAssignment.UI.Generic;
 using CombatExtended;
-using Lomzie.AutomaticWorkAssignment.Defs;
-using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using Lomzie.AutomaticWorkAssignment.UI;
 using Verse;
 

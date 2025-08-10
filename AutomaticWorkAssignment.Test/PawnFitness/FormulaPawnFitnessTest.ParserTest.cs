@@ -1,4 +1,3 @@
-using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using static Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness;
 using static Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser;
 using static Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness.Parser.Operator;

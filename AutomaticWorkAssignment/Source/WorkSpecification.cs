@@ -2,7 +2,6 @@
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
-using RimWorld;
 using System;
 using System.Collections;
 using System.Collections.Generic;

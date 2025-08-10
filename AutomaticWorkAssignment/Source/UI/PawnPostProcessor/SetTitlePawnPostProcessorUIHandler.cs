@@ -1,5 +1,4 @@
 ﻿using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
-using RimWorld;
 using UnityEngine;
 using Verse;
 

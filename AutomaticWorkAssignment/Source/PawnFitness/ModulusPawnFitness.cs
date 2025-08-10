@@ -1,5 +1,4 @@
-﻿using AutomaticWorkAssignment;
-using Lomzie.AutomaticWorkAssignment.Defs;
+﻿using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
 using System.Collections.Generic;
 using Verse;

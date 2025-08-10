@@ -1,8 +1,4 @@
-﻿using AutomaticWorkAssignment;
-using RimWorld;
-using System;
-using System.Collections;
-using System.Linq;
+﻿using System.Collections;
 using UnityEngine;
 using Verse;
 

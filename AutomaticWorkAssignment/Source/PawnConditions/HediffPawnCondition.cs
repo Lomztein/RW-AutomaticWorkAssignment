@@ -1,5 +1,4 @@
-﻿using AutomaticWorkAssignment;
-using Verse;
+﻿using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
