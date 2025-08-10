@@ -1,4 +1,4 @@
-﻿using AutomaticWorkAssignment.UI;
+using AutomaticWorkAssignment.UI;
 using AutomaticWorkAssignment.UI.Generic;
 using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
@@ -71,6 +71,7 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<CountPawnFitness, PawnConditionDef>("AWA.ConditionAdd".Translate(), false));
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<CountPawnsPawnFitness, PawnConditionDef>("AWA.ConditionAdd".Translate(), false));
             PawnSettingUIHandlers.AddHandler(new ConstantPawnFitnessUIHandler());
+            PawnSettingUIHandlers.AddHandler(new FormulaPawnFitnessUIHandler());
 
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<AggregatePawnFitness, PawnFitnessDef>("AWA.FunctionAdd".Translate(), false));
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<AveragePawnFitness, PawnFitnessDef>("AWA.FunctionAdd".Translate(), false));

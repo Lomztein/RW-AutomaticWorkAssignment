@@ -1,4 +1,4 @@
-﻿using Lomzie.AutomaticWorkAssignment.Amounts;
+using Lomzie.AutomaticWorkAssignment.Amounts;
 using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
@@ -20,6 +20,7 @@ using Verse.Noise;
 namespace Lomzie.AutomaticWorkAssignment.UI
 {
     // Don't look at this code. I'm terrible at writing UI.
+    // I did look ¯\_(ツ)_/¯
 
     public class WorkManagerWindow : MainTabWindow
     {
