@@ -332,7 +332,9 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
 
             [Theory, MemberData(nameof(GetTokenizeFormulaData), parameters: [new[] { "basic", "bindings" }])]
             public void ShouldTokenizeValidFormula(
+#pragma warning disable IDE0060, xUnit1026 // Remove unused parameter `description`, used to label tests
                 string description,
+#pragma warning restore IDE0060, xUnit1026 // Remove unused parameter `description`, used to label tests
                 string formula,
                 object[] expected
             )
@@ -362,10 +364,10 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
             [Theory, MemberData(nameof(GetParseTokensData), parameters: [new[] { "basic", "bindings" }])]
             public void ShouldParseTokens(string description, object[] tokens, float expected)
             {
-                var context = new FormulaPawnFitness.Parser.Context();
+                var context = new Context();
                 var bindings = GetTestBindings(description);
                 var result = context.ParseTokens(ToAst(TokensFromSynthetic(tokens)));
-                Assert.Equal(expected, result.Calc(null, null, null, bindings));
+                Assert.Equal(expected, result.Calc(new(), new(), new(), bindings));
             }
 
             [
@@ -400,9 +402,9 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
             [Theory, MemberData(nameof(GetEvaluateFormulaData), parameters: [new[] { "basic", "bindings" }])]
             public void ShouldEvaluateFormula(string description, string formula, float expected)
             {
-                var formulaExpression = new FormulaPawnFitness.Parser().ParseFormula(formula);
+                var formulaExpression = new Parser().ParseFormula(formula);
                 var bindings = GetTestBindings(description);
-                var result = formulaExpression.Calc(null, null, null, bindings);
+                var result = formulaExpression.Calc(new(), new(), new(), bindings);
                 Assert.Equal(expected, result);
             }
 
@@ -412,9 +414,15 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 );
 
             [Theory, MemberData(nameof(GetFormulaToExprData), parameters: [new[] { "basic" }])]
-            public void ShouldFormulaToExpr(string description, string formula, string expected)
+            public void ShouldFormulaToExpr(
+#pragma warning disable IDE0060, xUnit1026 // Remove unused parameter, used to label tests
+                string description,
+#pragma warning restore IDE0060, xUnit1026 // Remove unused parameter, used to label tests
+                string formula,
+                string expected
+            )
             {
-                var formulaExpression = new FormulaPawnFitness.Parser().ParseFormula(formula);
+                var formulaExpression = new Parser().ParseFormula(formula);
                 var linqExpr = formulaExpression.Expression.ToString();
                 Assert.Equal($"(pawn, specification, request, bindings) => {expected}", linqExpr);
             }
