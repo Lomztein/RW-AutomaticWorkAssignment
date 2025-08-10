@@ -3,14 +3,10 @@ using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
 using Lomzie.AutomaticWorkAssignment.UI;
 using RimWorld;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using UnityEngine;
 using Verse;
-using Verse.Noise;
 
 namespace AutomaticWorkAssignment.UI
 {

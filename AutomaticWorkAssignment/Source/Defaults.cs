@@ -1,17 +1,11 @@
-﻿using Lomzie.AutomaticWorkAssignment;
-using Lomzie.AutomaticWorkAssignment.Amounts;
+﻿using Lomzie.AutomaticWorkAssignment.Amounts;
 using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
-using LudeonTK;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
-using Verse.Sound;
 
 namespace Lomzie.AutomaticWorkAssignment
 {

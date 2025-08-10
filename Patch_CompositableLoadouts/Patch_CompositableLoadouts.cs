@@ -1,12 +1,7 @@
-﻿using AutomaticWorkAssignment.UI.Generic;
-using Inventory;
+﻿using Inventory;
 using Lomzie.AutomaticWorkAssignment.UI;
 using Lomzie.AutomaticWorkAssignment.UI.Modular;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts

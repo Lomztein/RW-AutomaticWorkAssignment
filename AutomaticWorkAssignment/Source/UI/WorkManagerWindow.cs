@@ -9,13 +9,9 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
-using System.Xml.Linq;
 using UnityEngine;
 using Verse;
-using Verse.Noise;
 
 namespace Lomzie.AutomaticWorkAssignment.UI
 {

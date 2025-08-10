@@ -1,6 +1,4 @@
-﻿using Lomzie.AutomaticWorkAssignment;
-using RimWorld;
-using System.Collections;
+﻿using RimWorld;
 using System.Collections.Generic;
 using Verse;
 

@@ -1,8 +1,6 @@
 ﻿using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors

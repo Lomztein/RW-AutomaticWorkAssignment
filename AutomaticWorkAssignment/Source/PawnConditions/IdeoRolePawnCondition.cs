@@ -1,10 +1,5 @@
-﻿using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
-using RimWorld;
-using System;
-using System.Collections.Generic;
+﻿using RimWorld;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions

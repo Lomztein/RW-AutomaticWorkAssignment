@@ -1,11 +1,6 @@
-﻿using Lomzie.AutomaticWorkAssignment;
-using RimWorld;
-using System;
+﻿using RimWorld;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lomzie.AutomaticWorkAssignment.UI.Dialogs
 {

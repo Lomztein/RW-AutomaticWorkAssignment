@@ -4,7 +4,6 @@ using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using RimWorld;
 using UnityEngine;
 using Verse;
-using static HarmonyLib.Code;
 
 namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
 {

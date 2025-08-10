@@ -1,16 +1,8 @@
-﻿using Lomzie.AutomaticWorkAssignment;
-using Lomzie.AutomaticWorkAssignment.Defs;
+﻿using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
-using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
-using Lomzie.AutomaticWorkAssignment.UI;
-using Lomzie.AutomaticWorkAssignment.UI.Generic;
 using RimWorld;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 

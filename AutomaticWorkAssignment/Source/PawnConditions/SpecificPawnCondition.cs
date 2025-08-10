@@ -1,8 +1,4 @@
-﻿using AutomaticWorkAssignment;
-using Lomzie.AutomaticWorkAssignment;
-using Lomzie.AutomaticWorkAssignment.PawnConditions;
-using System;
-using System.Linq;
+﻿using System.Linq;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions

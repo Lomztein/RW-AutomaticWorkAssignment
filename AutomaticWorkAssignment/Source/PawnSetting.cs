@@ -1,5 +1,4 @@
-﻿using Lomzie.AutomaticWorkAssignment;
-using Lomzie.AutomaticWorkAssignment.Defs;
+﻿using Lomzie.AutomaticWorkAssignment.Defs;
 using System;
 using System.Linq;
 using Verse;

@@ -1,5 +1,4 @@
-﻿using Lomzie.AutomaticWorkAssignment.PawnConditions;
-using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
+﻿using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using UnityEngine;
 using Verse;
 
