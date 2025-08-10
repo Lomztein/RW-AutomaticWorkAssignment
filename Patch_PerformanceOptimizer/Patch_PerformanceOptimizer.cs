@@ -16,7 +16,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.PerformanceOptimizer
             harmony.Patch(init, postfix: new Action(Settings_Initialize_PostFix));
         }
 
-        private static void Settings_Initialize_PostFix ()
+        private static void Settings_Initialize_PostFix()
         {
             var learnRateOptimization = PerformanceOptimizerSettings.optimizations.Find(x => x is Optimization_SkillRecord_LearnRateFactor);
             FieldInfo enabledField = typeof(Optimization_SkillRecord_LearnRateFactor).GetField("enabled", BindingFlags.NonPublic | BindingFlags.Instance);

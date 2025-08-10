@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Lomzie.AutomaticWorkAssignment;
+using Lomzie.AutomaticWorkAssignment.PawnFitness;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Lomzie.AutomaticWorkAssignment;
-using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions

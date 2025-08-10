@@ -84,7 +84,8 @@ namespace Lomzie.AutomaticWorkAssignment
                 forAssignment.SubstituteWith(substituteAssignment);
                 _workManager.RemoveAssignmentFromPawn(forAssignment, original);
                 _workManager.ResolvePawnPriorities(substitute);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Log.Error(ex.Message + " - " + ex.StackTrace);
             }

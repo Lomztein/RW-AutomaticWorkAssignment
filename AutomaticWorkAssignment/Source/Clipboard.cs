@@ -19,7 +19,7 @@ namespace Lomzie.AutomaticWorkAssignment
             _clipboardObject = MakeCopy(obj);
         }
 
-        private static IExposable MakeCopy (IExposable obj)
+        private static IExposable MakeCopy(IExposable obj)
         {
             IO.ExportToFile(obj, "clipboard", IO.GetClipboardDirectory());
             IExposable copy = Activator.CreateInstance(_objectType) as IExposable;
@@ -64,7 +64,7 @@ namespace Lomzie.AutomaticWorkAssignment
             IO.ImportFromFile(exposable, "clipboard", IO.GetClipboardDirectory());
         }
 
-        public static void Clear ()
+        public static void Clear()
         {
             _clipboardObject = null;
             _objectType = null;

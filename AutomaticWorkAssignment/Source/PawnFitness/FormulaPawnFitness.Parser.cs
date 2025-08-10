@@ -105,8 +105,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     return base.Message;
                 }
             }
-            public ParseException() {}
-            public ParseException(string message, Exception? innerException = null) : base(message, innerException){}
+            public ParseException() { }
+            public ParseException(string message, Exception? innerException = null) : base(message, innerException) { }
 
         }
         internal partial class Parser
@@ -320,7 +320,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     {"TICK", WellKnownFunctions.LoadMethod((Func<double>)WellKnownFunctions.Tick) },
                 }).ToDictionary(
                     kvp => kvp.Key,
-                    kvp => (WellKnownFunctions.ExpressionFactory)((callParams) => {
+                    kvp => (WellKnownFunctions.ExpressionFactory)((callParams) =>
+                    {
                         kvp.Value.arity.CheckArity(kvp.Key, callParams);
                         return kvp.Value.expressionFactory(callParams);
                     }));
@@ -527,7 +528,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     var result = context.ParseTokens(ast);
                     return result;
                 }
-                catch(Exception ex) when(ex is ArgumentOutOfRangeException || ex is InvalidOperationException || ex is ParseException)
+                catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is InvalidOperationException || ex is ParseException)
                 {
                     throw new ParseException("Formula is invalid", ex);
                 }

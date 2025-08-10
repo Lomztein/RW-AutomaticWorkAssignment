@@ -25,7 +25,7 @@ namespace Lomzie.AutomaticWorkAssignment.Test
                 var mockFn = new Mock<IPawnFitness>();
                 mockFn
                     .Setup(_ => _.CalcFitness(pawn1, It.IsAny<WorkSpecification>(), It.IsAny<ResolveWorkRequest>()))
-                    .Returns(new Queue<float>([42, 42, 666 ]).Dequeue);
+                    .Returns(new Queue<float>([42, 42, 666]).Dequeue);
                 mockFn
                     .Setup(_ => _.CalcFitness(pawn2, It.IsAny<WorkSpecification>(), It.IsAny<ResolveWorkRequest>()))
                     .Returns(new Queue<float>([42, 420, 123]).Dequeue);

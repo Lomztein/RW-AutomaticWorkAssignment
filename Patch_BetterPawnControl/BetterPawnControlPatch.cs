@@ -26,7 +26,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.BetterPawnControl
         private static MethodInfo _assignManager_getActivePolicy;
         private static MethodInfo _assignManager_saveCurrentState;
 
-        static BetterPawnControlPatch() 
+        static BetterPawnControlPatch()
         {
             _harmony = new Harmony("Lomzie.AutomaticWorkAssignment.BetterPawnControl");
             Do(_harmony);
@@ -43,7 +43,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.BetterPawnControl
             _assignManager_getActivePolicy = AccessTools.Method("BetterPawnControl.AssignManager:GetActivePolicy", new[] { typeof(int) });
             _assignManager_saveCurrentState = AccessTools.Method("BetterPawnControl.AssignManager:SaveCurrentState", new[] { typeof(List<Pawn>) });
 
-            MethodInfo resolveMethod = AccessTools.Method(typeof(MapWorkManager), "ResolvePriorities", new[] { typeof (ResolveWorkRequest) });
+            MethodInfo resolveMethod = AccessTools.Method(typeof(MapWorkManager), "ResolvePriorities", new[] { typeof(ResolveWorkRequest) });
             harm.Patch(resolveMethod, postfix: new HarmonyMethod(new Action<ResolveWorkRequest>(WorkManager_ResolvePriorities_PostFix)));
 
             MethodInfo settings_doListing = AccessTools.Method(typeof(AutomaticWorkAssignmentSettings), "DoListing", new[] { typeof(Listing_Standard) });

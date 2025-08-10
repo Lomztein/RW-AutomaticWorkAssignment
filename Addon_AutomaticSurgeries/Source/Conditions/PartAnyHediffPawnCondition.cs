@@ -23,9 +23,9 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         {
             if (pawn?.health?.hediffSet?.hediffs == null || BodyPartRecord == null)
                 return false;
-                
-            return pawn.health.hediffSet.hediffs.Any(x => 
-                x.Part != null && 
+
+            return pawn.health.hediffSet.hediffs.Any(x =>
+                x.Part != null &&
                 x.Part.LabelCap == BodyPartRecord.LabelCap);
         }
     }

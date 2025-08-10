@@ -43,7 +43,7 @@ namespace Lomzie.AutomaticWorkAssignment
                 shifted[index] = OrderedPriorities[i];
             }
             return shifted;
-        }   
+        }
 
         public void RemovePriority(WorkTypeDef priority)
         {
@@ -58,7 +58,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public void MovePriority(WorkTypeDef priority, int movement)
         {
-            Find.Root.StartCoroutine (DelayedMovePriority(priority, movement));
+            Find.Root.StartCoroutine(DelayedMovePriority(priority, movement));
         }
 
         private IEnumerator DelayedMovePriority(WorkTypeDef priority, int movement)
@@ -81,11 +81,11 @@ namespace Lomzie.AutomaticWorkAssignment
         public void ExposeData()
         {
             Scribe_Collections.Look(ref OrderedPriorities, "orderedPriorities", LookMode.Def);
-            
+
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (OrderedPriorities == null) OrderedPriorities = new List<WorkTypeDef>();
-                
+
                 OrderedPriorities = OrderedPriorities.ToList().Where(x => x != null).ToList();
             }
         }

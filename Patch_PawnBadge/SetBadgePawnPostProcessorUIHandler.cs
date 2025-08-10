@@ -32,7 +32,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.PawnBadge
             return _buttonSize * 2f;
         }
 
-        private IEnumerable<FloatMenuOption> GetFloatMenuOptions (SetBadgePawnPostProcessor pawnSetting)
+        private IEnumerable<FloatMenuOption> GetFloatMenuOptions(SetBadgePawnPostProcessor pawnSetting)
         {
             yield return new FloatMenuOption("AWA.PawnBadge.None".Translate(), () => pawnSetting.BadgeDef = null);
             var defs = DefDatabase<BadgeDef>.AllDefs;

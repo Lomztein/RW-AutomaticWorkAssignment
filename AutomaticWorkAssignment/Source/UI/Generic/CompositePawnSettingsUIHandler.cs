@@ -15,7 +15,7 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.UI.Generic
 {
-    public class CompositePawnSettingsUIHandler<T, D> : IPawnSettingUIHandler where T : IPawnSetting where D : PawnSettingDef 
+    public class CompositePawnSettingsUIHandler<T, D> : IPawnSettingUIHandler where T : IPawnSetting where D : PawnSettingDef
     {
         public bool CanHandle(IPawnSetting pawnSetting)
             => pawnSetting is T;
@@ -60,7 +60,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
             return y;
         }
 
-        private Action<IPawnSetting> GetNewSettingAction (CompositePawnSetting pawnSetting)
+        private Action<IPawnSetting> GetNewSettingAction(CompositePawnSetting pawnSetting)
         {
             if (pawnSetting.InnerSettings.Count != pawnSetting.MaxSettings)
                 return (x) => Find.Root.StartCoroutine(DelayedAdd(pawnSetting, x));

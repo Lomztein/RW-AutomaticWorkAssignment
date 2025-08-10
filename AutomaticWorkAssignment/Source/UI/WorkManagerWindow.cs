@@ -37,9 +37,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
 
         private const int MarginSize = 4;
-        public override Vector2 RequestedTabSize => 
+        public override Vector2 RequestedTabSize =>
             new Vector2(
-                WindowWidth, 
+                WindowWidth,
                 WindowHeight
                 );
 
@@ -50,7 +50,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         private Vector2 _listScrollPosition;
         private string _search;
-        
+
         // Main section layout
         private const float PriotityListElementWidth = 32;
         private static float InputSize => AutomaticWorkAssignmentSettings.UIInputSizeBase;
@@ -138,7 +138,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             }
         }
 
-        private void SelectMapParent ()
+        private void SelectMapParent()
         {
             Map currentMap = Find.CurrentMap;
             MapWorkManager workManager = currentMap.GetComponent<MapWorkManager>();
@@ -147,7 +147,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             var validMaps = allMaps.Where(x => x != currentMap && x != workManager.ParentMap)
                 .Where(x => !workManager.GetAllMaps().Contains(x));
 
-            var selectable = Enumerable.Concat(new List<Map>{ null }, validMaps);
+            var selectable = Enumerable.Concat(new List<Map> { null }, validMaps);
             Dialog_SelectMap selectMap = new Dialog_SelectMap(selectable, x => workManager.ParentMap = x);
             Find.WindowStack.Add(selectMap);
         }
@@ -202,7 +202,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                     Widgets.DrawHighlight(row);
 
                 Text.Anchor = TextAnchor.UpperLeft;
-                
+
                 TooltipHandler.TipRegion(row, () => "AWA.PawnsAssignedTip".Translate("    " + string.Join("\n    ", _workManager.GetPawnsAssignedTo(work))), 10371037);
 
                 (Rect left, Rect right) = Utils.SplitRectHorizontalRight(jobRect, AutomaticWorkAssignmentSettings.UIButtonSizeBase * 2);
@@ -225,7 +225,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 if (Widgets.ButtonText(suspend, work.IsSuspended ? suspendIcon : $"<color=grey>{suspendIcon}</color>"))
                     work.IsSuspended = !work.IsSuspended;
                 TooltipHandler.TipRegion(suspend, "AWA.SuspendWorkTooltip".Translate(work.IsSuspended.ToString()));
-                
+
                 Rect alert = Utils.GetSubRectFraction(suspendAlarm, new Vector2(0f, 0.5f), new Vector2(1f, 1f));
                 string alertIcon = "AWA.AlertCharacter".Translate();
                 if (Widgets.ButtonText(alert, work.EnableAlert ? alertIcon : $"<color=grey>{alertIcon}</color>"))
@@ -266,7 +266,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Text.Anchor = TextAnchor.UpperLeft;
 
             TooltipHandler.TipRegion(newRect, "AWA.NewWorkSpecificationTip".Translate());
-            
+
             if (Widgets.ButtonInvisible(newRect))
             {
                 SetCurrent(_workManager.CreateNewWorkSpecification());
@@ -357,17 +357,17 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         private void DoMainSectionContents(Rect rect)
         {
-                (Rect basicInfoRect, Rect priorityRect) = Utils.SplitRectVerticalUpper(rect, ButtonSize * 6);
+            (Rect basicInfoRect, Rect priorityRect) = Utils.SplitRectVerticalUpper(rect, ButtonSize * 6);
 
-                // Basic info
-                Widgets.DrawWindowBackground(basicInfoRect);
-                basicInfoRect = Utils.ShrinkByMargin(basicInfoRect, MarginSize);
-                DoBasicInfoContents(basicInfoRect);
+            // Basic info
+            Widgets.DrawWindowBackground(basicInfoRect);
+            basicInfoRect = Utils.ShrinkByMargin(basicInfoRect, MarginSize);
+            DoBasicInfoContents(basicInfoRect);
 
-                // Priority
-                Widgets.DrawWindowBackground(priorityRect);
-                priorityRect = Utils.ShrinkByMargin(priorityRect, MarginSize);
-                DoPriorityContents(priorityRect);
+            // Priority
+            Widgets.DrawWindowBackground(priorityRect);
+            priorityRect = Utils.ShrinkByMargin(priorityRect, MarginSize);
+            DoPriorityContents(priorityRect);
         }
 
         private void DoBasicInfoContents(Rect sectionRect)
@@ -509,7 +509,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             cur.x += ListScrollbarWidth;
             _priorityListWidth = cur.x;
-            
+
             Text.Anchor = TextAnchor.UpperLeft;
             GUI.EndGroup();
             Widgets.EndScrollView();
@@ -587,7 +587,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             sectionRect = remainder;
 
-            DoPawnSettingList(sectionRect,typeof(PawnFitnessDef), "AWA.FunctionAdd".Translate(), ref _fitnessListHeight, ref _fitnessListPosition,
+            DoPawnSettingList(sectionRect, typeof(PawnFitnessDef), "AWA.FunctionAdd".Translate(), ref _fitnessListHeight, ref _fitnessListPosition,
                 () => _current.Fitness,
                 (x) => _current.Fitness.Add(x as IPawnFitness),
                 (setting, movement) => _current.MoveFitness(setting as IPawnFitness, movement),
@@ -637,7 +637,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 );
         }
 
-        private static Rect DoAdvancedSectionMoveDeleteButtons (Rect inRect, Action<int> onMovement, Action onDelete)
+        private static Rect DoAdvancedSectionMoveDeleteButtons(Rect inRect, Action<int> onMovement, Action onDelete)
         {
             (Rect remainder, Rect buttonsRect) = Utils.SplitRectHorizontalRight(inRect, InputSize * 3);
             (Rect movementRect, Rect deleteRect) = Utils.SplitRectHorizontalRight(buttonsRect, InputSize);
@@ -649,14 +649,16 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                     onMovement(GetMovementAmount(-1));
                 if (Widgets.ButtonText(downRect, "\\/"))
                     onMovement(GetMovementAmount(1));
-            }else
+            }
+            else
                 remainder.width += movementRect.width;
 
             if (onDelete != null)
             {
                 if (Widgets.ButtonText(deleteRect, "X"))
                     onDelete();
-            }else
+            }
+            else
                 remainder.width += deleteRect.width;
 
             return remainder;
@@ -719,7 +721,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Widgets.EndScrollView();
         }
 
-        public static float DoPawnSetting (Vector2 position, float width, IPawnSetting setting, Action<IPawnSetting, int> onMoveSetting, Action<IPawnSetting> onDeleteSetting)
+        public static float DoPawnSetting(Vector2 position, float width, IPawnSetting setting, Action<IPawnSetting, int> onMoveSetting, Action<IPawnSetting> onDeleteSetting)
         {
             IPawnSetting prevRender = CurrentRenderSetting;
             CurrentRenderSetting = setting;

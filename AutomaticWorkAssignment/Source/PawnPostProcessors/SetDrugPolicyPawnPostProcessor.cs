@@ -25,7 +25,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
-            if (Policy != null) { 
+            if (Policy != null)
+            {
                 pawn.drugs.CurrentPolicy = Policy;
             }
         }

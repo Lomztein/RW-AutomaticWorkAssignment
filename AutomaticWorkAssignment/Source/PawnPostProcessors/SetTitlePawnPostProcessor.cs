@@ -13,7 +13,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
             pawn.story.title = title;
         }
 
-        public override void ExposeData() {
+        public override void ExposeData()
+        {
             base.ExposeData();
             Scribe_Values.Look(ref Title, "title", defaultValue: string.Empty);
         }

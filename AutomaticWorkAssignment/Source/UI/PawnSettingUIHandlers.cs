@@ -16,7 +16,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             _handlers.Add(handler);
         }
 
-        public static float Handle (Vector2 position, float width, IPawnSetting pawnSetting) {
+        public static float Handle(Vector2 position, float width, IPawnSetting pawnSetting)
+        {
             IPawnSettingUIHandler handler = _handlers.FirstOrDefault(x => x.CanHandle(pawnSetting));
             if (handler != null)
             {

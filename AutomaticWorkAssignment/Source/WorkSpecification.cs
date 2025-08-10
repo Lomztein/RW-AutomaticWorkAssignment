@@ -1,14 +1,14 @@
 ﻿using Lomzie.AutomaticWorkAssignment.Amounts;
-using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
+using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
+using RimWorld;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
-using RimWorld;
 
 namespace Lomzie.AutomaticWorkAssignment
 {
@@ -24,7 +24,7 @@ namespace Lomzie.AutomaticWorkAssignment
         public bool IsSuspended;
         public bool EnableAlert = true;
         public float Commitment; // 0 = Occasional, 0.5 = part-time work, 1.0 = full-time work.
-        
+
         public Map Map;
 
         public List<IPawnCondition> Conditions = new List<IPawnCondition>(); // Conditions required for a pawn to be valid. All conditions must be met.
@@ -81,7 +81,7 @@ namespace Lomzie.AutomaticWorkAssignment
             }
         }
 
-        public bool CanPawnDoWork (Pawn pawn)
+        public bool CanPawnDoWork(Pawn pawn)
         {
             if (RequireFullPawnCapability)
             {
@@ -96,7 +96,7 @@ namespace Lomzie.AutomaticWorkAssignment
             return false;
         }
 
-        public int GetTargetWorkers (ResolveWorkRequest request)
+        public int GetTargetWorkers(ResolveWorkRequest request)
             => Math.Max(TargetWorkers.GetCount(this, request), MinWorkers.GetCount(this, request));
 
         public void ApplyPostProcessing(Pawn pawn, ResolveWorkRequest request)
@@ -205,7 +205,7 @@ namespace Lomzie.AutomaticWorkAssignment
             private WorkSpecification _workSpec;
             private ResolveWorkRequest _workReq;
 
-            public PawnFitnessComparer (List<IPawnFitness> funcs, WorkSpecification workSpec, ResolveWorkRequest workReq)
+            public PawnFitnessComparer(List<IPawnFitness> funcs, WorkSpecification workSpec, ResolveWorkRequest workReq)
             {
                 _fitnessFunctions = funcs;
                 _workSpec = workSpec;
@@ -217,7 +217,7 @@ namespace Lomzie.AutomaticWorkAssignment
                 int funcIndex = 0;
                 float diff = 0f;
 
-                for (int i = 0; i <  _fitnessFunctions.Count; i++)
+                for (int i = 0; i < _fitnessFunctions.Count; i++)
                 {
                     float xFitnessd = _fitnessFunctions[funcIndex].CalcFitness(x, _workSpec, _workReq);
                     float yFitnessd = _fitnessFunctions[funcIndex].CalcFitness(y, _workSpec, _workReq);

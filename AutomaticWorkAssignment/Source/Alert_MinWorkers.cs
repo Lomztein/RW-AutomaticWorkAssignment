@@ -50,7 +50,7 @@ namespace Lomzie.AutomaticWorkAssignment
             return AnyIssues ? AlertReport.Active : AlertReport.Inactive;
         }
 
-        private List<Tuple<WorkSpecification, Map>> GetSpecsWithIssuesSorted ()
+        private List<Tuple<WorkSpecification, Map>> GetSpecsWithIssuesSorted()
         {
             List<Tuple<WorkSpecification, Map>> specs = new List<Tuple<WorkSpecification, Map>>(_specsWithIssue);
             specs.Sort(Compare);
@@ -96,7 +96,7 @@ namespace Lomzie.AutomaticWorkAssignment
             return builder.ToString();
         }
 
-        private Color GetColor ()
+        private Color GetColor()
         {
             if (DisplayRedCritical)
             {

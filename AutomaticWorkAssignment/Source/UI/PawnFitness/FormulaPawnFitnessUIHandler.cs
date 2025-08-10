@@ -37,7 +37,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
                 width -= 8;
                 for (var i = 0; i < pawnSetting.InnerFormula.BindingNames.Length; i++)
                 {
-                    if (i > 0) {
+                    if (i > 0)
+                    {
                         localPosition.y += 4;
                         Widgets.DrawLineHorizontal(localPosition.x, localPosition.y, width);
                         localPosition.y += 5;

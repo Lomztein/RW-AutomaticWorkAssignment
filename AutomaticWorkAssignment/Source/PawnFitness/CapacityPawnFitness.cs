@@ -9,7 +9,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
         public PawnCapacityDef CapacityDef;
 
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
-            => CapacityDef != null ? (pawn?.health.capacities?.GetLevel(CapacityDef) ?? 0): 0;
+            => CapacityDef != null ? (pawn?.health.capacities?.GetLevel(CapacityDef) ?? 0) : 0;
 
         public override void ExposeData()
         {

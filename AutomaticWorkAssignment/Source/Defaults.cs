@@ -17,7 +17,7 @@ namespace Lomzie.AutomaticWorkAssignment
 {
     public static class Defaults
     {
-        public static IEnumerable<WorkSpecification> GenerateDefaultWorkSpecifications ()
+        public static IEnumerable<WorkSpecification> GenerateDefaultWorkSpecifications()
         {
             WorkSpecification spec;
 

@@ -38,7 +38,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
             return 1f;
         }
 
-        private IEnumerable<Tuple<Hediff, HediffComp_TendDuration>> GetClearsAfterTendHediffs (HediffSet set)
+        private IEnumerable<Tuple<Hediff, HediffComp_TendDuration>> GetClearsAfterTendHediffs(HediffSet set)
         {
             foreach (var hediff in set.hediffs)
             {

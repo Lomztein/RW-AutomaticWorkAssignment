@@ -65,7 +65,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
             public ReservationInfo() { }
 
-            public bool IsTimedOut ()
+            public bool IsTimedOut()
             {
                 int timeout = _startTime + Timeout;
                 return GenTicks.TicksGame > timeout;

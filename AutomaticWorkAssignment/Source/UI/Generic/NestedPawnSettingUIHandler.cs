@@ -50,10 +50,10 @@ namespace AutomaticWorkAssignment.UI
             return y;
         }
 
-        private IEnumerable<D> GetDefs ()
+        private IEnumerable<D> GetDefs()
             => DefDatabase<D>.AllDefs;
 
-        private IEnumerator DelayedRemoveInnerSetting (NestedPawnSetting setting)
+        private IEnumerator DelayedRemoveInnerSetting(NestedPawnSetting setting)
         {
             yield return new WaitForEndOfFrame();
             setting.InnerSetting = null;
