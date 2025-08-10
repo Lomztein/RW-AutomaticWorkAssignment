@@ -43,7 +43,9 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
         private string _commitedString;
         private Formula? _comittedFormula;
         internal Formula? InnerFormula => _comittedFormula;
-        private string _CommitedFormula { get => _commitedString; set
+        private string _CommitedFormula
+        {
+            get => _commitedString; set
             {
                 if (value != _commitedString)
                 {
@@ -63,7 +65,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                         Logger.Message($"[AWA:core:Formula] Invalid formula: {ex}");
                         throw;
                     }
-                } else
+                }
+                else
                 {
                     Logger.Message($"[AWA:core:Formula] Skip loading");
                 }

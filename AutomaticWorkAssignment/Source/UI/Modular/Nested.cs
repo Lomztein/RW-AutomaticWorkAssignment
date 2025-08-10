@@ -15,7 +15,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
         private readonly Func<T, IPawnSetting> _getter;
         private readonly Action<T, IPawnSetting> _setter;
 
-        public Nested (Func<T, IPawnSetting> getter, Action<T, IPawnSetting> setter)
+        public Nested(Func<T, IPawnSetting> getter, Action<T, IPawnSetting> setter)
         {
             _getter = getter;
             _setter = setter;

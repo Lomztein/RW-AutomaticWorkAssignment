@@ -43,6 +43,6 @@ namespace Lomzie.AutomaticWorkAssignment
             return Get();
         }
 
-        public void MarkDirty () => _dirty = true;
+        public void MarkDirty() => _dirty = true;
     }
 }

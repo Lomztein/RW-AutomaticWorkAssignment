@@ -12,9 +12,9 @@ namespace Lomzie.AutomaticWorkAssignment
         public Pawn Pawn;
         private string _uniqueId;
 
-        public PawnRef () { }
+        public PawnRef() { }
 
-        public PawnRef (Pawn pawn)
+        public PawnRef(Pawn pawn)
         {
             Pawn = pawn;
         }

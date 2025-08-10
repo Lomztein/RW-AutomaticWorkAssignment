@@ -26,7 +26,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
             }
         }
 
-        public override void ExposeData() {
+        public override void ExposeData()
+        {
             base.ExposeData();
             Scribe_Defs.Look(ref RoleDef, "roleDef");
         }

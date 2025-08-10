@@ -23,7 +23,8 @@ namespace Lomzie.AutomaticWorkAssignment
             return setting;
         }
 
-        public virtual void ExposeData() {
+        public virtual void ExposeData()
+        {
             Scribe_Defs.Look(ref Def, "def");
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {

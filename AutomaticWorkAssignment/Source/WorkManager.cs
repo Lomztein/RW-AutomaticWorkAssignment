@@ -31,7 +31,7 @@ namespace Lomzie.AutomaticWorkAssignment
                 ClearLegacy();
         }
 
-        private void ClearLegacy ()
+        private void ClearLegacy()
         {
             WorkList.Clear();
             ExcludePawns.Clear();

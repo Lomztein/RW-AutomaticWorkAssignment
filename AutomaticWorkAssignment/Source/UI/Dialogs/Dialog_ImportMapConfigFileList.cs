@@ -24,7 +24,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Dialogs
             ReloadMaps();
         }
 
-        protected void ReloadMaps ()
+        protected void ReloadMaps()
         {
             maps.Clear();
 
@@ -57,9 +57,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Dialogs
             {
                 Log.Error(exc.Message + ": " + exc.StackTrace);
             }
-            finally { 
+            finally
+            {
                 if (Scribe.mode != LoadSaveMode.Inactive)
-                    Scribe.loader.FinalizeLoading(); 
+                    Scribe.loader.FinalizeLoading();
             }
         }
 

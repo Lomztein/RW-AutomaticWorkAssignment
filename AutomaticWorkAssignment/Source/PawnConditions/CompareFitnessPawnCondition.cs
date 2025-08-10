@@ -69,7 +69,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
                     return v1 > v2;
                 case Comparsion.GreaterThanOrEqual:
                     return v1 >= v2;
-                default: 
+                default:
                     throw new InvalidOperationException($"Unsupported comparison type {ComparisonType}");
             }
         }

@@ -28,4 +28,3 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         }
     }
 }
-    

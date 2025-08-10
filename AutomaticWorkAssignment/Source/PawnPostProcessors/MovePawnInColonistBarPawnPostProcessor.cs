@@ -18,7 +18,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
             if (pawn != null && pawn.playerSettings != null)
             {
                 int offset = request.GetVariable<int>("MovePawnInColonistBarOffset");
-                
+
                 int sign = MoveTo == MoveToSide.Left ? -1 : 1;
                 pawn.playerSettings.displayOrder = ((int.MaxValue / 2) - offset) * sign;
 

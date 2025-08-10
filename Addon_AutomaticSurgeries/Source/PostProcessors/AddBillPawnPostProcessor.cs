@@ -57,7 +57,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
         {
             if (record == null)
                 return null;
-                
+
             try
             {
                 var parts = pawn.RaceProps.body.GetPartsWithDef(record.def);
@@ -72,7 +72,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
             {
                 Log.Warning($"[AWA:AS] Error getting body part for {pawn.NameShortColored}: {ex.Message}");
             }
-            
+
             return null;
         }
 
@@ -80,7 +80,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
         {
             if (onMap == null)
                 return false;
-                
+
             try
             {
                 List<Tuple<Thing, int>> reservables = new List<Tuple<Thing, int>>();
@@ -125,7 +125,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
         {
             if (BillRecipeDef == null || bill == null)
                 return LogError("Bill recipe def or bill was null");
-                
+
             if (pawn == null)
                 return LogError("Pawn is null");
 
@@ -136,15 +136,15 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
             // Check if recipe is available on the pawn
             if (!BillRecipeDef.Worker.AvailableOnNow(pawn, bill.Part))
                 return LogError($"Recipe worker {BillRecipeDef.Worker.GetType().Name} AvailableOnNow({pawn}, {bill.Part?.LabelCap}) = false");
-                
+
             // Check if pawn already has the resulting hediff
             if (BillRecipeDef.addsHediff != null && HasHediff(pawn, BillRecipeDef.addsHediff, bill.Part))
                 return LogError($"Target pawn '{pawn}' already has resulting hediff '{BillRecipeDef.addsHediff}'.");
-                
+
             // Check if recipe requires fixed body parts but we don't have one
             if (BillRecipeDef.appliedOnFixedBodyParts.Any() && bill.Part == null)
                 return LogError($"Recipe applied on fixed body parts, but body part record = null.");
-                
+
             // Check if identical bill already exists
             if (pawn.BillStack.Bills.Where(x => x is Bill_Medical).Cast<Bill_Medical>()
                 .Any(x => x.recipe == bill.recipe && x.Part == bill.Part))
@@ -153,13 +153,13 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
             return true;
         }
 
-        private bool HasHediff (Pawn pawn, HediffDef hediff, BodyPartRecord bodyPartRecord)
+        private bool HasHediff(Pawn pawn, HediffDef hediff, BodyPartRecord bodyPartRecord)
         {
             if (bodyPartRecord == null)
                 return pawn.health.hediffSet.HasHediff(hediff);
-            return pawn?.health.hediffSet?.hediffs.Any(x => 
-                x.def == hediff && 
-                x.Part != null && 
+            return pawn?.health.hediffSet?.hediffs.Any(x =>
+                x.def == hediff &&
+                x.Part != null &&
                 x.Part.LabelCap == bodyPartRecord.LabelCap) ?? false;
         }
 
@@ -167,7 +167,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
         {
             if (map == null)
                 return false;
-                
+
             return map.listerThings.ThingsInGroup(ThingRequestGroup.HaulableEver)
                 .Any(x => ingredientCount.filter.Allows(x) && ingredientCount.CountFor(recipe) <= x.stackCount - MapWorkManager.GetManager(map).Reservations.Get(x));
         }

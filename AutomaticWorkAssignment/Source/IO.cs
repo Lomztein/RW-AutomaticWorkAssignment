@@ -19,8 +19,8 @@ namespace Lomzie.AutomaticWorkAssignment
         private const string GRAVSHIP_CONFIG_SAVE_FOLDER = "AutomaticWorkAssignment/GravshipConfigs";
         private const string CLIPBOARD_SAVE_FOLDER = "AutomaticWorkAssignment/Clipboard";
 
-        public static DirectoryInfo GetConfigDirectory ()
-            => GetOrCreateDirectory (CONFIG_SAVE_FOLDER);
+        public static DirectoryInfo GetConfigDirectory()
+            => GetOrCreateDirectory(CONFIG_SAVE_FOLDER);
 
         public static DirectoryInfo GetClipboardDirectory()
             => GetOrCreateDirectory(CLIPBOARD_SAVE_FOLDER);
@@ -55,11 +55,13 @@ namespace Lomzie.AutomaticWorkAssignment
             try
             {
                 FileInfo file = GetFile(fileName, directory);
-                SafeSaver.Save(file.FullName, "workManagerConfig", () => {
+                SafeSaver.Save(file.FullName, "workManagerConfig", () =>
+                {
                     ScribeMetaHeaderUtility.WriteMetaHeader();
                     Scribe_Deep.Look(ref exposable, "workManager");
                 });
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Log.Error(ex.Message + " - " + ex.StackTrace);
             }
@@ -162,7 +164,7 @@ namespace Lomzie.AutomaticWorkAssignment
             return null;
         }
 
-        public static IEnumerable<Tuple<XmlNode, XmlNode>> FindWorldObjectsWithMaps (XmlNode gameNode)
+        public static IEnumerable<Tuple<XmlNode, XmlNode>> FindWorldObjectsWithMaps(XmlNode gameNode)
         {
             XmlNode mapNode = gameNode.SelectSingleNode("maps");
             XmlNode worldObjects = gameNode.SelectSingleNode("world/worldObjects/worldObjects");

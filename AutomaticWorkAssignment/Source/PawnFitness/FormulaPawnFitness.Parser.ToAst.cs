@@ -125,7 +125,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                             {
                                 negated.Add(new AstLiteral(this, new NumberToken(-literalExpression.Value)));
                             }
-                            else if (Children[i+1] is AstExpression subExpression)
+                            else if (Children[i + 1] is AstExpression subExpression)
                             {
                                 negated.Add(new AstUnaryExpression(this, arithmeticExpression.Token, subExpression));
                             }
@@ -265,7 +265,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 public readonly NameToken Token;
                 public string Name => Token.Value;
 
-                public AstBindingExpression(IAstExpression? parent, NameToken token): base(parent)
+                public AstBindingExpression(IAstExpression? parent, NameToken token) : base(parent)
                 {
                     Token = token;
                 }
@@ -277,7 +277,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 IAstExpression astCursor = new AstCompositeArithmeticExpression(rootExpression);
                 rootExpression.Append(astCursor);
                 var allTokens = tokens.ToArray();
-                for(var i = 0; i < allTokens.Length; i++)
+                for (var i = 0; i < allTokens.Length; i++)
                 {
                     var currentToken = allTokens[i];
                     switch (currentToken)

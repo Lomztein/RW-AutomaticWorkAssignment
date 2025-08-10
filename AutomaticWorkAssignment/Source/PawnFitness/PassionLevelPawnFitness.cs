@@ -31,7 +31,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
             else return 0;
         }
 
-        private IEnumerable<SkillDef> GetSkillDefs (WorkSpecification workSpec)
+        private IEnumerable<SkillDef> GetSkillDefs(WorkSpecification workSpec)
         {
             if (SkillDef == null)
             {

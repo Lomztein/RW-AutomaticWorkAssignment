@@ -29,7 +29,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
             }
         }
 
-        private IEnumerable<Tag> GetTagsSetByAWA (ResolveWorkRequest request)
+        private IEnumerable<Tag> GetTagsSetByAWA(ResolveWorkRequest request)
         {
             foreach (var spec in request.WorkManager.WorkList)
             {
@@ -54,7 +54,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
                 foreach (var inner in composite.GetSettings())
                 {
                     var tags = GetTagsFrom(inner);
-                    foreach (var  tag in tags)
+                    foreach (var tag in tags)
                         yield return tag;
                 }
             }

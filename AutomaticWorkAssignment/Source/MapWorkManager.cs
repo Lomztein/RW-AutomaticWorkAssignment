@@ -72,7 +72,7 @@ namespace Lomzie.AutomaticWorkAssignment
             EnsureSanity();
         }
 
-        private void EnsureSanity ()
+        private void EnsureSanity()
         {
             if (WorkList == null) WorkList = new List<WorkSpecification>();
             if (ExcludedPawns == null) ExcludedPawns = new List<PawnRef>();
@@ -87,7 +87,7 @@ namespace Lomzie.AutomaticWorkAssignment
             }
         }
 
-        private void TryLoadLegacy ()
+        private void TryLoadLegacy()
         {
             WorkManager legacyManager = WorkManager.GetLegacyManager();
             if (legacyManager != null && legacyManager.WorkList.Count > 0)
@@ -126,7 +126,7 @@ namespace Lomzie.AutomaticWorkAssignment
             EnsureSanity();
         }
 
-        private DefaultLoadType DetermineDefaultLoadType ()
+        private DefaultLoadType DetermineDefaultLoadType()
         {
             if (AutomaticWorkAssignmentSettings.AutoMigrateOnGravshipJump && Map.wasSpawnedViaGravShipLanding && GravshipUtils.GravshipConfigMigrationFileExists())
                 return DefaultLoadType.Gravship;
@@ -145,7 +145,7 @@ namespace Lomzie.AutomaticWorkAssignment
             if (ParentMap == null)
             {
                 bool shouldResolve = AutoResolveFrequencyUtils.ShouldResolveNow(ResolveFrequencyDef, _lastResolveTick, map);
-                if(shouldResolve)
+                if (shouldResolve)
                 {
                     _lastResolveTick = GenTicks.TicksAbs;
                     ResolveWorkAssignments();
@@ -173,7 +173,7 @@ namespace Lomzie.AutomaticWorkAssignment
         public IEnumerable<Map> GetAllMaps()
             => _allMaps.Get(CacheMaps);
 
-        private IEnumerable<Map> CacheMaps ()
+        private IEnumerable<Map> CacheMaps()
         {
             Map rootMap = Map;
 
@@ -200,10 +200,10 @@ namespace Lomzie.AutomaticWorkAssignment
             {
                 yield return ParentMap;
                 MapWorkManager mapWorkManager = ParentMap.GetComponent<MapWorkManager>();
-                foreach (var map in  mapWorkManager.GetParentMaps())
+                foreach (var map in mapWorkManager.GetParentMaps())
                     yield return map;
             }
-        } 
+        }
 
         private IEnumerable<Pawn> CachePawns()
         {

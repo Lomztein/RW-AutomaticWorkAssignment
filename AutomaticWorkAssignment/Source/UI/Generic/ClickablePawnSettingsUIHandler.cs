@@ -15,7 +15,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
 
         private readonly float _buttonSize = 32;
 
-        public ClickablePawnSettingsUIHandler (Action<T> onClick, string label)
+        public ClickablePawnSettingsUIHandler(Action<T> onClick, string label)
         {
             _onClick = onClick;
             _label = label;

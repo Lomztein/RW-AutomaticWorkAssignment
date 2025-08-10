@@ -32,7 +32,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.PawnBadge
             _badgesField.SetValue(badgeComp, current);
         }
 
-        static SetBadgePawnPostProcessor ()
+        static SetBadgePawnPostProcessor()
         {
             Assembly assembly = typeof(BadgeDef).Assembly;
             _compBadgeType = assembly.GetType("RR_PawnBadge.CompBadge");
