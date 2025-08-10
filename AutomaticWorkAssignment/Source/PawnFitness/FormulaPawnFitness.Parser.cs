@@ -52,7 +52,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 {
                     if (!new HashSet<string>(declaredNames).SetEquals(Keys))
                     {
-                        throw new Exception("Invalid bindings");
+                        throw new InvalidOperationException("Invalid bindings");
                     }
                 }
             }
