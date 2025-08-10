@@ -61,6 +61,40 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
             {
                 var ex = Assert.Throws(exceptionType, () => FormulaPawnFitness.Parser.TokenizeFormula(formula).ToList());
             }
+
+            [
+                Theory,
+                InlineData(new object[] { 1 }, 1),
+                InlineData(new object[] { 1, Operator.Sum, 1 }, 2),
+                InlineData(new object[] { 1, Operator.Sum, 1, Operator.Sum, 1 }, 3),
+                InlineData(new object[] { 2, Operator.Factor, 2, Operator.Sum, 1 }, 5),
+                InlineData(new object[] { 1, Operator.Sum, 2, Operator.Factor, 2 }, 5),
+                InlineData(new object[] { Operator.OpenGroup, 1, Operator.CloseGroup }, 1),
+            ]
+            public void ShouldParseTokens(object[] tokens, float expected)
+            {
+                var context = new FormulaPawnFitness.Parser.Context();
+                var result = context.ParseTokens(TokensFromTestObjects(tokens))
+                    .ToFormula();
+                Assert.Equal(expected, result.Calc(null, null, null));
+            }
+
+            [
+                Theory,
+                InlineData(new object[] {}, typeof(InvalidOperationException), "No tokens"),
+                InlineData(new object[] { "asd" }, typeof(ArgumentException)),
+                InlineData(new object[] { Operator.OpenGroup }, typeof(ArgumentException)),
+            ]
+            public void ShouldFailOnInvalidTokens(object[] tokens, Type expectedError, string? message = null)
+            {
+                var context = new FormulaPawnFitness.Parser.Context();
+                var exception = Assert.Throws(expectedError, () => context.ParseTokens(TokensFromTestObjects(tokens))
+                    .ToFormula());
+                if (message != null)
+                {
+                    Assert.Equal(message, exception.Message);
+                }
+            }
         }
     }
 }
