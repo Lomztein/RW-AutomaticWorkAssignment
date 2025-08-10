@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using Verse;
-using static RimWorld.BaseGen.SymbolStack;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 {
@@ -13,12 +10,22 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
     {
         internal partial class Parser
         {
-            public delegate double CalcFitnessFunction(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request);
-            public delegate double UnboundCalcFitnessFunction(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request, FormulaBindings? bindings);
+            public delegate double CalcFitnessFunction(
+                Pawn pawn,
+                WorkSpecification specification,
+                ResolveWorkRequest request
+            );
+            public delegate double UnboundCalcFitnessFunction(
+                Pawn pawn,
+                WorkSpecification specification,
+                ResolveWorkRequest request,
+                FormulaBindings? bindings
+            );
 
-            public class FormulaBindings: Dictionary<string, CalcFitnessFunction>
+            public class FormulaBindings : Dictionary<string, CalcFitnessFunction>
             {
-                public FormulaBindings(){}
+                public FormulaBindings() { }
+
                 public FormulaBindings(IDictionary<string, CalcFitnessFunction> source)
                 {
                     this.AddRange(source);
@@ -32,36 +39,59 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     }
                 }
             }
+
             public class Formula
             {
                 public string[] BindingNames { get; private set; }
-                public Formula(Expression<UnboundCalcFitnessFunction> expression, string[] bindingNames)
+
+                public Formula(
+                    Expression<UnboundCalcFitnessFunction> expression,
+                    string[] bindingNames
+                )
                 {
                     Expression = expression;
                     BindingNames = bindingNames;
                 }
 
                 public Expression<UnboundCalcFitnessFunction> Expression { get; }
+
                 public CalcFitnessFunction Bind(FormulaBindings bindings)
                 {
                     bindings.Validate(BindingNames);
                     var fn = Expression.Compile();
-                    return (pawn, specification, request) => fn(pawn, specification, request, bindings);
+                    return (pawn, specification, request) =>
+                        fn(pawn, specification, request, bindings);
                 }
-                public float Calc(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request, FormulaBindings bindings)
+
+                public float Calc(
+                    Pawn pawn,
+                    WorkSpecification specification,
+                    ResolveWorkRequest request,
+                    FormulaBindings bindings
+                )
                 {
                     bindings.Validate(BindingNames);
                     var fn = Expression.Compile();
                     return (float)fn(pawn, specification, request, bindings);
                 }
             }
+
             internal class Context
             {
-                private static readonly ParameterExpression pawnParameter = Expression.Parameter(typeof(Pawn), "pawn");
-                private static readonly ParameterExpression specificationParameter = Expression.Parameter(typeof(WorkSpecification), "specification");
-                private static readonly ParameterExpression requestParameter = Expression.Parameter(typeof(ResolveWorkRequest), "request");
-                private static readonly ParameterExpression bindingsParameter = Expression.Parameter(typeof(FormulaBindings), "bindings");
-                private static readonly ParameterExpression[] parameters = new[]{
+                private static readonly ParameterExpression pawnParameter = Expression.Parameter(
+                    typeof(Pawn),
+                    "pawn"
+                );
+                private static readonly ParameterExpression specificationParameter =
+                    Expression.Parameter(typeof(WorkSpecification), "specification");
+                private static readonly ParameterExpression requestParameter = Expression.Parameter(
+                    typeof(ResolveWorkRequest),
+                    "request"
+                );
+                private static readonly ParameterExpression bindingsParameter =
+                    Expression.Parameter(typeof(FormulaBindings), "bindings");
+                private static readonly ParameterExpression[] parameters = new[]
+                {
                     pawnParameter,
                     specificationParameter,
                     requestParameter,
@@ -71,15 +101,29 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 private class BindingExpressionReplacer : ExpressionVisitor
                 {
                     private readonly Dictionary<ParameterExpression, ParameterExpression> mapping;
-                    public BindingExpressionReplacer(Expression<UnboundCalcFitnessFunction> sourceExpression)
+
+                    public BindingExpressionReplacer(
+                        Expression<UnboundCalcFitnessFunction> sourceExpression
+                    )
                     {
-                        mapping = sourceExpression.Parameters
-                            .Zip(parameters, (source, replacement) => new KeyValuePair<ParameterExpression, ParameterExpression>(source, replacement))
+                        mapping = sourceExpression
+                            .Parameters.Zip(
+                                parameters,
+                                (source, replacement) =>
+                                    new KeyValuePair<ParameterExpression, ParameterExpression>(
+                                        source,
+                                        replacement
+                                    )
+                            )
                             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
                     }
+
                     public override Expression Visit(Expression node)
                     {
-                        if(node is ParameterExpression nodeParam && mapping.TryGetValue(nodeParam, out var replacement))
+                        if (
+                            node is ParameterExpression nodeParam
+                            && mapping.TryGetValue(nodeParam, out var replacement)
+                        )
                         {
                             return replacement;
                         }
@@ -97,7 +141,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     var queue = new List<AstNode>(new[] { ast });
 
                     // Collect all, deep first
-                    for(var i = 0; i < queue.Count; i++) {
+                    for (var i = 0; i < queue.Count; i++)
+                    {
                         var cursor = queue[i];
                         switch (cursor)
                         {
@@ -110,7 +155,10 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                 break;
                             case IAstExpression expr:
                                 // Flatten empty groups (eg: `(1)`, `(-4.2)`, `(foo())`
-                                if (expr.Children.Count() == 1 && expr is not AstArithmeticExpression)
+                                if (
+                                    expr.Children.Count() == 1
+                                    && expr is not AstArithmeticExpression
+                                )
                                 {
                                     queue.Remove(cursor);
                                     i--;
@@ -119,8 +167,10 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                 break;
 
                             default:
-                                throw new ArgumentException($"Invalid token type {cursor.GetType().Name}", nameof(cursor));
-
+                                throw new ArgumentException(
+                                    $"Invalid token type {cursor.GetType().Name}",
+                                    nameof(cursor)
+                                );
                         }
                     }
 
@@ -136,64 +186,111 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                 last = Expression.Constant(literal.Token.Value, typeof(double));
                                 break;
 
-                            case AstArithmeticExpression anyOperator:
-                                switch (anyOperator.Token.Value)
+                            case AstUnaryExpression unaryExpr:
                                 {
-                                    case Operator.Exp:
-                                        last = Expression.Power(npnExpr[anyOperator.Children[0]], npnExpr[anyOperator.Children[1]]);
-                                        break;
-                                    case Operator.Root:
-                                        last = null;
-                                        if (anyOperator.Children[1] is AstLiteral lit)
-                                        {
-                                            if (lit.Token.Value == 2)
-                                            {
-                                                last = Expression.Call(((Func<double, double>)Math.Sqrt).Method, npnExpr[anyOperator.Children[0]]);
-                                            }
-                                            else if (lit.Token.Value == 3)
-                                            {
-                                                // Not supported in that dotnet version
-                                                // root = Expression.Call(((Func<double, double>)Math.Cbrt).Method, npnExpr[anyOperator.Children[0]]);
-                                            }
-                                        }
-                                        if (last == null)
-                                        {
+                                    if (unaryExpr.Operator == Operator.Subtract)
+                                    {
+                                        last = Expression.Negate(
+                                            npnExpr[unaryExpr.Child]
+                                        );
+                                    }
+                                    else
+                                    {
+                                        throw new InvalidOperationException(
+                                            $"Operator {Enum.GetName(typeof(Operator), unaryExpr.Token.Value)} not supported at this point"
+                                        );
+                                    }
+                                }
+                                break;
+
+                            case AstBinaryExpression binaryExpr:
+                                {
+                                    switch (binaryExpr.Token.Value)
+                                    {
+                                        case Operator.Exp:
                                             last = Expression.Power(
-                                                npnExpr[anyOperator.Children[0]],
+                                                npnExpr[binaryExpr.Children[0]],
+                                                npnExpr[binaryExpr.Children[1]]
+                                            );
+                                            break;
+                                        case Operator.Root:
+                                            last = null;
+                                            if (binaryExpr.Children[1] is AstLiteral lit)
+                                            {
+                                                if (lit.Token.Value == 2)
+                                                {
+                                                    last = Expression.Call(
+                                                        ((Func<double, double>)Math.Sqrt).Method,
+                                                        npnExpr[binaryExpr.Children[0]]
+                                                    );
+                                                }
+                                                else if (lit.Token.Value == 3)
+                                                {
+                                                    // Not supported in that dotnet version
+                                                    // root = Expression.Call(((Func<double, double>)Math.Cbrt).Method, npnExpr[anyOperator.Children[0]]);
+                                                }
+                                            }
+                                            last ??= Expression.Power(
+                                                npnExpr[binaryExpr.Children[0]],
                                                 Expression.Divide(
                                                     Expression.Constant((double)1, typeof(double)),
-                                                    npnExpr[anyOperator.Children[1]]
+                                                    npnExpr[binaryExpr.Children[1]]
                                                 )
                                             );
-                                        }
-                                        break;
-                                    case Operator.Factor:
-                                        last = Expression.Multiply(npnExpr[anyOperator.Children[0]], npnExpr[anyOperator.Children[1]]);
-                                        break;
-                                    case Operator.Divide:
-                                        last = Expression.Divide(npnExpr[anyOperator.Children[0]], npnExpr[anyOperator.Children[1]]);
-                                        break;
-                                    case Operator.Sum:
-                                        last = Expression.Add(npnExpr[anyOperator.Children[0]], npnExpr[anyOperator.Children[1]]);
-                                        break;
-                                    case Operator.Subtract:
-                                        last = Expression.Subtract(npnExpr[anyOperator.Children[0]], npnExpr[anyOperator.Children[1]]);
-                                        break;
-                                    case Operator.Modulus:
-                                        last = Expression.Modulo(npnExpr[anyOperator.Children[0]], npnExpr[anyOperator.Children[1]]);
-                                        break;
-                                    default:
-                                        throw new NotImplementedException($"Operator {Enum.GetName(typeof(Operator), anyOperator.Token.Value)} not supported");
+                                            break;
+                                        case Operator.Factor:
+                                            last = Expression.Multiply(
+                                                npnExpr[binaryExpr.Children[0]],
+                                                npnExpr[binaryExpr.Children[1]]
+                                            );
+                                            break;
+                                        case Operator.Divide:
+                                            last = Expression.Divide(
+                                                npnExpr[binaryExpr.Children[0]],
+                                                npnExpr[binaryExpr.Children[1]]
+                                            );
+                                            break;
+                                        case Operator.Sum:
+                                            last = Expression.Add(
+                                                npnExpr[binaryExpr.Children[0]],
+                                                npnExpr[binaryExpr.Children[1]]
+                                            );
+                                            break;
+                                        case Operator.Subtract:
+                                            last = Expression.Subtract(
+                                                npnExpr[binaryExpr.Children[0]],
+                                                npnExpr[binaryExpr.Children[1]]
+                                            );
+                                            break;
+                                        case Operator.Modulus:
+                                            last = Expression.Modulo(
+                                                npnExpr[binaryExpr.Children[0]],
+                                                npnExpr[binaryExpr.Children[1]]
+                                            );
+                                            break;
+                                        default:
+                                            throw new InvalidOperationException(
+                                                $"Operator {Enum.GetName(typeof(Operator), binaryExpr.Token.Value)} not supported at this point"
+                                            );
+                                    }
                                 }
                                 break;
 
                             case AstCallExpression call:
                                 {
-                                    var callParams = call.Children.Select(child => npnExpr[child]).ToList();
+                                    var callParams = call
+                                        .Children.Select(child => npnExpr[child])
+                                        .ToList();
                                     switch (call.Token.Value)
                                     {
                                         case "AVG":
-                                            last = Expression.Call(((Func<IEnumerable<double>, double>)Enumerable.Average).Method, Expression.NewArrayInit(typeof(double), callParams));
+                                            last = Expression.Call(
+                                                (
+                                                    (Func<IEnumerable<double>, double>)
+                                                        Enumerable.Average
+                                                ).Method,
+                                                Expression.NewArrayInit(typeof(double), callParams)
+                                            );
                                             break;
 
                                         case "TICK":
@@ -203,7 +300,9 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                         case "ROOT":
                                             if (callParams.Count != 2)
                                             {
-                                                throw new InvalidOperationException("Bad call signature");
+                                                throw new InvalidOperationException(
+                                                    "Bad call signature"
+                                                );
                                             }
                                             last = Expression.Power(
                                                 callParams[0],
@@ -215,19 +314,36 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                             break;
 
                                         case "SQRT":
-                                            last = Expression.Call(((Func<double, double>)Math.Sqrt).Method, callParams.Single());
+                                            last = Expression.Call(
+                                                ((Func<double, double>)Math.Sqrt).Method,
+                                                callParams.Single()
+                                            );
                                             break;
 
                                         case "MIN":
-                                            last = Expression.Call(((Func<IEnumerable<double>, double>)Enumerable.Min).Method, Expression.NewArrayInit(typeof(double), callParams));
+                                            last = Expression.Call(
+                                                (
+                                                    (Func<IEnumerable<double>, double>)
+                                                        Enumerable.Min
+                                                ).Method,
+                                                Expression.NewArrayInit(typeof(double), callParams)
+                                            );
                                             break;
 
                                         case "MAX":
-                                            last = Expression.Call(((Func<IEnumerable<double>, double>)Enumerable.Max).Method, Expression.NewArrayInit(typeof(double), callParams));
+                                            last = Expression.Call(
+                                                (
+                                                    (Func<IEnumerable<double>, double>)
+                                                        Enumerable.Max
+                                                ).Method,
+                                                Expression.NewArrayInit(typeof(double), callParams)
+                                            );
                                             break;
 
                                         default:
-                                            throw new NotImplementedException($"Method call \"{call.Token.Value}\" is not implemented");
+                                            throw new NotImplementedException(
+                                                $"Method call \"{call.Token.Value}\" is not implemented"
+                                            );
                                     }
                                 }
                                 break;
@@ -235,15 +351,22 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                             case AstBindingExpression binding:
                                 {
                                     bindings.Add(binding.Name);
-                                    Expression<UnboundCalcFitnessFunction> expr = (pawn, specification, request, bindings) => bindings[binding.Name](pawn, specification, request);
+                                    Expression<UnboundCalcFitnessFunction> expr = (
+                                        pawn,
+                                        specification,
+                                        request,
+                                        bindings
+                                    ) => bindings[binding.Name](pawn, specification, request);
                                     var replacer = new BindingExpressionReplacer(expr);
                                     last = replacer.Visit(expr.Body);
                                 }
                                 break;
 
                             default:
-                                throw new ArgumentException($"Invalid token type {cursor.GetType().Name}", nameof(cursor));
-
+                                throw new ArgumentException(
+                                    $"Invalid token type {cursor.GetType().Name}",
+                                    nameof(cursor)
+                                );
                         }
                         npnExpr.SetOrAdd(cursor, last);
                     }
@@ -252,7 +375,13 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     {
                         throw new InvalidOperationException("No tokens");
                     }
-                    var callExpr = Expression.Lambda<UnboundCalcFitnessFunction>(last, pawnParameter, specificationParameter, requestParameter, bindingsParameter);
+                    var callExpr = Expression.Lambda<UnboundCalcFitnessFunction>(
+                        last,
+                        pawnParameter,
+                        specificationParameter,
+                        requestParameter,
+                        bindingsParameter
+                    );
                     return new Formula(callExpr, bindings.ToArray());
                 }
             }
