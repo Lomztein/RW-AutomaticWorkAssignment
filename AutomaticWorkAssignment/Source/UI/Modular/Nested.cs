@@ -32,7 +32,14 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
 
             if (current != null)
             {
-                y += WorkManagerWindow.DoPawnSetting(innerPosition, innerWidth, current, null, (x) => Find.Root.StartCoroutine(DelayedRemoveInnerSetting(pawnSetting)));
+                y += WorkManagerWindow.DoPawnSetting(
+                    innerPosition,
+                    innerWidth,
+                    current,
+                    canMoveUp: false,
+                    canMoveDown: false,
+                    null,
+                    (x) => Find.Root.StartCoroutine(DelayedRemoveInnerSetting(pawnSetting)));
             }
             else
             {

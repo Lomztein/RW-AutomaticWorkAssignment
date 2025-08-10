@@ -38,7 +38,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
             position.x += 4;
             width -= 4;
 
-            return WorkManagerWindow.DoPawnSetting(position, width, setting, null, onDelete);
+            return WorkManagerWindow.DoPawnSetting(position, width, setting, canMoveUp: false, canMoveDown: false, null, onDelete);
         }
 
         private float DrawNewSettingButton<TDef, TSetting>(Vector2 position, float width, string newLabel, Action<TSetting> onNewSetting) where TDef : PawnSettingDef where TSetting : IPawnSetting
