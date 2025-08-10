@@ -16,13 +16,21 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 if (value != _commitedString)
                 {
                     Logger.Message($"[AWA:core:Formula] Loading {value}");
-                    _formula = new Parser().ParseFormula(value);
-                    Logger.Message($"[AWA:core:Formula] Loaded {_formula.Expression} with bindings [{string.Join(", ", _formula.BindingNames)}]");
-                    var obsoleteBindings = bindingSettings.Keys.Except(_formula.BindingNames).ToArray();
-                    Logger.Message($"[AWA:core:Formula] Clearing obsolete bindings [{string.Join(", ", obsoleteBindings)}]");
-                    bindingSettings.RemoveRange(obsoleteBindings);
-                    _commitedString = value;
-                    sourceString = value;
+                    try
+                    {
+                        _formula = new Parser().ParseFormula(value);
+                        Logger.Message($"[AWA:core:Formula] Loaded {_formula.Expression} with bindings [{string.Join(", ", _formula.BindingNames)}]");
+                        var obsoleteBindings = bindingSettings.Keys.Except(_formula.BindingNames).ToArray();
+                        Logger.Message($"[AWA:core:Formula] Clearing obsolete bindings [{string.Join(", ", obsoleteBindings)}]");
+                        bindingSettings.RemoveRange(obsoleteBindings);
+                        _commitedString = value;
+                        sourceString = value;
+                    }
+                    catch (ParseException ex)
+                    {
+                        Logger.Message($"[AWA:core:Formula] Invalid formula: {ex}");
+                        throw;
+                    }
                 } else
                 {
                     Logger.Message($"[AWA:core:Formula] Skip loading");

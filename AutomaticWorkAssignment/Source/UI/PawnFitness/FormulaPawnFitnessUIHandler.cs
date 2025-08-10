@@ -2,6 +2,7 @@
 using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using RimWorld;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,23 +15,42 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
         private static readonly float _inputFieldSize = 32;
         private static readonly float _buttonSize = 16;
         private static readonly float _labelSize = 24;
+        private FormulaPawnFitness.ParseException lastException;
 
         protected override float Handle(Vector2 position, float width, FormulaPawnFitness pawnSetting)
         {
             var localPosition = position;
+
             Rect rect = new Rect(localPosition, new Vector2(width, _inputFieldSize));
             var newFormula = Widgets.TextField(rect, pawnSetting.sourceString);
             localPosition.y += rect.height;
             if (newFormula != pawnSetting.sourceString)
             {
+                lastException = null;
                 pawnSetting.sourceString = newFormula;
             }
+
             Rect buttonRect = new Rect(localPosition, new Vector2(width, _buttonSize));
             if (Widgets.ButtonText(buttonRect, "Commit"))
             {
-                pawnSetting.Commit();
+                try
+                {
+                    pawnSetting.Commit();
+                }
+                catch (FormulaPawnFitness.ParseException e)
+                {
+                    lastException = e;
+                }
             }
             localPosition.y += _buttonSize;
+
+            if (lastException != null)
+            {
+                Rect labelRect = new Rect(localPosition, new Vector2(width, _labelSize));
+                localPosition.y += _labelSize;
+                Widgets.Label(labelRect, lastException.Message);
+            }
+
             if (pawnSetting.InnerFormula != null)
             {
                 localPosition.x += 8;
