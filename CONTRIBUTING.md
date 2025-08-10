@@ -15,6 +15,10 @@ In addition, you can install any/all the optional dependency mods you want to wo
 
 ## Dev process
 
+### Building
+
+When compiling, the build process will try to copy the DLL in your RimWorld mods folder for 15s. You should either have the game closed when building, or restart it in that period. You can try out [Reload mods](https://steamcommunity.com/sharedfiles/filedetails/?id=2981307344) to reopen the game in a click.
+
 ### Formatting
 
 Think about formatting your code with [./format.bat](./format.bat) regularly.
