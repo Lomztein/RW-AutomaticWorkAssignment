@@ -5,10 +5,11 @@
     <OutputType>Library</OutputType>
     <RootNamespace>$(RootNamespace)</RootNamespace>
 	<LangVersion>9.0</LangVersion>
+	<Nullable>annotations</Nullable>
   </PropertyGroup>
   
   <ItemGroup>
-    <InternalsVisibleTo Include="AutomaticWorkAssignment.Test"/>
+    <InternalsVisibleTo Include="AutomaticWorkAssignment.Test" />
   </ItemGroup>
 
   <ItemGroup>
