@@ -33,11 +33,11 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
                 pawnSetting.Commit();
             }
             localPosition.y += _buttonSize;
-            if (pawnSetting.Formula != null)
+            if (pawnSetting.InnerFormula != null)
             {
                 localPosition.x += 4;
                 width -= 4;
-                foreach (var bindingName in pawnSetting.Formula.BindingNames)
+                foreach (var bindingName in pawnSetting.InnerFormula.BindingNames)
                 {
                     Rect labelRect = new Rect(localPosition, new Vector2(width, _labelSize));
                     localPosition.y += _labelSize;

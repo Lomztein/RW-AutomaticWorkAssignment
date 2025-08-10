@@ -8,25 +8,24 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 {
     public partial class FormulaPawnFitness
     {
-        internal partial class Parser
+        public delegate double CalcFitnessFunction(
+            Pawn pawn,
+            WorkSpecification specification,
+            ResolveWorkRequest request
+        );
+        internal delegate double UnboundCalcFitnessFunction(
+            Pawn pawn,
+            WorkSpecification specification,
+            ResolveWorkRequest request,
+            Formula.Bindings? bindings
+        );
+        public class Formula
         {
-            public delegate double CalcFitnessFunction(
-                Pawn pawn,
-                WorkSpecification specification,
-                ResolveWorkRequest request
-            );
-            public delegate double UnboundCalcFitnessFunction(
-                Pawn pawn,
-                WorkSpecification specification,
-                ResolveWorkRequest request,
-                FormulaBindings? bindings
-            );
-
-            public class FormulaBindings : Dictionary<string, CalcFitnessFunction>
+            public class Bindings : Dictionary<string, CalcFitnessFunction>
             {
-                public FormulaBindings() { }
+                public Bindings() { }
 
-                public FormulaBindings(
+                public Bindings(
                     IDictionary<
                         string,
                         Func<Pawn, WorkSpecification, ResolveWorkRequest, float>
@@ -41,9 +40,10 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                         (double)kvp.Value(pawn, specification, request)
                                 )
                         )
-                    ) { }
+                    )
+                { }
 
-                public FormulaBindings(IDictionary<string, CalcFitnessFunction> source)
+                public Bindings(IDictionary<string, CalcFitnessFunction> source)
                 {
                     this.AddRange(source);
                 }
@@ -57,42 +57,42 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 }
             }
 
-            public class Formula
+            public string[] BindingNames { get; private set; }
+
+            internal Formula(
+                Expression<UnboundCalcFitnessFunction> expression,
+                string[] bindingNames
+            )
             {
-                public string[] BindingNames { get; private set; }
-
-                public Formula(
-                    Expression<UnboundCalcFitnessFunction> expression,
-                    string[] bindingNames
-                )
-                {
-                    Expression = expression;
-                    BindingNames = bindingNames;
-                }
-
-                public Expression<UnboundCalcFitnessFunction> Expression { get; }
-
-                public CalcFitnessFunction Bind(FormulaBindings bindings)
-                {
-                    bindings.Validate(BindingNames);
-                    var fn = Expression.Compile();
-                    return (pawn, specification, request) =>
-                        fn(pawn, specification, request, bindings);
-                }
-
-                public float Calc(
-                    Pawn pawn,
-                    WorkSpecification specification,
-                    ResolveWorkRequest request,
-                    FormulaBindings bindings
-                )
-                {
-                    bindings.Validate(BindingNames);
-                    var fn = Expression.Compile();
-                    return (float)fn(pawn, specification, request, bindings);
-                }
+                Expression = expression;
+                BindingNames = bindingNames;
             }
 
+            internal Expression<UnboundCalcFitnessFunction> Expression { get; }
+
+            public CalcFitnessFunction Bind(Bindings bindings)
+            {
+                bindings.Validate(BindingNames);
+                var fn = Expression.Compile();
+                return (pawn, specification, request) =>
+                    fn(pawn, specification, request, bindings);
+            }
+
+            public float Calc(
+                Pawn pawn,
+                WorkSpecification specification,
+                ResolveWorkRequest request,
+                Bindings bindings
+            )
+            {
+                bindings.Validate(BindingNames);
+                var fn = Expression.Compile();
+                return (float)fn(pawn, specification, request, bindings);
+            }
+        }
+
+        internal partial class Parser
+        {
             internal class Context
             {
                 private static readonly ParameterExpression pawnParameter = Expression.Parameter(
@@ -106,7 +106,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     "request"
                 );
                 private static readonly ParameterExpression bindingsParameter =
-                    Expression.Parameter(typeof(FormulaBindings), "bindings");
+                    Expression.Parameter(typeof(Formula.Bindings), "bindings");
                 private static readonly ParameterExpression[] parameters = new[]
                 {
                     pawnParameter,
