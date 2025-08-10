@@ -7,10 +7,42 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 {
     public partial class FormulaPawnFitness : PawnSetting, IPawnFitness
     {
-        public string sourceString;
+        #region UI state
+        private string _sourceString;
+        private Formula? _tempFormula;
+        private string? _lastException;
+        public string? LastException => _lastException;
+        public string SourceString
+        {
+            get => _sourceString;
+            set
+            {
+                if (value != _sourceString)
+                {
+                    _lastException = null;
+                    _sourceString = value;
+                    try
+                    {
+                        _tempFormula = new Parser().ParseFormula(value);
+                    }
+                    catch (ParseException ex)
+                    {
+                        Logger.Message($"[AWA:core:Formula] Invalid formula: {ex}");
+                        _lastException = ex.Message;
+                    }
+                    catch (Exception)
+                    {
+                        _lastException = "Unexpected error. Please contact the developer with the formula you typed.";
+                        throw;
+                    }
+                }
+            }
+        }
+        #endregion UI state
+
         private string _commitedString;
-        private Formula? _formula;
-        internal Formula? InnerFormula => _formula;
+        private Formula? _comittedFormula;
+        internal Formula? InnerFormula => _comittedFormula;
         private string _CommitedFormula { get => _commitedString; set
             {
                 if (value != _commitedString)
@@ -18,13 +50,13 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     Logger.Message($"[AWA:core:Formula] Loading {value}");
                     try
                     {
-                        _formula = new Parser().ParseFormula(value);
-                        Logger.Message($"[AWA:core:Formula] Loaded {_formula.Expression} with bindings [{string.Join(", ", _formula.BindingNames)}]");
-                        var obsoleteBindings = bindingSettings.Keys.Except(_formula.BindingNames).ToArray();
+                        _comittedFormula = _tempFormula;
+                        Logger.Message($"[AWA:core:Formula] Loaded {_comittedFormula.Expression} with bindings [{string.Join(", ", _comittedFormula.BindingNames)}]");
+                        var obsoleteBindings = bindingSettings.Keys.Except(_comittedFormula.BindingNames).ToArray();
                         Logger.Message($"[AWA:core:Formula] Clearing obsolete bindings [{string.Join(", ", obsoleteBindings)}]");
                         bindingSettings.RemoveRange(obsoleteBindings);
                         _commitedString = value;
-                        sourceString = value;
+                        _sourceString = value;
                     }
                     catch (ParseException ex)
                     {
@@ -37,11 +69,12 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 }
             }
         }
+
         public Dictionary<string, IPawnFitness> bindingSettings = new();
 
         internal void Commit()
         {
-            _CommitedFormula = sourceString;
+            _CommitedFormula = SourceString;
         }
 
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
@@ -67,8 +100,9 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
             base.ExposeData();
             var commited = _CommitedFormula;
             Scribe_Values.Look(ref commited, "formula");
-            Scribe_Collections.Look(ref bindingSettings, "bindings");
+            SourceString = commited;
             _CommitedFormula = commited;
+            Scribe_Collections.Look(ref bindingSettings, "bindings");
         }
     }
 }

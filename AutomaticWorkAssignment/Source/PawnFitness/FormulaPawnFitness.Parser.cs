@@ -94,8 +94,20 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 
         public class ParseException : Exception
         {
+            public override string Message
+            {
+                get
+                {
+                    if (InnerException is ParseException ex)
+                    {
+                        return ex.Message;
+                    }
+                    return base.Message;
+                }
+            }
             public ParseException() {}
-            public ParseException(string message, Exception innerException) : base(message, innerException){}
+            public ParseException(string message, Exception? innerException = null) : base(message, innerException){}
+
         }
         internal partial class Parser
         {
@@ -182,7 +194,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                 }
                                 if (callParams.Length != expected.Value)
                                 {
-                                    throw new InvalidOperationException($"Bad arity for function {name}, expected {expected.Value} parameters, have {callParams.Length}");
+                                    throw new ParseException($"Bad arity for function {name}, expected {expected.Value} parameters, have {callParams.Length}");
                                 }
                                 return;
                             }
@@ -208,7 +220,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                             var localMax = max ?? (int.MaxValue - 1);
                             if (callParams.Length < localMin || callParams.Length > max)
                             {
-                                throw new InvalidOperationException($"Bad arity for function {name}, expected {rangeMessage} parameters, have {callParams.Length}");
+                                throw new ParseException($"Bad arity for function {name}, expected {rangeMessage} parameters, have {callParams.Length}");
                             }
                         }
                     }
@@ -515,7 +527,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     var result = context.ParseTokens(ast);
                     return result;
                 }
-                catch(Exception ex) when(ex is ArgumentOutOfRangeException || ex is InvalidOperationException)
+                catch(Exception ex) when(ex is ArgumentOutOfRangeException || ex is InvalidOperationException || ex is ParseException)
                 {
                     throw new ParseException("Formula is invalid", ex);
                 }
