@@ -361,5 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/AutomaticWorkAssignment/About/PublishedFileId.txt
-/Addon_AutomaticSurgeries/About/PublishedFileId.txt
+
+**/PublishedFileId.txt
+**/Assemblies/*.{dll,pdb}
