@@ -12,16 +12,13 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
 {
     public class FormulaPawnFitnessUIHandler : PawnSettingUIHandler<FormulaPawnFitness>
     {
-        private static readonly float _inputFieldSize = 32;
-        private static readonly float _buttonSize = 16;
-        private static readonly float _labelSize = 24;
-        private FormulaPawnFitness.ParseException lastException;
+        private FormulaPawnFitness.ParseException? lastException;
 
         protected override float Handle(Vector2 position, float width, FormulaPawnFitness pawnSetting)
         {
             var localPosition = position;
 
-            Rect rect = new Rect(localPosition, new Vector2(width, _inputFieldSize));
+            Rect rect = new Rect(localPosition, new Vector2(width, AutomaticWorkAssignmentSettings.UIInputSizeBase));
             var newFormula = Widgets.TextField(rect, pawnSetting.sourceString);
             localPosition.y += rect.height;
             if (newFormula != pawnSetting.sourceString)
@@ -30,8 +27,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
                 pawnSetting.sourceString = newFormula;
             }
 
-            Rect buttonRect = new Rect(localPosition, new Vector2(width, _buttonSize));
-            if (Widgets.ButtonText(buttonRect, "Commit"))
+            Rect buttonRect = new Rect(localPosition, new Vector2(width, AutomaticWorkAssignmentSettings.UILabelSizeBase));
+            localPosition.y += buttonRect.height;
+            if (Widgets.ButtonText(buttonRect, "AWA.CommitSetting".Translate()))
             {
                 try
                 {
@@ -42,12 +40,11 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
                     lastException = e;
                 }
             }
-            localPosition.y += _buttonSize;
 
             if (lastException != null)
             {
-                Rect labelRect = new Rect(localPosition, new Vector2(width, _labelSize));
-                localPosition.y += _labelSize;
+                Rect labelRect = new Rect(localPosition, new Vector2(width, AutomaticWorkAssignmentSettings.UILabelSizeBase));
+                localPosition.y += labelRect.height;
                 Widgets.Label(labelRect, lastException.Message);
             }
 
@@ -65,8 +62,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
 
                     var bindingName = pawnSetting.InnerFormula.BindingNames[i];
 
-                    Rect labelRect = new Rect(localPosition, new Vector2(width, _labelSize));
-                    localPosition.y += _labelSize;
+                    Rect labelRect = new Rect(localPosition, new Vector2(width, AutomaticWorkAssignmentSettings.UILabelSizeBase));
+                    localPosition.y += labelRect.height;
                     Widgets.Label(labelRect, bindingName);
 
                     if (pawnSetting.bindingSettings.TryGetValue(bindingName, out var setting))
@@ -80,8 +77,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
                     }
                     else
                     {
-                        Rect addConditionButtonRect = new Rect(localPosition, new Vector2(width, _inputFieldSize));
-                        localPosition.y += _inputFieldSize;
+                        Rect addConditionButtonRect = new Rect(localPosition, new Vector2(width, AutomaticWorkAssignmentSettings.UIButtonSizeBase));
+                        localPosition.y += addConditionButtonRect.height;
                         if (Widgets.ButtonText(addConditionButtonRect, "AWA.NestedSettingSelect".Translate()))
                         {
                             FloatMenuUtility.MakeMenu(

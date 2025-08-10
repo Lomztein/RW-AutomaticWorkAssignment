@@ -42,6 +42,7 @@
   <AWA.NewSettingAddDefault>Add</AWA.NewSettingAddDefault>
   <AWA.NestedSettingNoneSelected>None selected</AWA.NestedSettingNoneSelected>
   <AWA.NestedSettingSelect>Select</AWA.NestedSettingSelect>
+  <AWA.CommitSetting>Commit</AWA.CommitSetting>
   <AWA.LeftOperandSet>Add left operand</AWA.LeftOperandSet>
   <AWA.RightOperandSet>Add right operand</AWA.RightOperandSet>
   <AWA.MinValue>Min</AWA.MinValue>
