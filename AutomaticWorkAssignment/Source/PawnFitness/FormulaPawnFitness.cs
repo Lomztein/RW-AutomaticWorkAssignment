@@ -9,8 +9,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
     {
         public string sourceString;
         private string _commitedString;
-        private Parser.Formula? _formula;
-        internal Parser.Formula? Formula => _formula;
+        private Formula? _formula;
+        internal Formula? InnerFormula => _formula;
         private string _CommitedFormula { get => _commitedString; set
             {
                 if (value != _commitedString)
@@ -38,7 +38,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
-            return Formula.Calc(
+            return InnerFormula.Calc(
                 pawn,
                 specification,
                 request,
