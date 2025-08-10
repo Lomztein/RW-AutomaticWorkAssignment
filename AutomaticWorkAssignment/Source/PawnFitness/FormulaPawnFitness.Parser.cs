@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnFitness
@@ -153,40 +154,165 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     }
                 }
 
-                #region Custom functions
-                static double Tick()
+                static class WellKnownFunctions
                 {
-                    return 0;
+                    public delegate Expression ExpressionFactory(params Expression[] args);
+
+                    [AttributeUsage(AttributeTargets.Method)]
+                    public class ArityAttribute : Attribute
+                    {
+                        private int? expected = default;
+                        private int? min = default;
+                        private int? max = default;
+                        public int Min { get => min ?? expected.Value; set => min = value; }
+                        public int Max { get => max ?? expected.Value; set => max = value; }
+                        public ArityAttribute(int expected)
+                        {
+                            this.expected = expected;
+                        }
+                        public ArityAttribute() { }
+
+                        public void CheckArity(string name, Expression[] callParams)
+                        {
+                            if (expected.HasValue)
+                            {
+                                if (min.HasValue || max.HasValue)
+                                {
+                                    throw new ArgumentException("Cannot provide an expected and (min | max) arity", nameof(expected));
+                                }
+                                if (callParams.Length != expected.Value)
+                                {
+                                    throw new InvalidOperationException($"Bad arity for function {name}, expected {expected.Value} parameters, have {callParams.Length}");
+                                }
+                                return;
+                            }
+                            string rangeMessage;
+                            if (min.HasValue && max.HasValue)
+                            {
+                                rangeMessage = $"between {min.Value} and {max.Value}";
+                            }
+                            else if (min.HasValue)
+                            {
+                                rangeMessage = $"at least {min.Value}";
+                            }
+                            else if (max.HasValue)
+                            {
+                                rangeMessage = $"at most {max.Value}";
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException("Bad arity options");
+                            }
+
+                            var localMin = min ?? 0;
+                            var localMax = max ?? (int.MaxValue - 1);
+                            if (callParams.Length < localMin || callParams.Length > max)
+                            {
+                                throw new InvalidOperationException($"Bad arity for function {name}, expected {rangeMessage} parameters, have {callParams.Length}");
+                            }
+                        }
+                    }
+
+                    public static (ExpressionFactory expressionFactory, ArityAttribute arity) LoadMethod(Delegate type)
+                    {
+                        var infos = type.GetMethodInfo();
+                        var arityAttr = infos.GetCustomAttributes<ArityAttribute>().SingleOrDefault();
+                        arityAttr ??= new ArityAttribute(infos.GetParameters().Length);
+                        Expression factory(Expression[] callParams) => Expression.Call(type.Method, callParams);
+                        return (factory, arityAttr);
+
+                    }
+
+                    #region Custom functions
+                    internal static double Tick()
+                    {
+                        return 0;
+                    }
+                    #endregion
+
+                    #region Standard functions
+                    [Arity(1)]
+                    internal static Expression SqrtExpression(params Expression[] callParams)
+                    {
+                        var value = callParams[0];
+                        return Expression.Call(((Func<double, double>)Math.Sqrt).Method, value);
+                    }
+
+                    [Arity(2)]
+                    internal static Expression RootExpression(params Expression[] callParams)
+                    {
+                        var left = callParams[0];
+                        var right = callParams[1];
+                        return Expression.Power(
+                            left,
+                            Expression.Divide(Expression.Constant((double)1, typeof(double)), right)
+                        );
+                    }
+
+                    [Arity(Min = 1)]
+                    internal static Expression MaxExpression(params Expression[] callParams) =>
+                        Expression.Call(
+                            ((Func<IEnumerable<double>, double>)Enumerable.Max).Method,
+                            Expression.NewArrayInit(typeof(double), callParams)
+                        );
+
+                    [Arity(Min = 1)]
+                    internal static Expression MinExpression(params Expression[] callParams) =>
+                        Expression.Call(
+                            ((Func<IEnumerable<double>, double>)Enumerable.Min).Method,
+                            Expression.NewArrayInit(typeof(double), callParams)
+                        );
+
+                    [Arity(Min = 1)]
+                    internal static Expression AvgExpression(params Expression[] callParams) =>
+                        Expression.Call(
+                            ((Func<IEnumerable<double>, double>)Enumerable.Average).Method,
+                            Expression.NewArrayInit(typeof(double), callParams)
+                        );
+
+                    [Arity(3)]
+                    internal static Expression ClampExpression(params Expression[] callParams)
+                    {
+                        var value = callParams[0];
+                        var min = callParams[1];
+                        var max = callParams[2];
+                        return Expression.IfThenElse(
+                            Expression.GreaterThan(value, max),
+                            max,
+                            Expression.IfThenElse(
+                                Expression.LessThan(value, min),
+                                min,
+                                value
+                            )
+                        );
+                    }
+                    #endregion
                 }
-                #endregion
-                #region Standard functions
-                Expression SqrtExpression(Expression value) =>
-                    Expression.Call(((Func<double, double>)Math.Sqrt).Method, value);
 
-                private static BinaryExpression RootExpression(Expression left, Expression right) =>
-                    Expression.Power(
-                        left,
-                        Expression.Divide(Expression.Constant((double)1, typeof(double)), right)
-                    );
+                static readonly Dictionary<string, WellKnownFunctions.ExpressionFactory> wellKnownFunctions = new Dictionary<string, WellKnownFunctions.ExpressionFactory>()
+                {
+                    {"SQRT", WellKnownFunctions.SqrtExpression},
+                    {"ROOT", WellKnownFunctions.RootExpression},
+                    {"MAX", WellKnownFunctions.MaxExpression},
+                    {"MIN", WellKnownFunctions.MinExpression},
+                    {"AVG", WellKnownFunctions.AvgExpression},
+                    {"CLAMP", WellKnownFunctions.ClampExpression},
+                }
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => (
+                            expressionFactory: kvp.Value,
+                            arity: kvp.Value.GetMethodInfo().GetCustomAttributes<WellKnownFunctions.ArityAttribute>().Single()))
+                .Union(new Dictionary<string, (WellKnownFunctions.ExpressionFactory expressionFactory, WellKnownFunctions.ArityAttribute arity)>()
+                {
+                    {"TICK", WellKnownFunctions.LoadMethod((Func<double>)WellKnownFunctions.Tick) },
+                }).ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => (WellKnownFunctions.ExpressionFactory)((callParams) => {
+                        kvp.Value.arity.CheckArity(kvp.Key, callParams);
+                        return kvp.Value.expressionFactory(callParams);
+                    }));
 
-                private static MethodCallExpression MaxExpression(List<Expression> callParams) =>
-                    Expression.Call(
-                        ((Func<IEnumerable<double>, double>)Enumerable.Max).Method,
-                        Expression.NewArrayInit(typeof(double), callParams)
-                    );
-
-                private static MethodCallExpression MinExpression(List<Expression> callParams) =>
-                    Expression.Call(
-                        ((Func<IEnumerable<double>, double>)Enumerable.Min).Method,
-                        Expression.NewArrayInit(typeof(double), callParams)
-                    );
-
-                private static MethodCallExpression AvgExpression(List<Expression> callParams) =>
-                    Expression.Call(
-                        ((Func<IEnumerable<double>, double>)Enumerable.Average).Method,
-                        Expression.NewArrayInit(typeof(double), callParams)
-                    );
-                #endregion
 
                 internal Formula ParseTokens(AstNode ast)
                 {
@@ -269,7 +395,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                             {
                                                 if (lit.Token.Value == 2)
                                                 {
-                                                    last = SqrtExpression(
+                                                    last = wellKnownFunctions["SQRT"](
                                                         astExprMap[binaryExpr.Children[0]]
                                                     );
                                                 }
@@ -279,7 +405,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                                     // root = Expression.Call(((Func<double, double>)Math.Cbrt).Method, npnExpr[anyOperator.Children[0]]);
                                                 }
                                             }
-                                            last ??= RootExpression(
+                                            last ??= wellKnownFunctions["ROOT"](
                                                 astExprMap[binaryExpr.Children[0]],
                                                 astExprMap[binaryExpr.Children[1]]
                                             );
@@ -326,53 +452,17 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                 {
                                     var callParams = call
                                         .Children.Select(child => astExprMap[child])
-                                        .ToList();
-                                    switch (call.Token.Value)
+                                        .ToArray();
+
+                                    if (wellKnownFunctions.TryGetValue(call.Name, out var fn))
                                     {
-                                        case "AVG":
-                                            last = AvgExpression(callParams);
-                                            break;
-
-                                        case "TICK":
-                                            last = Expression.Call(((Func<double>)Tick).Method);
-                                            break;
-
-                                        case "ROOT":
-                                            if (callParams.Count != 2)
-                                            {
-                                                throw new InvalidOperationException(
-                                                    "Bad call signature"
-                                                );
-                                            }
-                                            if (
-                                                callParams[1] is ConstantExpression constExpr
-                                                && (double)constExpr.Value == 2
-                                            )
-                                            {
-                                                last = SqrtExpression(callParams[0]);
-                                            }
-                                            else
-                                            {
-                                                last = RootExpression(callParams[0], callParams[1]);
-                                            }
-                                            break;
-
-                                        case "SQRT":
-                                            last = SqrtExpression(callParams.Single());
-                                            break;
-
-                                        case "MIN":
-                                            last = MinExpression(callParams);
-                                            break;
-
-                                        case "MAX":
-                                            last = MaxExpression(callParams);
-                                            break;
-
-                                        default:
-                                            throw new NotImplementedException(
-                                                $"Method call \"{call.Token.Value}\" is not implemented"
-                                            );
+                                        last = fn(callParams);
+                                    }
+                                    else
+                                    {
+                                        throw new NotImplementedException(
+                                            $"Method call \"{call.Token.Value}\" is not implemented"
+                                        );
                                     }
                                 }
                                 break;

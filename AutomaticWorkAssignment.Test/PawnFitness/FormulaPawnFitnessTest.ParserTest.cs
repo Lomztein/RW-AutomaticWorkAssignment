@@ -370,17 +370,20 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
 
             [
                 Theory,
-                InlineData(new object[] { }, typeof(InvalidOperationException)),
-                InlineData(new object[] { OpenGroup }, typeof(ArgumentException)),
+                InlineData(new object[] { }, typeof(ArgumentOutOfRangeException)), // Should have a better type and a clear message
+                InlineData(new object[] { OpenGroup }, typeof(ArgumentOutOfRangeException)), // Should have a better type and a clear message
+                InlineData(new object[] { "TICK", OpenGroup, 1, CloseGroup }, typeof(InvalidOperationException), "Bad arity for function TICK, expected 0 parameters, have 1"),
+                InlineData(new object[] { "MIN", OpenGroup, CloseGroup }, typeof(InvalidOperationException), "Bad arity for function MIN, expected at least 1 parameters, have 0"),
             ]
-            public void ShouldFailOnInvalidTokens(
+            public void ShouldFailOnParse(
                 object[] tokens,
                 Type expectedError,
                 string? message = null
             )
             {
                 var context = new Context();
-                var exception = Assert.ThrowsAny<Exception>(
+                var exception = Assert.Throws(
+                    expectedError,
                     () => context.ParseTokens(ToAst(TokensFromSynthetic(tokens)))
                 );
                 if (message != null)
