@@ -372,8 +372,8 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 Theory,
                 InlineData(new object[] { }, typeof(ArgumentOutOfRangeException)), // Should have a better type and a clear message
                 InlineData(new object[] { OpenGroup }, typeof(ArgumentOutOfRangeException)), // Should have a better type and a clear message
-                InlineData(new object[] { "TICK", OpenGroup, 1, CloseGroup }, typeof(InvalidOperationException), "Bad arity for function TICK, expected 0 parameters, have 1"),
-                InlineData(new object[] { "MIN", OpenGroup, CloseGroup }, typeof(InvalidOperationException), "Bad arity for function MIN, expected at least 1 parameters, have 0"),
+                InlineData(new object[] { "TICK", OpenGroup, 1, CloseGroup }, typeof(ParseException), "Bad arity for function TICK, expected 0 parameters, have 1"),
+                InlineData(new object[] { "MIN", OpenGroup, CloseGroup }, typeof(ParseException), "Bad arity for function MIN, expected at least 1 parameters, have 0"),
             ]
             public void ShouldFailOnParse(
                 object[] tokens,
