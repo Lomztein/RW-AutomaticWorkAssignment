@@ -91,6 +91,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
             }
         }
 
+        public class ParseException : Exception
+        {
+            public ParseException() {}
+            public ParseException(string message, Exception innerException) : base(message, innerException){}
+        }
         internal partial class Parser
         {
             internal class Context
@@ -412,11 +417,18 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 
             public Formula ParseFormula(string source)
             {
-                var tokens = TokenizeFormula(source);
-                var ast = ToAst(tokens);
-                var context = new Context();
-                var result = context.ParseTokens(ast);
-                return result;
+                try
+                {
+                    var tokens = TokenizeFormula(source);
+                    var ast = ToAst(tokens);
+                    var context = new Context();
+                    var result = context.ParseTokens(ast);
+                    return result;
+                }
+                catch(Exception ex) when(ex is ArgumentOutOfRangeException || ex is InvalidOperationException)
+                {
+                    throw new ParseException("Formula is invalid", ex);
+                }
             }
         }
     }
