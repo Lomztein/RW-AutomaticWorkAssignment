@@ -35,10 +35,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
 
         private float DrawSetting(Vector2 position, float width, IPawnSetting setting, Action<IPawnSetting> onDelete)
         {
-            position.x += 4;
-            width -= 4;
+            var layout = new RectAggregator(new Rect(position, new Vector2(width, 0)).Pad(left: 8), GetHashCode());
 
-            return WorkManagerWindow.DoPawnSetting(position, width, setting, canMoveUp: false, canMoveDown: false, null, onDelete);
+            return WorkManagerWindow.DoPawnSetting(ref layout, setting, canMoveUp: false, canMoveDown: false, null, onDelete).height;
         }
 
         private float DrawNewSettingButton<TDef, TSetting>(Vector2 position, float width, string newLabel, Action<TSetting> onNewSetting) where TDef : PawnSettingDef where TSetting : IPawnSetting

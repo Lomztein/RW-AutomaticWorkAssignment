@@ -8,6 +8,12 @@ namespace Lomzie.AutomaticWorkAssignment
 {
     public static class Utils
     {
+        public static Rect Pad(this Rect inRect, float right = 0, float left = 0, float top = 0, float bottom = 0) =>
+            new(
+                inRect.x + left,
+                inRect.y + top,
+                inRect.width - (left + right),
+                inRect.height - (top + bottom));
         public static (Rect labelRect, Rect contentRect) GetLabeledContentWithFixedLabelSize(Rect inRect, float labelSize)
         {
             Rect labelRect = new Rect(inRect);

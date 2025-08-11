@@ -12,15 +12,14 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
     {
         protected override float Handle(Vector2 position, float width, FormulaPawnFitness pawnSetting)
         {
-            var localPosition = position;
+            const int inset = 8;
+            var layout = new RectAggregator(new Rect(position.x, position.y, width, 0), GetHashCode(), new(8, 1));
 
-            Rect rect = new Rect(localPosition, new Vector2(width, AutomaticWorkAssignmentSettings.UIInputSizeBase));
+            Rect rect = layout.NewRow(AutomaticWorkAssignmentSettings.UIInputSizeBase);
             var newFormula = Widgets.TextField(rect, pawnSetting.SourceString);
-            localPosition.y += rect.height;
             pawnSetting.SourceString = newFormula;
 
-            Rect buttonRect = new Rect(localPosition, new Vector2(width, AutomaticWorkAssignmentSettings.UILabelSizeBase));
-            localPosition.y += buttonRect.height;
+            Rect buttonRect = layout.NewRow(AutomaticWorkAssignmentSettings.UILabelSizeBase);
             if (Widgets.ButtonText(buttonRect, "AWA.CommitSetting".Translate(), active: pawnSetting.LastException == null))
             {
                 pawnSetting.Commit();
@@ -28,33 +27,31 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
 
             if (pawnSetting.LastException != null)
             {
-                Widgets.LongLabel(localPosition.x, width, pawnSetting.LastException, ref localPosition.y);
+                var curY = layout.Rect.yMax;
+                Widgets.LongLabel(layout.Rect.x, layout.Rect.width, pawnSetting.LastException, ref curY);
+                layout.NewRow(curY - layout.Rect.yMax);
             }
 
             if (pawnSetting.InnerFormula != null)
             {
-                localPosition.x += 8;
-                width -= 8;
+                var bindingsLayout = new RectAggregator(layout.Rect.BottomPart(0).Pad(left: inset), GetHashCode(), new(1, 1));
                 for (var i = 0; i < pawnSetting.InnerFormula.BindingNames.Length; i++)
                 {
                     if (i > 0)
                     {
-                        localPosition.y += 4;
-                        Widgets.DrawLineHorizontal(localPosition.x, localPosition.y, width);
-                        localPosition.y += 5;
+                        var lineRect = bindingsLayout.NewRow(9);
+                        Widgets.DrawLineHorizontal(lineRect.Rect.x, lineRect.Rect.center.y, width);
                     }
 
                     var bindingName = pawnSetting.InnerFormula.BindingNames[i];
 
-                    Rect labelRect = new Rect(localPosition, new Vector2(width, AutomaticWorkAssignmentSettings.UILabelSizeBase));
-                    localPosition.y += labelRect.height;
+                    var labelRect = bindingsLayout.NewRow(AutomaticWorkAssignmentSettings.UILabelSizeBase);
                     Widgets.Label(labelRect, bindingName);
 
                     if (pawnSetting.bindingSettings.TryGetValue(bindingName, out var setting))
                     {
-                        localPosition.y += WorkManagerWindow.DoPawnSetting(
-                            position: localPosition,
-                            width: width,
+                        WorkManagerWindow.DoPawnSetting(
+                            ref bindingsLayout,
                             setting: setting,
                             canMoveUp: false,
                             canMoveDown: false,
@@ -63,8 +60,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
                     }
                     else
                     {
-                        Rect addConditionButtonRect = new Rect(localPosition, new Vector2(width, AutomaticWorkAssignmentSettings.UIButtonSizeBase));
-                        localPosition.y += addConditionButtonRect.height;
+                        Rect addConditionButtonRect = bindingsLayout.NewRow(AutomaticWorkAssignmentSettings.UIButtonSizeBase);
                         if (Widgets.ButtonText(addConditionButtonRect, "AWA.NestedSettingSelect".Translate()))
                         {
                             FloatMenuUtility.MakeMenu(
@@ -74,8 +70,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
                         }
                     }
                 }
+                layout.NewRow(bindingsLayout.Rect.height);
             }
-            return localPosition.y - position.y;
+
+            return layout.Rect.height;
         }
 
         private IEnumerable<PawnFitnessDef> GetDefs()
