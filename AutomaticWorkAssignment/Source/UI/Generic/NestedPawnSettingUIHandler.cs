@@ -23,16 +23,13 @@ namespace AutomaticWorkAssignment.UI
 
         protected float Handle(Vector2 position, float width, NestedPawnSetting pawnSetting)
         {
-            float y = 0f;
-            Vector2 innerPosition = position;
+            const int inset = 8;
+            var layout = new RectAggregator(new Rect(position.x, position.y, width, 0).Pad(left: inset), GetHashCode(), new(8, 1));
 
-            innerPosition.x += 4;
-            float innerWidth = width - 4;
             if (pawnSetting.InnerSetting != null)
             {
-                y += WorkManagerWindow.DoPawnSetting(
-                    innerPosition,
-                    innerWidth,
+                WorkManagerWindow.DoPawnSetting(
+                    ref layout,
                     pawnSetting.InnerSetting,
                     canMoveUp: false,
                     canMoveDown: false,
@@ -41,16 +38,14 @@ namespace AutomaticWorkAssignment.UI
             }
             else
             {
-                Rect addConditionButtonRect = new Rect(innerPosition, new Vector2(innerWidth, _addConditionButtonSize));
+                Rect addConditionButtonRect = layout.NewRow(_addConditionButtonSize);
                 if (Widgets.ButtonText(addConditionButtonRect, "AWA.NestedSettingSelect".Translate()))
                 {
                     FloatMenuUtility.MakeMenu(GetDefs(), x => x.LabelCap, x => () => pawnSetting.InnerSetting = PawnSetting.CreateFrom<IPawnSetting>(x));
                 }
-
-                y += addConditionButtonRect.height;
             }
 
-            return y;
+            return layout.Rect.height;
         }
 
         private IEnumerable<D> GetDefs()

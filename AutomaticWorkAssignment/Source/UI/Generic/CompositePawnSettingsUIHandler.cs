@@ -1,9 +1,8 @@
-﻿using Lomzie.AutomaticWorkAssignment.Defs;
+using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
 using RimWorld;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -16,8 +15,6 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
 
         public float Handle(Vector2 position, float width, IPawnSetting pawnSetting)
             => Handle(position, width, (CompositePawnSetting)pawnSetting);
-
-        Dictionary<CompositePawnSetting, ListData> _listData = new Dictionary<CompositePawnSetting, ListData>();
 
         private float _sectionHeight = 128;
 
@@ -32,26 +29,31 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
 
         protected virtual float Handle(Vector2 position, float width, CompositePawnSetting pawnSetting)
         {
-            float y = 0f;
-            Vector2 innerPosition = position;
+            var layout = new RectAggregator(new Rect(position.x, position.y, width, 0).Pad(left: 8), GetHashCode(), new(8, 1));
 
-            innerPosition.x += 4;
-            float innerWidth = width - 4;
             if (pawnSetting.InnerSettings != null)
             {
-                Rect sectionRect = new Rect(innerPosition, new Vector2(innerWidth, _sectionHeight));
-                ListData listData = GetListData(pawnSetting);
+                for (var i = 0; i < pawnSetting.InnerSettings.Count; i++)
+                {
+                    var setting = pawnSetting.InnerSettings[i];
+                    WorkManagerWindow.DoPawnSetting(
+                        ref layout,
+                        setting: setting,
+                        canMoveUp: i > 0,
+                        canMoveDown: i < pawnSetting.InnerSettings.Count,
+                        onMoveSetting: GetMoveAction(pawnSetting),
+                        onDeleteSetting: (x) => Find.Root.StartCoroutine(DelayedDelete(pawnSetting, x)));
+                }
 
-                WorkManagerWindow.DoPawnSettingList(sectionRect, typeof(D), NewSettingLabel, ref listData.Height, ref listData.Position,
-                    () => pawnSetting.InnerSettings,
+                WorkManagerWindow.AddFunctionButton(
+                    ref layout,
+                    typeof(D),
+                    NewSettingLabel,
                     GetNewSettingAction(pawnSetting),
-                    GetMoveAction(pawnSetting),
-                    (x) => Find.Root.StartCoroutine(DelayedDelete(pawnSetting, x)));
-
-                y += Mathf.Min(listData.Height, _sectionHeight);
+                    pawnSetting.InnerSettings);
             }
 
-            return y;
+            return layout.Rect.height;
         }
 
         private Action<IPawnSetting> GetNewSettingAction(CompositePawnSetting pawnSetting)
@@ -84,21 +86,6 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
         {
             yield return new WaitForEndOfFrame();
             composite.InnerSettings.Remove(setting);
-        }
-
-        private ListData GetListData(CompositePawnSetting pawnSetting)
-        {
-            if (!_listData.ContainsKey(pawnSetting))
-            {
-                _listData.Add(pawnSetting, new ListData());
-            }
-            return _listData[pawnSetting];
-        }
-
-        private class ListData
-        {
-            public float Height;
-            public Vector2 Position;
         }
     }
 }

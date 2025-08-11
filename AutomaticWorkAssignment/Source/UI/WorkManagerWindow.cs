@@ -683,69 +683,70 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             var scrollContent = scrollView;
 
             Widgets.BeginGroup(scrollContent);
-            var cur = Vector2.zero;
+            float width = scrollView.width - MarginSize / 2;
 
+            var layoutAggregator = new RectAggregator(new Rect(Vector2.zero, new(width, 0)), Instance.GetHashCode(), new(1, 1));
             for (var i = 0; i < settings.Count; i++)
             {
                 var setting = settings[i];
-                float x = MarginSize / 2f;
-                float width = scrollView.width - MarginSize / 2;
 
-                float rowHeight = DoPawnSetting(
-                    new Vector2(x, cur.y), width, setting,
+                Rect pawnSettingBlock = DoPawnSetting(
+                    ref layoutAggregator,
+                    setting,
                     canMoveUp: i > 0,
                     canMoveDown: i < settings.Count,
                     onMoveSetting, onDeleteSetting);
 
-                Rect row = new Rect(x, cur.y, width, rowHeight);
-                if (i % 2 == 1) Widgets.DrawAltRect(row);
-
-                cur.y += rowHeight;
+                if (i % 2 == 1) Widgets.DrawAltRect(pawnSettingBlock);
             }
 
             if (onNewSetting != null)
             {
-                // row for new function.
-                var newRect = new Rect(0f, cur.y, inRect.width, NewFunctionButtonSize);
-                Widgets.DrawHighlightIfMouseover(newRect);
-                if (settings.Count % 2 == 1) Widgets.DrawAltRect(newRect);
-
-                Text.Anchor = TextAnchor.MiddleCenter;
-                Widgets.Label(newRect, new GUIContent(newSettingLabel));
-                Text.Anchor = TextAnchor.UpperLeft;
-
-                if (Widgets.ButtonInvisible(newRect))
-                {
-                    var defs = GenDefDatabase.GetAllDefsInDatabaseForDef(settingDefType).Cast<PawnSettingDef>();
-                    FloatMenuUtility.MakeMenu(defs, x => x.LabelCap, x => () => onNewSetting(PawnSetting.CreateFrom<IPawnSetting>(x)));
-                }
-
-                cur.y += NewFunctionButtonSize;
+                AddFunctionButton(ref layoutAggregator, settingDefType, newSettingLabel, onNewSetting, settings);
             }
 
-            listHeight = cur.y;
-
             Text.Anchor = TextAnchor.UpperLeft;
+            listHeight = layoutAggregator.Rect.height;
             GUI.EndGroup();
             Widgets.EndScrollView();
         }
 
-        public static float DoPawnSetting(Vector2 position,
-            float width,
+        public static void AddFunctionButton(ref RectAggregator layoutAggregator, Type settingDefType, string newSettingLabel, Action<IPawnSetting> onNewSetting, List<IPawnSetting> settings)
+        {
+            // row for new function.
+            var newRect = layoutAggregator.NewRow(NewFunctionButtonSize);
+            Widgets.DrawHighlightIfMouseover(newRect);
+            if (settings.Count % 2 == 1) Widgets.DrawAltRect(newRect);
+
+            Text.Anchor = TextAnchor.MiddleCenter;
+            Widgets.Label(newRect, new GUIContent(newSettingLabel));
+            Text.Anchor = TextAnchor.UpperLeft;
+
+            if (Widgets.ButtonInvisible(newRect))
+            {
+                var defs = GenDefDatabase.GetAllDefsInDatabaseForDef(settingDefType).Cast<PawnSettingDef>();
+                FloatMenuUtility.MakeMenu(defs, x => x.LabelCap, x => () => onNewSetting(PawnSetting.CreateFrom<IPawnSetting>(x)));
+            }
+        }
+
+        /// <returns>the drawn <see cref="Rect"/> area</returns>
+        public static Rect DoPawnSetting(
+            ref RectAggregator layout,
             IPawnSetting setting,
             bool canMoveUp,
             bool canMoveDown,
             Action<IPawnSetting, int> onMoveSetting,
             Action<IPawnSetting> onDeleteSetting)
         {
-            var agg = new RectAggregator(new Rect(position, new(width, 0)), Instance.GetHashCode(), new(1, 1));
+            var localLayout = new RectAggregator(layout.Rect.BottomPart(0), Instance.GetHashCode(), new(1, 1));
             IPawnSetting prevRender = CurrentRenderSetting;
             CurrentRenderSetting = setting;
 
             Text.Anchor = TextAnchor.MiddleLeft;
-            var labelRect = agg.NewRow(SettingsLabelSize);
+            var labelRect = localLayout.NewRow(SettingsLabelSize);
             Widgets.Label(labelRect, GetSettingLabel(setting));
             Text.Anchor = TextAnchor.UpperLeft;
+            TooltipHandler.TipRegion(labelRect, setting.Description);
 
             Action<int> onMove = null;
             Action onDelete = null;
@@ -768,14 +769,15 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             if (Widgets.ButtonImage(copyRect, TexButton.Copy))
                 Clipboard.Copy(setting);
 
-            float rowHeight = PawnSettingUIHandlers.Handle(new Vector2(agg.Rect.x, agg.Rect.yMax), width, setting);
+            float rowHeight = PawnSettingUIHandlers.Handle(new Vector2(localLayout.Rect.x, localLayout.Rect.yMax), localLayout.Rect.width, setting);
 
-            var row = agg.NewRow(rowHeight);
-            Widgets.DrawHighlightIfMouseover(row);
-            TooltipHandler.TipRegion(row, setting.Description);
+            var row = localLayout.NewRow(rowHeight);
 
             CurrentRenderSetting = prevRender;
-            return agg.Rect.height;
+
+            var selfRect = layout.NewRow(localLayout.Rect.height);
+            Widgets.DrawHighlightIfMouseover(selfRect);
+            return selfRect;
         }
 
         public static string GetSettingLabel(IPawnSetting setting)
