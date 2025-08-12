@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -8,28 +9,63 @@ namespace Lomzie.AutomaticWorkAssignment
 {
     public static class Utils
     {
-        public static RectDivider[] SplitIn(this RectDivider rect, int x = 1, int y = 1)
+        /// <summary>
+        /// A bit hacky, but margin is private for some reason
+        /// </summary>
+        public static Vector2 GetMargin(this ref RectDivider rect)
         {
-            var width = rect.Rect.width / x;
-            var height = rect.Rect.height / y;
+            var sourceRect = rect.Rect;
+            var row = rect.NewRow(0);
+            var col = rect.NewCol(0);
+            var margin = new Vector2(rect.Rect.x - sourceRect.x, col.Rect.y - sourceRect.y);
+            rect = new RectDivider(sourceRect, rect.GetHashCode(), margin);
+            return margin;
+        }
+        public static RectDivider[] SplitIn(this ref RectDivider rect, int x = 1, int y = 1)
+        {
+            if (x < 1)
+                throw new ArgumentOutOfRangeException(nameof(x), x, "Should be greater or equal to 1");
+            if (y < 1)
+                throw new ArgumentOutOfRangeException(nameof(y), y, "Should be greater or equal to 1");
+            var margin = rect.GetMargin();
+            var usableWidth = (rect.Rect.width - (margin.x * (x - 1))) / x;
+            var usableHeight = (rect.Rect.height - (margin.y * (y - 1))) / y;
             var outRect = new List<RectDivider>();
             while (y-- > 0)
             {
-                var row = rect.NewRow(height);
+                var row = rect.NewRow(usableHeight);
                 var locX = x;
                 while (locX-- > 0)
                 {
-                    outRect.Add(row.NewCol(height));
+                    outRect.Add(row.NewCol(usableWidth));
                 }
             }
             return outRect.ToArray();
         }
-        public static Rect Pad(this Rect inRect, float right = 0, float left = 0, float top = 0, float bottom = 0) =>
-            new(
-                inRect.x + left,
-                inRect.y + top,
-                inRect.width - (left + right),
-                inRect.height - (top + bottom));
+        public static Rect Pad(this Rect inRect, float right = 0, float left = 0, float top = 0, float bottom = 0)
+        {
+            inRect.x += left;
+            inRect.y += top;
+            inRect.width -= left + right;
+            inRect.height -= top + bottom;
+            return inRect;
+        }
+
+        public static Rect PadX(this Rect inRect, float x)
+        {
+            inRect.x += x;
+            inRect.width -= x * 2;
+            return inRect;
+        }
+
+        public static Rect PadY(this Rect inRect, float y)
+        {
+            inRect.y += y;
+            inRect.height -= y * 2;
+            return inRect;
+        }
+
+        public static Rect PadXY(this Rect inRect, float xy) => inRect.Pad(left: xy, right: xy, top: xy, bottom: xy);
         public static (Rect labelRect, Rect contentRect) GetLabeledContentWithFixedLabelSize(Rect inRect, float labelSize)
         {
             Rect labelRect = new Rect(inRect);

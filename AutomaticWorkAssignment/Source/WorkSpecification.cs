@@ -123,6 +123,15 @@ namespace Lomzie.AutomaticWorkAssignment
             Fitness.Remove(fitness);
         }
 
+        public void MoveCondition(IPawnCondition condition, int movement)
+            => Find.Root.StartCoroutine(DelayedMoveCondition(condition, movement));
+
+        private IEnumerator DelayedMoveCondition(IPawnCondition condition, int movement)
+        {
+            yield return new WaitForEndOfFrame();
+            Utils.MoveElement(Conditions, condition, movement);
+        }
+
         public void DeleteCondition(IPawnCondition condition)
             => Find.Root.StartCoroutine(DelayedDeleteCondition(condition));
 

@@ -24,7 +24,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
         public float Handle(Vector2 position, float width, T pawnSetting)
         {
             const int inset = 8;
-            var layout = new RectAggregator(new Rect(position.x + inset, position.y, width - inset, 0), GetHashCode(), new(8, 1));
+            var layout = new RectAggregator(new Rect(position.x, position.y, width, 0).Pad(left: inset), GetHashCode(), new(0, 1));
             IPawnSetting current = _getter(pawnSetting);
 
             if (current != null)
