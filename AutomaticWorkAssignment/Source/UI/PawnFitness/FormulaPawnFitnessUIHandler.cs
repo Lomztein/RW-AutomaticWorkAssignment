@@ -34,7 +34,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
 
             if (pawnSetting.InnerFormula != null)
             {
-                var bindingsLayout = new RectAggregator(layout.Rect.BottomPart(0).Pad(left: inset), GetHashCode(), new(1, 1));
+                var bindingsLayout = new RectAggregator(layout.Rect.BottomPart(0).Pad(left: inset), GetHashCode(), new(0, 1));
                 for (var i = 0; i < pawnSetting.InnerFormula.BindingNames.Length; i++)
                 {
                     if (i > 0)
@@ -46,7 +46,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
                     var bindingName = pawnSetting.InnerFormula.BindingNames[i];
 
                     var labelRect = bindingsLayout.NewRow(AutomaticWorkAssignmentSettings.UILabelSizeBase);
-                    Widgets.Label(labelRect, bindingName);
+                    Widgets.Label(labelRect, "AWA.BindingName".Translate(bindingName));
 
                     if (pawnSetting.bindingSettings.TryGetValue(bindingName, out var setting))
                     {

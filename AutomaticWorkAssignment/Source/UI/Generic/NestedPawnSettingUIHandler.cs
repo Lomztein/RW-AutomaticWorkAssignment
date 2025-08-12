@@ -24,7 +24,7 @@ namespace AutomaticWorkAssignment.UI
         protected float Handle(Vector2 position, float width, NestedPawnSetting pawnSetting)
         {
             const int inset = 8;
-            var layout = new RectAggregator(new Rect(position.x, position.y, width, 0).Pad(left: inset), GetHashCode(), new(8, 1));
+            var layout = new RectAggregator(new Rect(position.x, position.y, width, 0).Pad(left: inset), GetHashCode(), new(0, 1));
 
             if (pawnSetting.InnerSetting != null)
             {

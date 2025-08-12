@@ -29,7 +29,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
 
         protected virtual float Handle(Vector2 position, float width, CompositePawnSetting pawnSetting)
         {
-            var layout = new RectAggregator(new Rect(position.x, position.y, width, 0).Pad(left: 8), GetHashCode(), new(8, 1));
+            var layout = new RectAggregator(new Rect(position.x, position.y, width, 0).Pad(left: 8), GetHashCode(), new(0, 1));
 
             if (pawnSetting.InnerSettings != null)
             {
@@ -45,9 +45,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
                         onDeleteSetting: (x) => Find.Root.StartCoroutine(DelayedDelete(pawnSetting, x)));
                 }
 
-                WorkManagerWindow.AddFunctionButton(
+                WorkManagerWindow.AddFunctionButton<D>(
                     ref layout,
-                    typeof(D),
                     NewSettingLabel,
                     GetNewSettingAction(pawnSetting),
                     pawnSetting.InnerSettings);
