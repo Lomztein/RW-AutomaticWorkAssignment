@@ -8,6 +8,22 @@ namespace Lomzie.AutomaticWorkAssignment
 {
     public static class Utils
     {
+        public static RectDivider[] SplitIn(this RectDivider rect, int x = 1, int y = 1)
+        {
+            var width = rect.Rect.width / x;
+            var height = rect.Rect.height / y;
+            var outRect = new List<RectDivider>();
+            while (y-- > 0)
+            {
+                var row = rect.NewRow(height);
+                var locX = x;
+                while (locX-- > 0)
+                {
+                    outRect.Add(row.NewCol(height));
+                }
+            }
+            return outRect.ToArray();
+        }
         public static Rect Pad(this Rect inRect, float right = 0, float left = 0, float top = 0, float bottom = 0) =>
             new(
                 inRect.x + left,
