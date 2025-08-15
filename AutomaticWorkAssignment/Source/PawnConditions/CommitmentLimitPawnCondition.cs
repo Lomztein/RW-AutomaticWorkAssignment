@@ -15,7 +15,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (pawn != null)
-                return request.WorkManager.GetPawnCommitment(pawn) < Limit;
+                return request.WorkManager.GetPawnCommitment(pawn) <= Limit;
             return false;
         }
     }
