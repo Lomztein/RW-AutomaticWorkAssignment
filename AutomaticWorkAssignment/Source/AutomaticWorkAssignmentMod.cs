@@ -120,6 +120,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
             // Initialize post processor UI handlers.
             PawnSettingUIHandlers.AddHandler(new SetTitlePawnPostProcessorUIHandler());
+            PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<SetNicknamePawnPostProcessor>(new TextField<SetNicknamePawnPostProcessor>(x => x.Format, (x, y) => x.Format = y)));
             PawnSettingUIHandlers.AddHandler(new SetCarriedMedicinePawnPostProcessorUIHandler());
             PawnSettingUIHandlers.AddHandler(new ConditionalPawnPostProcessorUIHandler());
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<SetPawnColonistBarOrderingPawnPostProcessor, PawnFitnessDef>());

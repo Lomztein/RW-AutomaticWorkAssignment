@@ -2,15 +2,14 @@
  Group system for work specs, for organization and for interweaving of assignments. Will replace current incremental feature.
  Add support for Float Sub-Menus using https://steamcommunity.com/sharedfiles/filedetails/?id=2864015430
  Change selection UI handler to allow multiple entries.
- Add some way to persist work specs across tiles when gravship-jumping
-	Colony Manager Fork uses some sort of manager database thing, maybe we could do something similar?
- Refactor work manager configuration to be stored in seperate class for greater flexibility.
+ Add option to count additonal work spec assignments for a given spec.
 
  - Bugs - 
 
  - Fitness -
 
  - Conditions -
+ Is incapable of work
 
  - Post Processors -
  Do all (list of post processors)
@@ -25,3 +24,8 @@
 	Aggregates
 
  Events
+	On threat
+	On schedule
+	On timer
+	On health condition
+	???

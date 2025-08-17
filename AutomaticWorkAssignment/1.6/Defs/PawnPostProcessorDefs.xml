@@ -7,6 +7,12 @@
     <description>Set pawn title on assignment.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SetNicknamePostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetNicknamePawnPostProcessor</settingClass>
+    <label>set nickname</label>
+    <description>Set pawn nickname on assignment. Keywords {first}, {last}, {title} will be replaced by first name, last name, and title respectively.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_SetApparelPolicyPostProcessor</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetApparelPolicyPawnPostProcessor</settingClass>
     <label>set apparel policy</label>
