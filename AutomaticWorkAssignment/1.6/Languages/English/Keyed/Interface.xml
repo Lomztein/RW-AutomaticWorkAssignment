@@ -38,6 +38,8 @@
   <AWA.True>True</AWA.True>
   <AWA.False>False</AWA.False>
   <AWA.Default>Default</AWA.Default>
+  <AWA.Add>Add</AWA.Add>
+  <AWA.RequireAll>Require all</AWA.RequireAll>
 
   <AWA.NewSettingAddDefault>Add</AWA.NewSettingAddDefault>
   <AWA.NestedSettingNoneSelected>None selected</AWA.NestedSettingNoneSelected>

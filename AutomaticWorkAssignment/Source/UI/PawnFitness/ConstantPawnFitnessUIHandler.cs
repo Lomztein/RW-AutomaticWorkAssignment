@@ -6,16 +6,16 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
 {
     public class ConstantPawnFitnessUIHandler : PawnSettingUIHandler<ConstantPawnFitness>
     {
-        private static readonly float _inputFieldSize = 32;
-        private static string _buffer;
+        private float Size => AutomaticWorkAssignmentSettings.UILabelSizeBase;
+        private readonly Buffer<string> _buffer = new Buffer<string>();
 
         protected override float Handle(Vector2 position, float width, ConstantPawnFitness pawnSetting)
         {
-            Rect rect = new Rect(position, new Vector2(width, _inputFieldSize));
-            _buffer = pawnSetting.Value.ToString();
-            Widgets.TextFieldNumeric(rect, ref pawnSetting.Value, ref _buffer);
-            pawnSetting.Value = float.Parse(_buffer);
-            return _inputFieldSize;
+            Rect rect = new Rect(position, new Vector2(width, Size));
+            string buffer = _buffer.Get(pawnSetting);
+            Widgets.TextFieldNumeric(rect, ref pawnSetting.Value, ref buffer);
+            _buffer.Set(pawnSetting, buffer);
+            return Size;
         }
     }
 }

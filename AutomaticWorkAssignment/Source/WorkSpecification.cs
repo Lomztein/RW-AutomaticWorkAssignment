@@ -16,7 +16,6 @@ namespace Lomzie.AutomaticWorkAssignment
         public string Name = "New Work"; // Label for UI.
 
         public bool IsCritical; // Job will temporarily be reassigned to another pawn if the prior assignee is unable to work.
-        public bool IsIncremental; // Job will be assigned one pawn per assignment iteration.
         public bool RequireFullPawnCapability = true; // Job will not be assigned if a pawn is unable to do some of the work. If off, pawn must only be able to do at least one thing.
         public bool InterweavePriorities; // Subsequent assignments to pawns will be shifted right.
         public bool IsSpecialist; // Job will prohibit assignments to jobs further down the list.
@@ -156,7 +155,6 @@ namespace Lomzie.AutomaticWorkAssignment
             Scribe_Values.Look(ref Name, "name");
             Scribe_Values.Look(ref IsCritical, "isCritical");
             Scribe_Values.Look(ref IsSpecialist, "isSpecialist");
-            Scribe_Values.Look(ref IsIncremental, "isIncremental");
             Scribe_Values.Look(ref IsSuspended, "isSuspended");
             Scribe_Values.Look(ref EnableAlert, "enableAlert", true);
             Scribe_Values.Look(ref RequireFullPawnCapability, "requireFullPawnCapability");

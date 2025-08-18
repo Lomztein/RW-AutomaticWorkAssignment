@@ -309,31 +309,28 @@ namespace Lomzie.AutomaticWorkAssignment
             List<WorkSpecification> assignmentList = WorkList.Where(x => !x.IsSuspended).ToList();
             List<Pawn> specialists = new List<Pawn>();
 
-            while (assignmentList.Count > 0)
+            foreach (WorkSpecification current in assignmentList)
             {
                 // Go over each work specification, find best fits, and assign work accordingly.
-                WorkSpecification current = assignmentList[0];
-                IEnumerable<Pawn> matchesSorted = current.GetApplicableOrMinimalPawnsSorted(req.Pawns.Where(x => !specialists.Contains(x)), req);
-                matchesSorted = matchesSorted.Where(x => CanBeAssignedTo(x, current));
+                var availablePawns = req.Pawns.Where(x => !specialists.Contains(x) && CanBeAssignedTo(x, current));
+                IEnumerable<Pawn>matchesSorted = current.GetApplicableOrMinimalPawnsSorted(availablePawns, req);
 
                 int currentAssigned = GetCountAssignedTo(current);
                 int targetAssigned = current.GetTargetWorkers(req);
                 int remaining = targetAssigned - currentAssigned;
 
-                // If incremenetal, assign one pawn per while iteration.
-                int toAssign = current.IsIncremental ? Mathf.Min(1, remaining) : remaining;
                 // Only assign the amount of available workers.
-                int canAssign = matchesSorted.Count();
-                toAssign = Mathf.Min(toAssign, canAssign);
+                int toAssign = remaining;
 
                 float maxTargetCommitment = (1f - current.Commitment);
+                List<Pawn> availableToAssign = matchesSorted.ToList();
 
-                if (canAssign != 0)
+                if (toAssign != 0)
                 {
                     // Max commitment level increases if no pawns with enough available commitment was found.
                     for (int c = 0; c < maxCommitment; c++)
                     {
-                        Queue<Pawn> commitable = new Queue<Pawn>(matchesSorted.Where(x => GetPawnCommitment(x) < maxTargetCommitment + c).ToList());
+                        Queue<Pawn> commitable = new Queue<Pawn>(availableToAssign.Where(x => GetPawnCommitment(x) < maxTargetCommitment + c));
 
                         int i = 0;
                         int assigned = 0;
@@ -344,6 +341,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
                             Pawn pawn = commitable.Dequeue();
                             AssignWorkToPawn(current, pawn);
+                            availableToAssign.Remove(pawn);
                             assigned++;
 
                             // Add pawn to list of specialists, so that it may be excluded later.
@@ -352,39 +350,11 @@ namespace Lomzie.AutomaticWorkAssignment
                         }
                         toAssign -= assigned;
 
-                        if (c >= maxCommitment - 1)
-                        {
-                            // Not able to find a suitable commitable worker.
-                            assignmentList.Remove(current);
-                        }
-
                         if (toAssign == 0)
                         {
                             // Completed the for-loop, all assignents have been made, so we can move on.
                             break;
                         }
-                    }
-                }
-                else
-                {
-                    // There are no more applicable workers for this work, remove it from the list.
-                    assignmentList.Remove(current);
-                }
-
-                int postAssignmentCount = GetCountAssignedTo(current);
-                if (targetAssigned <= postAssignmentCount)
-                {
-                    assignmentList.Remove(current); // Job is satisfied.
-                    if (targetAssigned < postAssignmentCount)
-                        Log.Warning($"{current.Name} has been over-assigned!");
-                }
-                // Work spec is not fully satisfied, move to end of list and try again next iteration.
-                else if (assignmentList.Count > 0)
-                {
-                    // Only move the actual current spec to the back of the list, in case we accidentally removed it earlier.
-                    if (assignmentList.Remove(current))
-                    {
-                        assignmentList.Add(current);
                     }
                 }
             }

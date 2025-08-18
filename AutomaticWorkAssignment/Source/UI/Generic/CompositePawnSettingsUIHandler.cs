@@ -17,7 +17,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
         public float Handle(Vector2 position, float width, IPawnSetting pawnSetting)
             => Handle(position, width, (CompositePawnSetting)pawnSetting);
 
-        Dictionary<CompositePawnSetting, ListData> _lastData = new Dictionary<CompositePawnSetting, ListData>();
+        Dictionary<CompositePawnSetting, ListData> _listData = new Dictionary<CompositePawnSetting, ListData>();
 
         private float _sectionHeight = 128;
 
@@ -88,11 +88,11 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
 
         private ListData GetListData(CompositePawnSetting pawnSetting)
         {
-            if (!_lastData.ContainsKey(pawnSetting))
+            if (!_listData.ContainsKey(pawnSetting))
             {
-                _lastData.Add(pawnSetting, new ListData());
+                _listData.Add(pawnSetting, new ListData());
             }
-            return _lastData[pawnSetting];
+            return _listData[pawnSetting];
         }
 
         private class ListData

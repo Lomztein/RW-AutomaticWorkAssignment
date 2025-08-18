@@ -61,6 +61,12 @@
     <description>Assign to pawns less committed than the limit.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_WorkCapable</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.WorkCapablePawnCondition</settingClass>
+    <label>is capable of work</label>
+    <description>Assign to pawns capable of the given work types.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_HasStockpile</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.StockpilePawnCondition</settingClass>
     <label>has stockpile</label>

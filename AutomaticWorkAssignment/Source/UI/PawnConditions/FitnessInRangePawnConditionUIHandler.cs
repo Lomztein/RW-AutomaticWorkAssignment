@@ -14,8 +14,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
         private float _rangeSelectionLabelSize = 24;
         private float _rangeSelectionInputSize = 24;
 
-        private string _minBuffer;
-        private string _maxBuffer;
+        private Buffer<string> _minBuffer = new Buffer<string>();
+        private Buffer<string> _maxBuffer = new Buffer<string>();
 
         protected override float Handle(Vector2 position, float width, FitnessInRangePawnCondition pawnCondition)
         {
@@ -80,11 +80,14 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
             minRect = Utils.GetSubRectFraction(rangeInput, Vector2.zero, new Vector2(0.5f, 1f));
             maxRect = Utils.GetSubRectFraction(rangeInput, new Vector2(0.5f, 0f), Vector2.one);
 
-            _minBuffer = pawnCondition.Min.ToString();
-            _maxBuffer = pawnCondition.Max.ToString();
+            string minBuffer = _minBuffer.Get(pawnCondition);
+            string maxBuffer = _maxBuffer.Get(pawnCondition);
 
-            Widgets.TextFieldNumeric(minRect, ref pawnCondition.Min, ref _minBuffer);
-            Widgets.TextFieldNumeric(maxRect, ref pawnCondition.Max, ref _maxBuffer);
+            Widgets.TextFieldNumeric(minRect, ref pawnCondition.Min, ref minBuffer);
+            Widgets.TextFieldNumeric(maxRect, ref pawnCondition.Max, ref maxBuffer);
+
+            _minBuffer.Set(pawnCondition, minBuffer);
+            _maxBuffer.Set(pawnCondition, maxBuffer);
 
             y += rangeInput.height;
             return y;

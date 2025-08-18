@@ -75,6 +75,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         private Vector2 _iconImageSize = new Vector2(24f, 24f);
 
+        private string _minPawnAmountBuffer;
+        private string _targetPawnAmountBuffer;
+
+
         public override void PreOpen()
         {
             base.PreOpen();
@@ -384,13 +388,13 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Rect minRect = Utils.GetSubRectFraction(firstRow, new Vector2(0f, 0.33f), new Vector2(1f, 0.66f));
             minRect = Utils.ShrinkByMargin(minRect, MarginSize);
             var minRects = Utils.GetLabeledContentWithFixedLabelSize(minRect, labelWidth);
-            DoPawnAmountContents(minRects.labelRect, minRects.contentRect, "AWA.LabelMinWorkers".Translate(), _current.MinWorkers, (x) => _current.MinWorkers = x);
+            DoPawnAmountContents(minRects.labelRect, minRects.contentRect, "AWA.LabelMinWorkers".Translate(), _current.MinWorkers, _minPawnAmountBuffer, (x) => _current.MinWorkers = x);
 
             // Target workers
             Rect maxRect = Utils.GetSubRectFraction(firstRow, new Vector2(0f, 0.66f), new Vector2(1f, 1f));
             maxRect = Utils.ShrinkByMargin(maxRect, MarginSize);
             var maxRects = Utils.GetLabeledContentWithFixedLabelSize(maxRect, labelWidth);
-            DoPawnAmountContents(maxRects.labelRect, maxRects.contentRect, "AWA.LabelTargetWorkers".Translate(), _current.TargetWorkers, (x) => _current.TargetWorkers = x);
+            DoPawnAmountContents(maxRects.labelRect, maxRects.contentRect, "AWA.LabelTargetWorkers".Translate(), _current.TargetWorkers, _targetPawnAmountBuffer, (x) => _current.TargetWorkers = x);
 
             Rect secondRow = Utils.GetSubRectFraction(sectionRect, new Vector2(0.5f, 0f), new Vector2(1f, 1f));
             Text.Anchor = TextAnchor.MiddleLeft;
@@ -794,8 +798,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             => Input.GetKey(KeyCode.LeftShift) ? sign * 1000 : sign;
 
         // TODO: Move handling of each type into own class.
-        private string _pawnAmountBuffer;
-        private void DoPawnAmountContents(Rect labelRect, Rect contentRect, string label, IPawnAmount pawnAmount, Action<IPawnAmount> newPawnAmountType)
+        private void DoPawnAmountContents(Rect labelRect, Rect contentRect, string label, IPawnAmount pawnAmount, string pawnAmountBuffer, Action<IPawnAmount> newPawnAmountType)
         {
             Text.Anchor = TextAnchor.MiddleLeft;
 
@@ -805,15 +808,13 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Widgets.Label(labelRect, label);
             if (pawnAmount is IntPawnAmount intPawnAmount)
             {
-                _pawnAmountBuffer = intPawnAmount.Value.ToString();
-                Widgets.TextFieldNumeric(amountRect, ref intPawnAmount.Value, ref _pawnAmountBuffer);
-                intPawnAmount.Value = int.Parse(_pawnAmountBuffer);
+                Widgets.TextFieldNumeric(amountRect, ref intPawnAmount.Value, ref pawnAmountBuffer);
             }
             if (pawnAmount is PercentagePawnAmount percentagePawnAmount)
             {
-                _pawnAmountBuffer = (percentagePawnAmount.Percentage * 100f).ToString();
-                Widgets.TextFieldNumeric(amountRect, ref percentagePawnAmount.Percentage, ref _pawnAmountBuffer, 0f, 100f);
-                percentagePawnAmount.Percentage = float.Parse(_pawnAmountBuffer) / 100f;
+                float percentage = percentagePawnAmount.Percentage * 100f;
+                Widgets.TextFieldNumeric(amountRect, ref percentage, ref pawnAmountBuffer, 0f, 100f);
+                percentagePawnAmount.Percentage = percentage / 100f;
             }
             if (pawnAmount is BuildingPawnAmount buildingPawnAmount)
             {
@@ -827,9 +828,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 }
                 Text.Anchor = TextAnchor.MiddleCenter;
                 Widgets.Label(multLabelRect, "x");
-                _pawnAmountBuffer = buildingPawnAmount.Multiplier.ToString();
-                Widgets.TextFieldNumeric(multRect, ref buildingPawnAmount.Multiplier, ref _pawnAmountBuffer);
-                buildingPawnAmount.Multiplier = float.Parse(_pawnAmountBuffer);
+                Widgets.TextFieldNumeric(multRect, ref buildingPawnAmount.Multiplier, ref pawnAmountBuffer);
                 Text.Anchor = TextAnchor.UpperLeft;
             }
 

@@ -109,6 +109,7 @@ namespace Lomzie.AutomaticWorkAssignment
                 (m) => DefDatabase<PlanetLayerDef>.AllDefs, x => x.LabelCap, x => x.LayerDef?.LabelCap ?? "AWA.PlanetLayerSelect".Translate(), (c, s) => c.LayerDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<GenderPawnCondition, Gender>(
                 (m) => (Gender[])Enum.GetValues(typeof(Gender)), (x) => GenderUtility.GetLabel(x), (x) => GenderUtility.GetLabel(x.Gender), (pp, po) => pp.Gender = po));
+            PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<WorkCapablePawnCondition>(new Toggle<WorkCapablePawnCondition>(x => x.RequireAll, (x, y) => x.RequireAll = y, x => "AWA.RequireAll".Translate()), new Lister<WorkCapablePawnCondition, WorkTypeDef, WorkTypeDef>((rect, e) => Widgets.Label(rect, e.labelShort), AutomaticWorkAssignmentSettings.UILabelSizeBase, x => DefDatabase<WorkTypeDef>.AllDefs, x => x.labelShort, x => x.RequiredCapabilities, (x, y) => y, null)));
 
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<AnyPawnCondition, PawnConditionDef>("AWA.ConditionSelect".Translate(), false));
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<AllPawnCondition, PawnConditionDef>("AWA.ConditionSelect".Translate(), false));
