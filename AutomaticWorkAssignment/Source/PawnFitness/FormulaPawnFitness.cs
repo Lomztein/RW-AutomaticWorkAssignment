@@ -82,6 +82,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
+            if (InnerFormula == null)
+            {
+                Logger.Message("[AWA:core:Formula] No formula set");
+                return 0;
+            }
             try
             {
                 return InnerFormula.Calc(
