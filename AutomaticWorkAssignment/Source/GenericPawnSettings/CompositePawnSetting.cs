@@ -4,11 +4,11 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.GenericPawnSettings
 {
-    public abstract class CompositePawnSetting : PawnSetting, ICompositePawnSetting
+    public abstract class CompositePawnSetting<TSettingType> : PawnSetting, ICompositePawnSetting where TSettingType : IPawnSetting
     {
         public virtual int MaxSettings => int.MaxValue;
 
-        public List<IPawnSetting> InnerSettings = new List<IPawnSetting>();
+        public List<TSettingType> InnerSettings = new List<TSettingType>();
 
         public override void ExposeData()
         {
@@ -17,12 +17,12 @@ namespace Lomzie.AutomaticWorkAssignment.GenericPawnSettings
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (InnerSettings == null)
-                    InnerSettings = new List<IPawnSetting>();
+                    InnerSettings = new List<TSettingType>();
                 InnerSettings = InnerSettings.Where(x => x.IsValidAfterLoad()).ToList();
             }
         }
 
         public IEnumerable<IPawnSetting> GetSettings()
-            => InnerSettings;
+            => InnerSettings.Cast<IPawnSetting>();
     }
 }

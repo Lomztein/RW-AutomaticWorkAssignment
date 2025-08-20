@@ -8,15 +8,14 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.UI.Generic
 {
-    public class CompositePawnSettingsUIHandler<T, D> : IPawnSettingUIHandler where T : IPawnSetting where D : PawnSettingDef
+    public class CompositePawnSettingsUIHandler<TSettingCategory, TSetting, TSettingDef> : IPawnSettingUIHandler
+        where TSettingCategory : IPawnSetting where TSetting : TSettingCategory where TSettingDef : PawnSettingDef
     {
         public bool CanHandle(IPawnSetting pawnSetting)
-            => pawnSetting is T;
+            => pawnSetting is TSetting;
 
         public float Handle(Vector2 position, float width, IPawnSetting pawnSetting)
-            => Handle(position, width, (CompositePawnSetting)pawnSetting);
-
-        private float _sectionHeight = 128;
+            => Handle(position, width, (CompositePawnSetting<TSettingCategory>)pawnSetting);
 
         public string NewSettingLabel = "AWA.NewSettingAddDefault".Translate();
         public bool AllowMoveSettings = true;
@@ -27,7 +26,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
             AllowMoveSettings = allowMoveSetting;
         }
 
-        protected virtual float Handle(Vector2 position, float width, CompositePawnSetting pawnSetting)
+        protected virtual float Handle(Vector2 position, float width, CompositePawnSetting<TSettingCategory> pawnSetting)
         {
             var layout = new RectAggregator(new Rect(position.x, position.y, width, 0).Pad(left: 8), GetHashCode(), new(0, 1));
 
@@ -45,7 +44,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
                         onDeleteSetting: (x) => Find.Root.StartCoroutine(DelayedDelete(pawnSetting, x)));
                 }
 
-                WorkManagerWindow.AddFunctionButton<D>(
+                WorkManagerWindow.AddFunctionButton<TSettingCategory, TSettingDef>(
                     ref layout,
                     NewSettingLabel,
                     GetNewSettingAction(pawnSetting),
@@ -55,33 +54,33 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
             return layout.Rect.height;
         }
 
-        private Action<IPawnSetting> GetNewSettingAction(CompositePawnSetting pawnSetting)
+        private Action<TSettingCategory> GetNewSettingAction(CompositePawnSetting<TSettingCategory> pawnSetting)
         {
             if (pawnSetting.InnerSettings.Count != pawnSetting.MaxSettings)
                 return (x) => Find.Root.StartCoroutine(DelayedAdd(pawnSetting, x));
             return null;
         }
 
-        private Action<IPawnSetting, int> GetMoveAction(CompositePawnSetting pawnSetting)
+        private Action<TSettingCategory, int> GetMoveAction(CompositePawnSetting<TSettingCategory> pawnSetting)
         {
             if (AllowMoveSettings)
                 return (x, movement) => Find.Root.StartCoroutine(DelayedMove(pawnSetting, x, movement));
             return null;
         }
 
-        private IEnumerator DelayedAdd(CompositePawnSetting composite, IPawnSetting newSetting)
+        private IEnumerator DelayedAdd(CompositePawnSetting<TSettingCategory> composite, TSettingCategory newSetting)
         {
             yield return new WaitForEndOfFrame();
             composite.InnerSettings.Add(newSetting);
         }
 
-        private IEnumerator DelayedMove(CompositePawnSetting composite, IPawnSetting setting, int movement)
+        private IEnumerator DelayedMove(CompositePawnSetting<TSettingCategory> composite, TSettingCategory setting, int movement)
         {
             yield return new WaitForEndOfFrame();
             Utils.MoveElement(composite.InnerSettings, setting, movement);
         }
 
-        private IEnumerator DelayedDelete(CompositePawnSetting composite, IPawnSetting setting)
+        private IEnumerator DelayedDelete(CompositePawnSetting<TSettingCategory> composite, TSettingCategory setting)
         {
             yield return new WaitForEndOfFrame();
             composite.InnerSettings.Remove(setting);

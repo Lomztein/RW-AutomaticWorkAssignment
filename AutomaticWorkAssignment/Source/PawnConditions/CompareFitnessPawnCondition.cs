@@ -7,7 +7,7 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
-    public class CompareFitnessPawnCondition : CompositePawnSetting, IPawnCondition
+    public class CompareFitnessPawnCondition : CompositePawnSetting<IPawnFitness>, IPawnCondition
     {
         public override int MaxSettings => 2;
 
@@ -27,8 +27,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         {
             if (InnerSettings.All(x => x != null))
             {
-                IPawnFitness lhs = InnerSettings[0] as IPawnFitness;
-                IPawnFitness rhs = InnerSettings[1] as IPawnFitness;
+                IPawnFitness lhs = InnerSettings[0];
+                IPawnFitness rhs = InnerSettings[1];
                 return DoComparison(lhs.CalcFitness(pawn, specification, request), rhs.CalcFitness(pawn, specification, request));
             }
             return false;
@@ -49,7 +49,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 
         private void SetupDefaults()
         {
-            InnerSettings = new System.Collections.Generic.List<IPawnSetting>() { null, null };
+            InnerSettings = new System.Collections.Generic.List<IPawnFitness>() { null, null };
             InnerSettings[1] = CreateFrom<IPawnFitness>(DefDatabase<PawnFitnessDef>.GetNamed("Lomzie_ConstantPawnFitness"));
         }
 

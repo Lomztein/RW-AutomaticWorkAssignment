@@ -625,12 +625,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             if (Clipboard.Contains<TSetting>() && Widgets.ButtonImage(headerRect.NewCol(ButtonSize, HorizontalJustification.Right), TexButton.Paste))
                 columnSettings.getEntries().Add(Clipboard.Paste<TSetting>());
 
-            var locSettings = columnSettings;
-            DoPawnSettingList<TSettingDef>(layout, addText.Translate(), ref columnSettings.listHeight, ref columnSettings.listPosition,
-                () => locSettings.getEntries().Cast<IPawnSetting>().ToList(),
-                (x) => locSettings.getEntries().Add((TSetting)x),
-                (setting, movement) => locSettings.handleMove((TSetting)setting, movement),
-                (setting) => locSettings.handleDelete((TSetting)setting));
+            DoPawnSettingList<TSetting, TSettingDef>(layout, addText.Translate(), ref columnSettings);
         }
 
         private static void DoAdvancedSectionMoveDeleteButtons(
@@ -666,58 +661,60 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Text.Anchor = TextAnchor.UpperLeft;
         }
 
-        public static void DoPawnSettingList<TDef>(
+        private static void DoPawnSettingList<TSetting, TSettingDef>(
             Rect inRect,
             string newSettingLabel,
-            ref float prevListHeight,
-            ref Vector2 listPosition,
-            Func<List<IPawnSetting>> settingGetter,
-            Action<IPawnSetting> onNewSetting,
-            Action<IPawnSetting, int> onMoveSetting,
-            Action<IPawnSetting> onDeleteSetting)
-            where TDef : PawnSettingDef
+            ref ConfigurationColumnData<TSetting> columnSettings)
+            where TSetting : IPawnSetting where TSettingDef : PawnSettingDef
         {
-            var settings = settingGetter().ToList();
+            var settings = columnSettings.getEntries().Cast<TSetting>().ToList();
 
-            var scrollInnerContainer = new Rect(0f, 0f, inRect.width, prevListHeight);
+            var scrollInnerContainer = new Rect(0f, 0f, inRect.width, columnSettings.listHeight);
             // Leave space for the scrollbar if overflowed
-            if (prevListHeight > inRect.height)
+            if (columnSettings.listHeight > inRect.height)
                 scrollInnerContainer = scrollInnerContainer.Pad(right: ListScrollbarWidth);
             Logger.Message($"Scrollbar width: {ListScrollbarWidth}");
 
-            Widgets.BeginScrollView(inRect, ref listPosition, scrollInnerContainer);
+            Widgets.BeginScrollView(inRect, ref columnSettings.listPosition, scrollInnerContainer);
             Widgets.BeginGroup(scrollInnerContainer);
 
             float width = scrollInnerContainer.width - MarginSize / 2;
+
+            var locSettings = columnSettings;
 
             var scrollLayoutAggregator = new RectAggregator(scrollInnerContainer.TopPartPixels(0).Pad(left: MarginSize), Instance.GetHashCode(), new(1, 1));
             for (var i = 0; i < settings.Count; i++)
             {
                 var setting = settings[i];
 
-                Rect pawnSettingBlock = DoPawnSetting(
+                Rect pawnSettingBlock = DoPawnSetting<TSetting>(
                     ref scrollLayoutAggregator,
                     setting,
                     canMoveUp: i > 0,
                     canMoveDown: i < settings.Count,
-                    onMoveSetting, onDeleteSetting);
+                    onMoveSetting: (setting, movement) => locSettings.handleMove(setting, movement),
+                    onDeleteSetting: (setting) => locSettings.handleDelete(setting));
 
                 if (i % 2 == 1) Widgets.DrawAltRect(pawnSettingBlock.Pad(left: -MarginSize));
             }
-
-            if (onNewSetting != null)
-            {
-                AddFunctionButton<TDef>(ref scrollLayoutAggregator, newSettingLabel, onNewSetting, settings);
-            }
+            AddFunctionButton<TSetting, TSettingDef>(
+                ref scrollLayoutAggregator,
+                newSettingLabel,
+                (newPawnSettings) => locSettings.getEntries().Add(newPawnSettings),
+                settings);
 
             Text.Anchor = TextAnchor.UpperLeft;
-            prevListHeight = scrollLayoutAggregator.Rect.height;
+            columnSettings.listHeight = scrollLayoutAggregator.Rect.height;
             GUI.EndGroup();
             Widgets.EndScrollView();
         }
 
-        public static void AddFunctionButton<TDef>(ref RectAggregator layoutAggregator, string newSettingLabel, Action<IPawnSetting> onNewSetting, List<IPawnSetting> settings)
-            where TDef : PawnSettingDef
+        public static void AddFunctionButton<TSetting, TSettingDef>(
+            ref RectAggregator layoutAggregator,
+            string newSettingLabel,
+            Action<TSetting> onNewSetting,
+            List<TSetting> settings)
+            where TSetting : IPawnSetting where TSettingDef : PawnSettingDef
         {
             // row for new function.
             var newRect = layoutAggregator.NewRow(NewFunctionButtonSize).Rect.Pad(left: -MarginSize);
@@ -730,19 +727,20 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             if (Widgets.ButtonInvisible(newRect))
             {
-                var defs = GenDefDatabase.GetAllDefsInDatabaseForDef(typeof(TDef)).Cast<TDef>();
-                FloatMenuUtility.MakeMenu(defs, x => x.LabelCap, x => () => onNewSetting(PawnSetting.CreateFrom<IPawnSetting>(x)));
+                var defs = GenDefDatabase.GetAllDefsInDatabaseForDef(typeof(TSettingDef)).Cast<TSettingDef>();
+                FloatMenuUtility.MakeMenu(defs, x => x.LabelCap, x => () => onNewSetting(PawnSetting.CreateFrom<TSetting>(x)));
             }
         }
 
         /// <returns>the drawn <see cref="Rect"/> area</returns>
-        public static Rect DoPawnSetting(
+        public static Rect DoPawnSetting<TSetting>(
             ref RectAggregator layout,
-            IPawnSetting setting,
+            TSetting setting,
             bool canMoveUp,
             bool canMoveDown,
-            Action<IPawnSetting, int> onMoveSetting,
-            Action<IPawnSetting> onDeleteSetting)
+            Action<TSetting, int> onMoveSetting,
+            Action<TSetting> onDeleteSetting)
+            where TSetting : IPawnSetting
         {
             var localLayout = new RectAggregator(layout.Rect.BottomPart(0), Instance.GetHashCode(), new(1, 1));
             IPawnSetting prevRender = CurrentRenderSetting;
