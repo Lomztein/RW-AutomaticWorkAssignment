@@ -288,10 +288,10 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                         var value = callParams[0];
                         var min = callParams[1];
                         var max = callParams[2];
-                        return Expression.IfThenElse(
+                        return Expression.Condition(
                             Expression.GreaterThan(value, max),
                             max,
-                            Expression.IfThenElse(
+                            Expression.Condition(
                                 Expression.LessThan(value, min),
                                 min,
                                 value
