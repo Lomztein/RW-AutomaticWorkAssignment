@@ -364,3 +364,5 @@ FodyWeavers.xsd
 
 **/PublishedFileId.txt
 **/Assemblies/*.{dll,pdb}
+
+.rw.pid
