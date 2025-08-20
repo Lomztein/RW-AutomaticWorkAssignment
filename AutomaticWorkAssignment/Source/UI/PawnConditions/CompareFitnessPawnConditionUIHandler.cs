@@ -28,7 +28,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
             float y = 0f;
             if (pawnSetting.InnerSettings[0] != null)
             {
-                float height = DrawOperand(position, width, (IPawnFitness)pawnSetting.InnerSettings[0], 0, pawnSetting);
+                float height = DrawOperand(position, width, pawnSetting.InnerSettings[0], 0, pawnSetting);
                 position.y += height;
                 y += height;
             }
@@ -50,7 +50,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
 
             if (pawnSetting.InnerSettings[1] != null)
             {
-                float height = DrawOperand(position, width, (IPawnFitness)pawnSetting.InnerSettings[1], 1, pawnSetting);
+                float height = DrawOperand(position, width, pawnSetting.InnerSettings[1], 1, pawnSetting);
                 position.y += height;
                 y += height;
             }

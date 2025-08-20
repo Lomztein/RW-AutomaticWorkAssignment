@@ -6,12 +6,12 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 {
-    public abstract class AggregatePawnFitness : CompositePawnSetting, IPawnFitness
+    public abstract class AggregatePawnFitness : CompositePawnSetting<IPawnFitness>, IPawnFitness
     {
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (InnerSettings.Count > 0)
-                return InnerSettings.Select(x => (x as IPawnFitness).CalcFitness(pawn, specification, request)).Aggregate(Aggregate);
+                return InnerSettings.Select(x => x.CalcFitness(pawn, specification, request)).Aggregate(Aggregate);
             return 0f;
         }
 
@@ -48,17 +48,17 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
             => Mathf.Max(accumulate, source);
     }
 
-    public class AveragePawnFitness : CompositePawnSetting, IPawnFitness
+    public class AveragePawnFitness : CompositePawnSetting<IPawnFitness>, IPawnFitness
     {
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (InnerSettings.Count > 0)
-                return InnerSettings.Select(x => (x as IPawnFitness).CalcFitness(pawn, specification, request)).Average();
+                return InnerSettings.Select(x => x.CalcFitness(pawn, specification, request)).Average();
             return 0f;
         }
     }
 
-    public class CountPawnFitness : CompositePawnSetting, IPawnFitness
+    public class CountPawnFitness : CompositePawnSetting<IPawnFitness>, IPawnFitness
     {
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
@@ -66,7 +66,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
         }
     }
 
-    public class CountPawnsPawnFitness : CompositePawnSetting, IPawnFitness
+    public class CountPawnsPawnFitness : CompositePawnSetting<IPawnFitness>, IPawnFitness
     {
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
