@@ -110,6 +110,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         public override void DoWindowContents(Rect inRect)
         {
+            var initialFont = Text.Font;
+            Text.Font = GameFont.Small;
             (Rect list, Rect remainder) = Utils.SplitRectHorizontalLeft(inRect, ListSectionWidth);
             (Rect header, Rect listRemainder) = Utils.SplitRectVerticalUpper(list, ButtonSize);
 
@@ -151,6 +153,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 DoMainSectionContents(mainRect);
                 DoAdvancedSectionContents(mainRemainder);
             }
+
+            Text.Font = initialFont;
         }
 
         private void SelectMapParent()
