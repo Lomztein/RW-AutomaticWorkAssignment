@@ -673,7 +673,6 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             // Leave space for the scrollbar if overflowed
             if (columnSettings.listHeight > inRect.height)
                 scrollInnerContainer = scrollInnerContainer.Pad(right: ListScrollbarWidth);
-            Logger.Message($"Scrollbar width: {ListScrollbarWidth}");
 
             Widgets.BeginScrollView(inRect, ref columnSettings.listPosition, scrollInnerContainer);
             Widgets.BeginGroup(scrollInnerContainer);
