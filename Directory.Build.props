@@ -7,6 +7,7 @@
 
 	<PropertyGroup>
 		<RootNamespace>Lomzie.AutomaticWorkAssignment</RootNamespace>
+		<SteamAppId>294100</SteamAppId>
 	</PropertyGroup>
 
 	<Target Name="CheckSteamApps">
@@ -31,7 +32,7 @@
 			Condition="'$(RimWorldActualVersion)' != '$(RimWorldVersion)'" />
 	</Target>
 
-	<Target Name="CopyMod" AfterTargets="PostBuildEvent" Condition="'$(AutomaticWorkAssignmentPatchOf)' == '' AND '$(IsPackable)' != 'false'">
+	<Target Name="CopyMod" Condition="'$(AutomaticWorkAssignmentPatchOf)' == '' AND '$(IsPackable)' != 'false'">
 		<Exec
 			WorkingDirectory="$(SolutionDir)"
 			Command="
@@ -41,7 +42,7 @@
 			LogStandardErrorAsError="true"
 			ContinueOnError="true" />
 	</Target>
-	<Target Name="CopyModPatch" AfterTargets="PostBuildEvent" Condition="'$(AutomaticWorkAssignmentPatchOf)' != '' AND '$(IsPackable)' != 'false'">
+	<Target Name="CopyModPatch" Condition="'$(AutomaticWorkAssignmentPatchOf)' != '' AND '$(IsPackable)' != 'false'">
 		<Exec
 			WorkingDirectory="$(SolutionDir)"
 			Command="
