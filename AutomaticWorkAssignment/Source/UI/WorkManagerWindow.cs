@@ -523,6 +523,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Rect interweaveRect = new Rect(requireCapabilityRect);
             interweaveRect.y += InputSize;
             DrawPrioritySettingsToggle(interweaveRect, ref _current.InterweavePriorities, "AWA.LabelInterweavePriorities".Translate(), "AWA.LabelInterweavePrioritiesTip".Translate());
+
+            Rect ignoreSpecialistRect = new Rect(interweaveRect);
+            ignoreSpecialistRect.y += InputSize;
+            DrawPrioritySettingsToggle(ignoreSpecialistRect, ref _current.IsIgnoreSpecialist, "AWA.LabelIgnoreSpecialist".Translate(), "AWA.LabelIgnoreSpecialistTip".Translate());
         }
 
         private void DrawPrioritySettingsToggle(Rect rect, ref bool value, string label, string description)
