@@ -13,9 +13,7 @@ if(Test-Path $PID_FILE -PathType Leaf){
     Remove-Item $PID_FILE
 }
 
-Write-Host "Copy files"
-dotnet msbuild -target:CopyModPatch
-dotnet msbuild -target:CopyMod
+. copy.ps1
 
 Write-Host "Starting RimWorld"
 $rwProcess = Start-Process "$SteamAppsPath\common\RimWorld\RimWorldWin64.exe" -passthru
