@@ -115,6 +115,16 @@ namespace Lomzie.AutomaticWorkAssignment
         public static (Rect upper, Rect lower) SplitRectVerticalLower(Rect inRect, float height)
             => SplitRectVerticalUpper(inRect, inRect.height - height);
 
+        public static IEnumerable<Rect> SplitVertically(Rect inRect, int parts)
+        {
+            float partHeight = inRect.height / parts;
+            for (int i = 0; i < parts; i++)
+            {
+                float y = inRect.y + partHeight * i;
+                yield return new Rect(inRect.x, y, inRect.width, partHeight);
+            }
+        }
+
         public static Rect ShrinkByMargin(Rect inRect, float margin)
         {
             Rect newRect = new Rect(inRect);

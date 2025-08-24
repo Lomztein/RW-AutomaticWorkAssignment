@@ -86,8 +86,11 @@
   <AWA.LabelRequireFullCapabilityTip>Require that pawn is capable of all work for assignment?</AWA.LabelRequireFullCapabilityTip>
   <AWA.LabelInterweavePriorities>Interweave priorities</AWA.LabelInterweavePriorities>
   <AWA.LabelInterweavePrioritiesTip>Spread out assignees work over the different priorities?</AWA.LabelInterweavePrioritiesTip>
-  <AWA.LabelIgnoreSpecialist>Ignore specialists</AWA.LabelIgnoreSpecialist>
-  <AWA.LabelIgnoreSpecialistTip>Ignore the pawns designated as specialists?</AWA.LabelIgnoreSpecialistTip>
+  <AWA.LabelIncludeSpecialists>Include specialists</AWA.LabelIncludeSpecialists>
+  <AWA.LabelIncludeSpecialistsTip>Consider pawns marked as specialists?</AWA.LabelIncludeSpecialistsTip>
+  <AWA.LabelCountAssigneesFrom>Count assigness from</AWA.LabelCountAssigneesFrom>
+  <AWA.LabelCountAssigneesFromTip>Count assignees from other specifications, as being assigned to this.</AWA.LabelCountAssigneesFromTip>
+  <AWA.LabelAddWorkSpecification>Add work specification</AWA.LabelAddWorkSpecification>
   <AWA.HeaderFitness>Fitness</AWA.HeaderFitness>
   <AWA.HeaderConditions>Conditions</AWA.HeaderConditions>
   <AWA.HeaderPostProcessors>On assignment</AWA.HeaderPostProcessors>

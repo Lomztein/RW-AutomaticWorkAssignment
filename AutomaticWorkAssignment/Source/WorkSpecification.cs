@@ -35,6 +35,8 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public PawnWorkPriorities Priorities = PawnWorkPriorities.CreateEmpty(); // The actual work priorities to be assigned.
 
+        public List<WorkSpecification> CountAssigneesFrom = new List<WorkSpecification>();
+
         public Pawn[] GetApplicableOrMinimalPawnsSorted(IEnumerable<Pawn> allPawns, ResolveWorkRequest request)
         {
             PawnFitnessComparer comparer = new PawnFitnessComparer(Fitness, this, request);
@@ -177,6 +179,7 @@ namespace Lomzie.AutomaticWorkAssignment
             Scribe_Collections.Look(ref Fitness, "fitness", LookMode.Deep);
             Scribe_Collections.Look(ref Conditions, "conditions", LookMode.Deep);
             Scribe_Collections.Look(ref PostProcessors, "postProcessors", LookMode.Deep);
+            Scribe_Collections.Look(ref CountAssigneesFrom, "countAssigneesFrom", LookMode.Reference, true);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
@@ -186,10 +189,12 @@ namespace Lomzie.AutomaticWorkAssignment
                 if (Fitness == null) Fitness = new List<IPawnFitness>();
                 if (Conditions == null) Conditions = new List<IPawnCondition>();
                 if (PostProcessors == null) PostProcessors = new List<IPawnPostProcessor>();
+                if (CountAssigneesFrom == null) CountAssigneesFrom = new List<WorkSpecification>();
 
                 Fitness = Fitness.ToList().Where(x => x.IsValidAfterLoad()).ToList();
                 Conditions = Conditions.ToList().Where(x => x.IsValidAfterLoad()).ToList();
                 PostProcessors = PostProcessors.ToList().Where(x => x.IsValidAfterLoad()).ToList();
+                CountAssigneesFrom = CountAssigneesFrom.Where(x => x != null).ToList();
             }
         }
 

@@ -326,7 +326,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         {
             if (!Find.WindowStack.IsOpen<ExcludeColonistsWindow>())
             {
-                Find.WindowStack.Add(new ExcludeColonistsWindow());
+                Find.WindowStack.Add(new ExcludeColonistsWindow(_workManager));
             }
         }
 
@@ -392,60 +392,64 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private void DoBasicInfoContents(Rect sectionRect)
         {
             Rect firstRow = Utils.GetSubRectFraction(sectionRect, Vector2.zero, new Vector2(0.5f, 1f));
-            int labelWidth = (int)(firstRow.width / 4f);
+            float labelWidth = firstRow.width / 4f;
+            Rect[] firstRowParts = Utils.SplitVertically(firstRow, 4).Select(x => Utils.ShrinkByMargin(x, MarginSize)).ToArray();
             Text.Anchor = TextAnchor.MiddleLeft;
 
             // Name
-            Rect nameRect = Utils.GetSubRectFraction(firstRow, Vector2.zero, new Vector2(1f, 0.33f));
-            nameRect = Utils.ShrinkByMargin(nameRect, MarginSize);
-            var nameRects = Utils.GetLabeledContentWithFixedLabelSize(nameRect, labelWidth);
-
+            var nameRects = Utils.GetLabeledContentWithFixedLabelSize(firstRowParts[0], labelWidth);
             Widgets.Label(nameRects.labelRect, "AWA.LabelName".Translate());
             _current.Name = Widgets.TextField(nameRects.contentRect, _current.Name);
 
             // Min workers
-            Rect minRect = Utils.GetSubRectFraction(firstRow, new Vector2(0f, 0.33f), new Vector2(1f, 0.66f));
-            minRect = Utils.ShrinkByMargin(minRect, MarginSize);
-            var minRects = Utils.GetLabeledContentWithFixedLabelSize(minRect, labelWidth);
+            var minRects = Utils.GetLabeledContentWithFixedLabelSize(firstRowParts[1], labelWidth);
             DoPawnAmountContents(minRects.labelRect, minRects.contentRect, "AWA.LabelMinWorkers".Translate(), _current.MinWorkers, _minPawnAmountBuffer, (x) => _current.MinWorkers = x);
 
             // Target workers
-            Rect maxRect = Utils.GetSubRectFraction(firstRow, new Vector2(0f, 0.66f), new Vector2(1f, 1f));
-            maxRect = Utils.ShrinkByMargin(maxRect, MarginSize);
-            var maxRects = Utils.GetLabeledContentWithFixedLabelSize(maxRect, labelWidth);
+            var maxRects = Utils.GetLabeledContentWithFixedLabelSize(firstRowParts[2], labelWidth);
             DoPawnAmountContents(maxRects.labelRect, maxRects.contentRect, "AWA.LabelTargetWorkers".Translate(), _current.TargetWorkers, _targetPawnAmountBuffer, (x) => _current.TargetWorkers = x);
 
+            if (Widgets.ButtonText(firstRowParts[3], "AWA.LabelCountAssigneesFrom".Translate()))
+            {
+                Find.WindowStack.Add(new CountAssigneesFromWindow(_current, _workManager));
+            }
+            TooltipHandler.TipRegion(firstRowParts[3], "AWA.LabelCountAssigneesFromTip".Translate());
+
             Rect secondRow = Utils.GetSubRectFraction(sectionRect, new Vector2(0.5f, 0f), new Vector2(1f, 1f));
+            Rect[] secondRowParts = Utils.SplitVertically(secondRow, 4).Select(x => Utils.ShrinkByMargin(x, MarginSize)).ToArray();
             Text.Anchor = TextAnchor.MiddleLeft;
 
             // Critical
-            Rect criticalRect = Utils.GetSubRectFraction(secondRow, Vector2.zero, new Vector2(1f, 0.33f));
-            criticalRect = Utils.ShrinkByMargin(criticalRect, MarginSize);
-            var criticalRects = Utils.GetLabeledContentWithFixedLabelSize(criticalRect, labelWidth * 2);
+            var criticalRects = Utils.GetLabeledContentWithFixedLabelSize(secondRowParts[0], labelWidth * 2);
             Widgets.Label(criticalRects.labelRect, "AWA.LabelCritical".Translate());
             if (Widgets.ButtonText(criticalRects.contentRect, _current.IsCritical ? "AWA.Yes".Translate() : "AWA.No".Translate()))
             {
                 _current.IsCritical = !_current.IsCritical;
             }
-            TooltipHandler.TipRegion(criticalRect, "AWA.LabelCriticalTip".Translate());
+            TooltipHandler.TipRegion(secondRowParts[0], "AWA.LabelCriticalTip".Translate());
 
             // Specialist
-            Rect specialistRect = Utils.GetSubRectFraction(secondRow, new Vector3(0f, 0.33f), new Vector2(1f, 0.66f));
-            specialistRect = Utils.ShrinkByMargin(specialistRect, MarginSize);
-            var specialistRects = Utils.GetLabeledContentWithFixedLabelSize(specialistRect, labelWidth * 2);
+            var specialistRects = Utils.GetLabeledContentWithFixedLabelSize(secondRowParts[1], labelWidth * 2);
             Widgets.Label(specialistRects.labelRect, "AWA.LabelSpecialist".Translate());
             if (Widgets.ButtonText(specialistRects.contentRect, _current.IsSpecialist ? "AWA.Yes".Translate() : "AWA.No".Translate()))
             {
                 _current.IsSpecialist = !_current.IsSpecialist;
             }
-            TooltipHandler.TipRegion(specialistRect, "AWA.LabelSpecialistTip".Translate());
+            TooltipHandler.TipRegion(secondRowParts[1], "AWA.LabelSpecialistTip".Translate());
+
+            // Include specialists
+            var includeSpecialistsRects = Utils.GetLabeledContentWithFixedLabelSize(secondRowParts[2], labelWidth * 2);
+            Widgets.Label(includeSpecialistsRects.labelRect, "AWA.LabelIncludeSpecialists".Translate());
+            if (Widgets.ButtonText(includeSpecialistsRects.contentRect, _current.IncludeSpecialists ? "AWA.Yes".Translate() : "AWA.No".Translate()))
+            {
+                _current.IncludeSpecialists = !_current.IncludeSpecialists;
+            }
+            TooltipHandler.TipRegion(secondRowParts[2], "AWA.LabelIncludeSpecialistsTip".Translate());
 
             // Commitment
-            Rect commitmentRect = Utils.GetSubRectFraction(secondRow, new Vector3(0f, 0.66f), new Vector2(1f, 1f));
-            commitmentRect = Utils.ShrinkByMargin(commitmentRect, MarginSize);
-            var commitmentRects = Utils.GetLabeledContentWithFixedLabelSize(commitmentRect, labelWidth * 2);
+            var commitmentRects = Utils.GetLabeledContentWithFixedLabelSize(secondRowParts[3], labelWidth * 2);
             Widgets.Label(commitmentRects.labelRect, "AWA.LabelCommitment".Translate());
-            TooltipHandler.TipRegion(commitmentRect, "AWA.LabelCommitmentTip".Translate());
+            TooltipHandler.TipRegion(secondRowParts[3], "AWA.LabelCommitmentTip".Translate());
 
             Text.Anchor = TextAnchor.UpperCenter;
             Rect sliderLabelRect = Utils.GetSubRectFraction(commitmentRects.contentRect, Vector2.zero, new Vector2(1f, 0.5f));
@@ -541,10 +545,6 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Rect interweaveRect = new Rect(requireCapabilityRect);
             interweaveRect.y += InputSize;
             DrawPrioritySettingsToggle(interweaveRect, ref _current.InterweavePriorities, "AWA.LabelInterweavePriorities".Translate(), "AWA.LabelInterweavePrioritiesTip".Translate());
-
-            Rect ignoreSpecialistRect = new Rect(interweaveRect);
-            ignoreSpecialistRect.y += InputSize;
-            DrawPrioritySettingsToggle(ignoreSpecialistRect, ref _current.IncludeSpecialists, "AWA.LabelIncludeSpecialist".Translate(), "AWA.LabelIncludeSpecialistTip".Translate());
         }
 
         private void DrawPrioritySettingsToggle(Rect rect, ref bool value, string label, string description)
