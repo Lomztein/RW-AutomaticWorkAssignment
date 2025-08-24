@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>AWA Addon: Events</name>
+  <author>Lomzie</author>
+  <url>https://github.com/Lomztein/RW-AutomaticWorkAssignment</url>
+  <description>
+    This is a small addon mod to my Automatic Work Assignments mod, that adds features for automatically performing surgeries on pawns. This was split into its own seperate mod, as I felt this feature would be outside the scope of the main mod.
+    
+    The central feature of this mod is the new "Add bill" on assignment task, that, well adds a surgery bill to the pawn. This can used to automatically augment your pawns with bionics or implants, or automatically replace missing limbs.
+    
+    The "Add bill" task tries to avoid adding bills that cannot be completed, such as if it cannot be performed on the pawn or if materials are missing. It will also only assign the amount of surgeries you have available parts for. This is imperfect though, but in my testing it works well enough for bionics at least.
+    
+    This mod also adds a couple of new fitness functions and conditions, particularily useful to check the health of pawns and their parts.d
+    
+    It should go without saying that surgeries can still fail, and your pawns may die by an automated surgery just as with a regular surgery.
+    
+    Adding valid bills to pawns is a fairly complicated process to automate, and some bills might fail to work. Let me know if you have any issues and I'll look into fixing it.
+  </description>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <packageId>Lomzie.AWAEvents</packageId>
+  <modDependencies>
+    <li>
+      <packageId>lomzie.automaticworkassignment</packageId>
+      <displayName>Automatic Work Assignment</displayName>
+      <steamWorkshopUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=3464549791</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>lomzie.automaticworkassignment</li>
+  </loadAfter>
+</ModMetaData>
