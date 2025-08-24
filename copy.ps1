@@ -1,3 +1,7 @@
+param(
+    [Parameter(Position=0,mandatory=$true)][String] $Configuration
+)
+
 Write-Host "Copy files"
-dotnet msbuild -target:CopyModPatch
-dotnet msbuild -target:CopyMod
+dotnet msbuild -property:Configuration=$Configuration -target:CopyMod
+dotnet msbuild -property:Configuration=$Configuration -target:CopyModPatch
