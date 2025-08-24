@@ -235,13 +235,6 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 
                     }
 
-                    #region Custom functions
-                    internal static double Tick()
-                    {
-                        return 0;
-                    }
-                    #endregion
-
                     #region Standard functions
                     [Arity(1)]
                     internal static Expression SqrtExpression(params Expression[] callParams)
@@ -315,16 +308,13 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                         kvp => (
                             expressionFactory: kvp.Value,
                             arity: kvp.Value.GetMethodInfo().GetCustomAttributes<WellKnownFunctions.ArityAttribute>().Single()))
-                .Union(new Dictionary<string, (WellKnownFunctions.ExpressionFactory expressionFactory, WellKnownFunctions.ArityAttribute arity)>()
-                {
-                    {"TICK", WellKnownFunctions.LoadMethod((Func<double>)WellKnownFunctions.Tick) },
-                }).ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => (WellKnownFunctions.ExpressionFactory)((callParams) =>
-                    {
-                        kvp.Value.arity.CheckArity(kvp.Key, callParams);
-                        return kvp.Value.expressionFactory(callParams);
-                    }));
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => (WellKnownFunctions.ExpressionFactory)((callParams) =>
+                        {
+                            kvp.Value.arity.CheckArity(kvp.Key, callParams);
+                            return kvp.Value.expressionFactory(callParams);
+                        }));
 
 
                 internal Formula ParseTokens(AstNode ast)

@@ -16,14 +16,23 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             _handlers.Add(handler);
         }
 
+        public static IPawnSettingUIHandler? GetHandler(IPawnSetting pawnSetting)
+        {
+            IPawnSettingUIHandler? handler = _handlers.FirstOrDefault(x => x.CanHandle(pawnSetting));
+            if (handler != null)
+            {
+                return handler;
+            }
+            Log.Warning($"Unable to handle PawnSetting of type {pawnSetting.GetType().Name}!");
+            return null;
+        }
         public static float Handle(Vector2 position, float width, IPawnSetting pawnSetting)
         {
-            IPawnSettingUIHandler handler = _handlers.FirstOrDefault(x => x.CanHandle(pawnSetting));
+            IPawnSettingUIHandler handler = GetHandler(pawnSetting);
             if (handler != null)
             {
                 return handler.Handle(position, width, pawnSetting);
             }
-            Log.Warning($"Unable to handle PawnSetting of type {pawnSetting.GetType().Name}!");
             return 0f;
         }
     }

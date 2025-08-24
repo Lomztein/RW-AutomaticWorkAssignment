@@ -1,4 +1,4 @@
-﻿using Lomzie.AutomaticWorkAssignment.UI;
+using Lomzie.AutomaticWorkAssignment.UI;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -121,7 +121,7 @@ namespace Lomzie.AutomaticWorkAssignment
                 moveTo = GetSpecsWithIssuesSorted().First();
             }
             Current.Game.CurrentMap = moveTo.Item2;
-            (def.TabWindow as WorkManagerWindow).SetCurrent(moveTo.Item1);
+            (def.TabWindow as WorkManagerWindow).SetCurrentWorkSpecification(moveTo.Item1);
         }
     }
 }

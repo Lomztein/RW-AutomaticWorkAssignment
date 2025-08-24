@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Lomzie.AutomaticWorkAssignment.UI
 {
     public abstract class PawnSettingUIHandler<T> : IPawnSettingUIHandler where T : IPawnSetting
     {
+        public virtual Action? GetHelp => null;
         public virtual bool CanHandle(IPawnSetting pawnSetting)
             => typeof(T).IsInstanceOfType(pawnSetting);
 
