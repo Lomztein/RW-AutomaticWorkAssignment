@@ -4,7 +4,7 @@
     "Run RimWorld": {
       "commandName": "Executable",
       "executablePath": "pwsh",
-      "commandLineArgs": ".\\start.ps1 \"$(SteamAppsPath)\"",
+      "commandLineArgs": ".\\start.ps1 \"$(SteamAppsPath)\" \"$(Configuration)\"",
       "workingDirectory": "$(SolutionDir)"
     }
   }
