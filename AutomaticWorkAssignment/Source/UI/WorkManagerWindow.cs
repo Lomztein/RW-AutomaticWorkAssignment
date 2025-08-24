@@ -4,6 +4,7 @@ using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using Lomzie.AutomaticWorkAssignment.UI.Dialogs;
+using Lomzie.AutomaticWorkAssignment.UI.Modular;
 using Lomzie.AutomaticWorkAssignment.UI.Windows;
 using RimWorld;
 using System;
@@ -93,6 +94,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 () => _currentWorkSpecification.PostProcessors,
                 (postProcessor) => _currentWorkSpecification.DeletePostProcessor(postProcessor),
                 (postProcessor, index) => _currentWorkSpecification.MovePostProcessor(postProcessor, index));
+            workSpecificationContainer = new(_RenderWorkSpecification, Vector2.down);
         }
         public override void PreOpen()
         {
@@ -173,6 +175,100 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Find.WindowStack.Add(selectMap);
         }
 
+        private Rect _RenderWorkSpecification(WorkSpecification? work, Rect container, int i)
+        {
+            var row = new Rect(container.x, container.y, container.width, ListElementHeight);
+            Widgets.DrawHighlightIfMouseover(row);
+
+            if (i++ % 2 == 1) Widgets.DrawAltRect(row);
+            var jobRect = Utils.ShrinkByMargin(row, ListElementHeight * 0.1f);
+
+            if (work == null) // row for new job.
+            {
+                Widgets.DrawHighlightIfMouseover(row);
+
+                if (i % 2 == 1) Widgets.DrawAltRect(row);
+
+                Text.Anchor = TextAnchor.MiddleCenter;
+                Widgets.Label(row, new GUIContent("AWA.NewWorkSpecification".Translate()));
+                Text.Anchor = TextAnchor.UpperLeft;
+
+                TooltipHandler.TipRegion(row, "AWA.NewWorkSpecificationTip".Translate());
+
+                if (Widgets.ButtonInvisible(row))
+                {
+                    SetCurrentWorkSpecification(_workManager.CreateNewWorkSpecification());
+                }
+                return row;
+            }
+
+            if (Mouse.IsOver(row))
+                HighlightAssignees(work);
+
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Rect labelRect = Utils.GetSubRectFraction(jobRect, Vector2.zero, new Vector2(1f, 0.5f));
+            Rect assignedRect = Utils.GetSubRectFraction(jobRect, new Vector2(0f, 0.5f), new Vector2(1f, 1f));
+
+            Widgets.Label(labelRect, new GUIContent($"{ColorizeIf(work.Name, "grey", work.IsSuspended)}"));
+            Widgets.Label(assignedRect, new GUIContent(ColorizeIf("AWA.PawnsAssigned".Translate(_workManager.GetCountAssignedTo(work), work.GetTargetWorkers(_workManager.MakeDefaultRequest())), "grey", work.IsSuspended)));
+
+            if (_currentWorkSpecification == work)
+                Widgets.DrawHighlight(row);
+
+            Text.Anchor = TextAnchor.UpperLeft;
+
+            TooltipHandler.TipRegion(row, () => "AWA.PawnsAssignedTip".Translate("    " + string.Join("\n    ", _workManager.GetPawnsAssignedTo(work))), 10371037);
+
+            (Rect left, Rect right) = Utils.SplitRectHorizontalRight(jobRect, AutomaticWorkAssignmentSettings.UIButtonSizeBase * 2);
+            (Rect _, Rect copyPasteRect) = Utils.SplitRectHorizontalRight(left, ButtonSize * 2);
+            (Rect pasteRect, Rect copyRect) = Utils.SplitRectHorizontalLeft(copyPasteRect, ButtonSize);
+
+            if (Clipboard.Contains<WorkSpecification>())
+                if (Widgets.ButtonImage(pasteRect, TexButton.Paste))
+                    Clipboard.PasteInto(work);
+
+            if (Widgets.ButtonImage(copyRect, TexButton.Copy))
+                Clipboard.Copy(work);
+
+            // Suspend / alarm
+            Text.Anchor = TextAnchor.MiddleCenter;
+
+            Rect suspendAlarm = Utils.GetSubRectFraction(right, Vector2.zero, new Vector2(0.33f, 1f));
+            Rect suspend = Utils.GetSubRectFraction(suspendAlarm, Vector2.zero, new Vector2(1f, 0.5f));
+            string suspendIcon = "AWA.SuspendCharacter".Translate();
+            if (Widgets.ButtonText(suspend, work.IsSuspended ? suspendIcon : $"<color=grey>{suspendIcon}</color>"))
+                work.IsSuspended = !work.IsSuspended;
+            TooltipHandler.TipRegion(suspend, "AWA.SuspendWorkTooltip".Translate(work.IsSuspended.ToString()));
+
+            Rect alert = Utils.GetSubRectFraction(suspendAlarm, new Vector2(0f, 0.5f), new Vector2(1f, 1f));
+            string alertIcon = "AWA.AlertCharacter".Translate();
+            if (Widgets.ButtonText(alert, work.EnableAlert ? alertIcon : $"<color=grey>{alertIcon}</color>"))
+                work.EnableAlert = !work.EnableAlert;
+            TooltipHandler.TipRegion(alert, "AWA.AlertWorkTooltip".Translate(work.EnableAlert.ToString()));
+
+            Text.Anchor = TextAnchor.UpperLeft;
+
+            // Rearrange
+            Rect rearrangeRect = Utils.GetSubRectFraction(right, new Vector2(0.33f, 0f), new Vector2(0.66f, 1f));
+            int movement = DoVerticalRearrangeButtons(rearrangeRect);
+            if (movement != 0)
+            {
+                _workManager.MoveWorkSpecification(work, GetMovementAmount(movement));
+            }
+
+            // Delete
+            Rect deleteRect = Utils.GetSubRectFraction(right, new Vector2(0.66f, 0f), new Vector2(1f, 1f));
+            if (Widgets.ButtonText(deleteRect, "X"))
+                _workManager.DeleteWorkSpecification(work);
+
+            if (Widgets.ButtonInvisible(jobRect))
+            {
+                SetCurrentWorkSpecification(work);
+            }
+
+            return row;
+        }
+        private readonly DraggableContainer<WorkSpecification?> workSpecificationContainer;
         private void DoWorkSpecificationsListContents(Rect rect)
         {
             Widgets.DrawWindowBackground(rect);
@@ -194,110 +290,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             if (height > listRect.height)
                 scrollView.width -= ListScrollbarWidth;
 
-            Widgets.BeginScrollView(listRect, ref _listScrollPosition, scrollView);
-            var scrollContent = scrollView;
-
-            Widgets.BeginGroup(scrollContent);
-            var cur = Vector2.zero;
-            var i = 0;
-
-            foreach (WorkSpecification work in workSpecifications)
-            {
-                var row = new Rect(0f, cur.y, scrollContent.width, ListElementHeight);
-                Widgets.DrawHighlightIfMouseover(row);
-
-                if (i++ % 2 == 1) Widgets.DrawAltRect(row);
-                var jobRect = Utils.ShrinkByMargin(row, ListElementHeight * 0.1f);
-
-                if (Mouse.IsOver(row))
-                    HighlightAssignees(work);
-
-                Text.Anchor = TextAnchor.MiddleLeft;
-                Rect labelRect = Utils.GetSubRectFraction(jobRect, Vector2.zero, new Vector2(1f, 0.5f));
-                Rect assignedRect = Utils.GetSubRectFraction(jobRect, new Vector2(0f, 0.5f), new Vector2(1f, 1f));
-
-                Widgets.Label(labelRect, new GUIContent($"{ColorizeIf(work.Name, "grey", work.IsSuspended)}"));
-                Widgets.Label(assignedRect, new GUIContent(ColorizeIf("AWA.PawnsAssigned".Translate(_workManager.GetCountAssignedTo(work), work.GetTargetWorkers(_workManager.MakeDefaultRequest())), "grey", work.IsSuspended)));
-
-                if (_currentWorkSpecification == work)
-                    Widgets.DrawHighlight(row);
-
-                Text.Anchor = TextAnchor.UpperLeft;
-
-                TooltipHandler.TipRegion(row, () => "AWA.PawnsAssignedTip".Translate("    " + string.Join("\n    ", _workManager.GetPawnsAssignedTo(work))), 10371037);
-
-                (Rect left, Rect right) = Utils.SplitRectHorizontalRight(jobRect, AutomaticWorkAssignmentSettings.UIButtonSizeBase * 2);
-                (Rect _, Rect copyPasteRect) = Utils.SplitRectHorizontalRight(left, ButtonSize * 2);
-                (Rect pasteRect, Rect copyRect) = Utils.SplitRectHorizontalLeft(copyPasteRect, ButtonSize);
-
-                if (Clipboard.Contains<WorkSpecification>())
-                    if (Widgets.ButtonImage(pasteRect, TexButton.Paste))
-                        Clipboard.PasteInto(work);
-
-                if (Widgets.ButtonImage(copyRect, TexButton.Copy))
-                    Clipboard.Copy(work);
-
-                // Suspend / alarm
-                Text.Anchor = TextAnchor.MiddleCenter;
-
-                Rect suspendAlarm = Utils.GetSubRectFraction(right, Vector2.zero, new Vector2(0.33f, 1f));
-                Rect suspend = Utils.GetSubRectFraction(suspendAlarm, Vector2.zero, new Vector2(1f, 0.5f));
-                string suspendIcon = "AWA.SuspendCharacter".Translate();
-                if (Widgets.ButtonText(suspend, work.IsSuspended ? suspendIcon : $"<color=grey>{suspendIcon}</color>"))
-                    work.IsSuspended = !work.IsSuspended;
-                TooltipHandler.TipRegion(suspend, "AWA.SuspendWorkTooltip".Translate(work.IsSuspended.ToString()));
-
-                Rect alert = Utils.GetSubRectFraction(suspendAlarm, new Vector2(0f, 0.5f), new Vector2(1f, 1f));
-                string alertIcon = "AWA.AlertCharacter".Translate();
-                if (Widgets.ButtonText(alert, work.EnableAlert ? alertIcon : $"<color=grey>{alertIcon}</color>"))
-                    work.EnableAlert = !work.EnableAlert;
-                TooltipHandler.TipRegion(alert, "AWA.AlertWorkTooltip".Translate(work.EnableAlert.ToString()));
-
-                Text.Anchor = TextAnchor.UpperLeft;
-
-                // Rearrange
-                Rect rearrangeRect = Utils.GetSubRectFraction(right, new Vector2(0.33f, 0f), new Vector2(0.66f, 1f));
-                int movement = DoVerticalRearrangeButtons(rearrangeRect);
-                if (movement != 0)
-                {
-                    _workManager.MoveWorkSpecification(work, GetMovementAmount(movement));
-                }
-
-                // Delete
-                Rect deleteRect = Utils.GetSubRectFraction(right, new Vector2(0.66f, 0f), new Vector2(1f, 1f));
-                if (Widgets.ButtonText(deleteRect, "X"))
-                    _workManager.DeleteWorkSpecification(work);
-
-                if (Widgets.ButtonInvisible(jobRect))
-                {
-                    SetCurrentWorkSpecification(work);
-                }
-
-                cur.y += ListElementHeight;
-            }
-
-            // row for new job.
-            var newRect = new Rect(0f, cur.y, scrollContent.width, ListElementHeight);
-            Widgets.DrawHighlightIfMouseover(newRect);
-
-            if (i % 2 == 1) Widgets.DrawAltRect(newRect);
-
-            Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(newRect, new GUIContent("AWA.NewWorkSpecification".Translate()));
-            Text.Anchor = TextAnchor.UpperLeft;
-
-            TooltipHandler.TipRegion(newRect, "AWA.NewWorkSpecificationTip".Translate());
-
-            if (Widgets.ButtonInvisible(newRect))
-            {
-                SetCurrentWorkSpecification(_workManager.CreateNewWorkSpecification());
-            }
-
-            cur.y += ListElementHeight;
-            _listHeight = cur.y;
-
-            GUI.EndGroup();
-            Widgets.EndScrollView();
+            workSpecificationContainer.Render(listRect, workSpecifications);
 
             Rect resolveNowButtonRect = Utils.GetSubRectFraction(buttomsRect, Vector2.zero, new Vector2(0.25f, 1f));
             Rect autoResolveButtonRect = Utils.GetSubRectFraction(buttomsRect, new Vector2(0.25f, 0f), new Vector2(0.5f, 1f));
