@@ -463,6 +463,11 @@ namespace Lomzie.AutomaticWorkAssignment
             {
                 num += kvp.Value.Count(x => x.Specification == spec);
             }
+            foreach (var countFrom in spec.CountAssigneesFrom)
+            {
+                if (AllowCountAssigneesFrom(spec, countFrom)) // Double check validity
+                    num += GetCountAssignedTo(countFrom);
+            }
             return num;
         }
 
@@ -473,6 +478,30 @@ namespace Lomzie.AutomaticWorkAssignment
                 if (kvp.Value.Any(x => x.Specification == spec))
                     yield return kvp.Key;
             }
+            foreach (var countAdditional in spec.CountAssigneesFrom)
+            {
+                if (AllowCountAssigneesFrom(spec, countAdditional))
+                {
+                    IEnumerable<Pawn> additional = GetPawnsAssignedTo(countAdditional);
+                    foreach (Pawn pawn in additional)
+                        yield return pawn;
+                }
+            }
+        }
+
+        public bool AllowCountAssigneesFrom(WorkSpecification spec, WorkSpecification from)
+            => WorkList.IndexOf(spec) > WorkList.IndexOf(from);
+
+        public void RemoveInvalidCountAssignessFrom(WorkSpecification spec)
+        {
+            List<WorkSpecification> invalid = new();
+            foreach (var countFrom in spec.CountAssigneesFrom)
+            {
+                if (!AllowCountAssigneesFrom(spec, countFrom))
+                    invalid.Add(countFrom);
+            }
+            foreach (var toRemove in invalid)
+                spec.CountAssigneesFrom.Remove(toRemove);
         }
 
         public bool IsAssignedTo(Pawn pawn, WorkSpecification spec)
