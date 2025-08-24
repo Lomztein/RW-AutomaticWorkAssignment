@@ -786,7 +786,20 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             if (Widgets.ButtonImage(copyRect, TexButton.Copy))
                 Clipboard.Copy(setting);
 
-            float rowHeight = PawnSettingUIHandlers.Handle(new Vector2(localLayout.Rect.x, localLayout.Rect.yMax), localLayout.Rect.width, setting);
+            var handler = PawnSettingUIHandlers.GetHandler(setting);
+
+            float rowHeight = 0f;
+            if (handler != null)
+            {
+                if (handler.GetHelp != null)
+                {
+                    var helpRect = labelRect.NewCol(InputSize, HorizontalJustification.Right);
+                    if (Widgets.ButtonImage(helpRect, TexButton.Info))
+                        handler.GetHelp();
+                    TooltipHandler.TipRegion(helpRect, "AWA.GetHelp".Translate());
+                }
+                rowHeight = handler.Handle(new Vector2(localLayout.Rect.x, localLayout.Rect.yMax), localLayout.Rect.width, setting);
+            }
 
             var row = localLayout.NewRow(rowHeight);
 

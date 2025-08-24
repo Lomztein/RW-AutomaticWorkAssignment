@@ -3,6 +3,7 @@ using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
 using Lomzie.AutomaticWorkAssignment.UI;
 using RimWorld;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace AutomaticWorkAssignment.UI
 {
     public class NestedPawnSettingUIHandler<T, D> : IPawnSettingUIHandler where T : IPawnSetting where D : PawnSettingDef
     {
+        public virtual Action? GetHelp => null;
         private readonly float _addConditionButtonSize = 32;
 
         public bool CanHandle(IPawnSetting pawnSetting)
