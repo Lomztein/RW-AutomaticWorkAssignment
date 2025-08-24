@@ -96,7 +96,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         }
         public override void PreOpen()
         {
+            PlayerKnowledgeDatabase.KnowledgeDemonstrated(AWAConceptDefOf.AWA_Welcome, KnowledgeAmount.Total);
             base.PreOpen();
+            LessonAutoActivator.TeachOpportunity(AWAConceptDefOf.AWA_WorkManagerWindow, OpportunityType.GoodToKnow);
             _workManager = MapWorkManager.GetManager(Find.CurrentMap);
 
             var workList = DefDatabase<WorkTypeDef>.AllDefs.ToList();
@@ -315,6 +317,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             TooltipHandler.TipRegion(autoResolveButtonRect, "AWA.AutoResolveTip".Translate(_workManager.ResolveFrequencyDef.LabelCap));
             TooltipHandler.TipRegion(excludePawnsButtonRect, "AWA.ExcludePawnsTip".Translate());
             TooltipHandler.TipRegion(importFromSaveButtonRect, "AWA.SaveLoadTip".Translate());
+
+            // Set highlight for learning helpers
+            UIHighlighter.HighlightOpportunity(listRect, "MainTab-Lomzie_WorkManagerWindow-WorkAssignments");
         }
 
         private void OpenAutoResolveFrequencyOptions()
@@ -371,6 +376,11 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         public void SetCurrentWorkSpecification(WorkSpecification current)
         {
+            if (current != null)
+            {
+                PlayerKnowledgeDatabase.KnowledgeDemonstrated(AWAConceptDefOf.AWA_WorkManagerWindow, KnowledgeAmount.Total);
+                LessonAutoActivator.TeachOpportunity(AWAConceptDefOf.AWA_WorkManagerWindow_WorkSpecificationDetails, OpportunityType.GoodToKnow);
+            }
             _currentWorkSpecification = current;
         }
 

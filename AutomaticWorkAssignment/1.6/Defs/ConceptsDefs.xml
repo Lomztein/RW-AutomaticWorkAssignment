@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<ConceptDef>
+		<defName>AWA_Welcome</defName>
+		<label>﹝AWA﹞ Welcome !</label>
+		<priority>100</priority>
+		<helpText>Welcome to Automatic Work Assignment mod ! We have prepared a few set of basic &lt;b&gt;work specifications&lt;/b&gt;, but they do nothing for now.
+
+Open the mod's window to get started.</helpText>
+		<highlightTags>
+			<li>MainTab-Lomzie_WorkManagerWindow-Closed</li>
+		</highlightTags>
+	</ConceptDef>
+	<ConceptDef>
+		<defName>AWA_WorkManagerWindow</defName>
+		<label>﹝AWA﹞ Work manager editor</label>
+		<priority>100</priority>
+		<needsOpportunity>True</needsOpportunity>
+		<helpText>You can overview the &lt;b&gt;work specifications&lt;/b&gt; we've set-up for you. Each assignment can be paused, alert if unsatisfied, moved or removed, and show the actual/desired assigned pawns.
+
+Select one of them to see its details.</helpText>
+		<highlightTags>
+			<li>MainTab-Lomzie_WorkManagerWindow-Closed</li>
+			<li>MainTab-Lomzie_WorkManagerWindow-WorkAssignments</li>
+		</highlightTags>
+	</ConceptDef>
+	<ConceptDef>
+		<defName>AWA_WorkManagerWindow_WorkSpecificationDetails</defName>
+		<label>﹝AWA﹞ Work specifications details</label>
+		<priority>100</priority>
+		<needsOpportunity>True</needsOpportunity>
+		<helpText>Each &lt;b&gt;work specifications&lt;/b&gt; has 5 sections:
+			
+&lt;b&gt;The fullfilment options&lt;/b&gt; defines how many pawns you want assigned to this &lt;b&gt;work specifications&lt;/b&gt;. This is what you'll typically see in the &lt;b&gt;work specifications&lt;/b&gt; list on the left.
+
+&lt;b&gt;The jobs&lt;/b&gt; lists which jobs should be assigned to pawns of this &lt;b&gt;work specifications&lt;/b&gt;
+
+&lt;b&gt;The fitness&lt;/b&gt; is used to calculate a &lt;i&gt;fitness scores&lt;/i&gt; for each pawn. Pawns with the higher fitness will be picked first, until the desired number of pawns are assigned.
+
+&lt;b&gt;The conditions&lt;/b&gt; filters pawns based on true/false filters, such as passions, skill level, weapon equipped, etc
+
+&lt;b&gt;The assigment actions&lt;/b&gt; will do some actions on assigned pawn, such as setting a schedule, an allowed area, adding a bill to it (with Automatic Surgeries plugin), etc.</helpText>
+		<highlightTags>
+			<li>MainTab-Lomzie_WorkManagerWindow-Closed</li>
+		</highlightTags>
+	</ConceptDef>
+</Defs>
