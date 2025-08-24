@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- Fitness -->
+  
+  <!-- Conditions -->
+
+  <!-- Post processors -->
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_OnEventPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.OnEventPawnPostProcessor</settingClass>
+    <label>on event</label>
+    <description>Perform a task on a given event.</description>
+  </Def>
+</Defs>

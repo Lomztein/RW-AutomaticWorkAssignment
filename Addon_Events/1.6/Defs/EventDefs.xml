@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.EventDef">
+    <defName>HealthConditionAdded</defName>
+    <label>on health condition</label>
+    <description>Invoked when a health condition has been added.</description>
+  </Def>
+</Defs>
