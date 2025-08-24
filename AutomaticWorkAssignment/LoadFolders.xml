@@ -20,7 +20,7 @@
     <li IfModActive="Ludeon.RimWorld.Anomaly">1.6/Mods/Anomaly</li>
     <li IfModActive="voult.betterpawncontrol" WorkshopUrl="https://steamcommunity.com/sharedfiles/filedetails/?id=1541460369">1.6/Mods/Patch_BetterPawnControl</li>
     <!--<li IfModActive="saucypigeon.pawnbadge" WorkshopUrl="https://steamcommunity.com/sharedfiles/filedetails/?id=2526040241">1.6/Mods/Patch_PawnBadge</li>-->
-    <!--<li IfModActive="ceteam.combatextended" WorkshopUrl="https://steamcommunity.com/sharedfiles/filedetails/?id=2890901044">1.6/Mods/Patch_CombatExtended</li>-->
+    <li IfModActive="ceteam.combatextended" WorkshopUrl="https://steamcommunity.com/sharedfiles/filedetails/?id=2890901044">1.6/Mods/Patch_CombatExtended</li>
     <li IfModActive="vanillaexpanded.skills" WorkshopUrl="https://steamcommunity.com/sharedfiles/filedetails/?id=3400246558">1.6/Mods/Patch_VanillaSkillsExpanded</li>
     <li IfModActive="taranchuk.performanceoptimizer" WorkshopUrl="https://steamcommunity.com/sharedfiles/filedetails/?id=2664723367">1.6/Mods/Patch_PerformanceOptimizer</li>
     <li IfModActive="wiri.compositableloadouts" WorkshopUrl="https://steamcommunity.com/sharedfiles/filedetails/?id=2679126859">1.6/Mods/Patch_CompositableLoadouts</li>

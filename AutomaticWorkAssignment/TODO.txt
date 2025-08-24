@@ -9,7 +9,6 @@
  - Fitness -
 
  - Conditions -
- Is incapable of work
 
  - Post Processors -
  Do all (list of post processors)

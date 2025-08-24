@@ -312,7 +312,7 @@ namespace Lomzie.AutomaticWorkAssignment
             foreach (WorkSpecification current in assignmentList)
             {
                 // Go over each work specification, find best fits, and assign work accordingly.
-                var availablePawns = req.Pawns.Where(x => (current.IsIgnoreSpecialist || !specialists.Contains(x)) && CanBeAssignedTo(x, current));
+                var availablePawns = req.Pawns.Where(x => (current.IncludeSpecialists || !specialists.Contains(x)) && CanBeAssignedTo(x, current));
                 IEnumerable<Pawn>matchesSorted = current.GetApplicableOrMinimalPawnsSorted(availablePawns, req);
 
                 int currentAssigned = GetCountAssignedTo(current);

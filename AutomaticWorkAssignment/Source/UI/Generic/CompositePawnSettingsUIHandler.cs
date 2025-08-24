@@ -28,7 +28,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
 
         protected virtual float Handle(Vector2 position, float width, CompositePawnSetting<TSettingCategory> pawnSetting)
         {
-            var layout = new RectAggregator(new Rect(position.x, position.y, width, 0).Pad(left: 8), GetHashCode(), new(0, 1));
+            var layout = new RectAggregator(new Rect(position.x, position.y, width, 0).Pad(left: 8), GetHashCode(), new(0, 0));
 
             if (pawnSetting.InnerSettings != null)
             {

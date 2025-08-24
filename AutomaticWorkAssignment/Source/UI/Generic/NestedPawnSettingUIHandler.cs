@@ -13,7 +13,6 @@ namespace AutomaticWorkAssignment.UI
     public class NestedPawnSettingUIHandler<T, D> : IPawnSettingUIHandler where T : IPawnSetting where D : PawnSettingDef
     {
         private readonly float _addConditionButtonSize = 32;
-        private readonly float _labelSize = 24;
 
         public bool CanHandle(IPawnSetting pawnSetting)
             => pawnSetting is T;
@@ -24,7 +23,7 @@ namespace AutomaticWorkAssignment.UI
         protected float Handle(Vector2 position, float width, NestedPawnSetting pawnSetting)
         {
             const int inset = 8;
-            var layout = new RectAggregator(new Rect(position.x, position.y, width, 0).Pad(left: inset), GetHashCode(), new(0, 1));
+            var layout = new RectAggregator(new Rect(position.x, position.y, width, 0).Pad(left: inset), GetHashCode(), new(0, 0));
 
             if (pawnSetting.InnerSetting != null)
             {

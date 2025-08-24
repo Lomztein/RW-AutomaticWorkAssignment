@@ -544,7 +544,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             Rect ignoreSpecialistRect = new Rect(interweaveRect);
             ignoreSpecialistRect.y += InputSize;
-            DrawPrioritySettingsToggle(ignoreSpecialistRect, ref _current.IsIgnoreSpecialist, "AWA.LabelIgnoreSpecialist".Translate(), "AWA.LabelIgnoreSpecialistTip".Translate());
+            DrawPrioritySettingsToggle(ignoreSpecialistRect, ref _current.IncludeSpecialists, "AWA.LabelIncludeSpecialist".Translate(), "AWA.LabelIncludeSpecialistTip".Translate());
         }
 
         private void DrawPrioritySettingsToggle(Rect rect, ref bool value, string label, string description)
@@ -590,7 +590,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 priorities.MovePriority(workDef, GetMovementAmount(movement));
             }
 
-            if (Widgets.ButtonText(deleteRect, "X"))
+            if (Widgets.ButtonText(deleteRect, "✕"))
             {
                 priorities.RemovePriority(workDef);
             }
@@ -652,13 +652,13 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 if (canMoveUp)
                 {
                     var upRect = labelRect.NewCol(InputSize, HorizontalJustification.Right);
-                    if (Widgets.ButtonText(upRect, "⇑"))
+                    if (Widgets.ButtonText(upRect, "/\\"))
                         onMovement(GetMovementAmount(-1));
                 }
                 if (canMoveDown)
                 {
                     var downRect = labelRect.NewCol(InputSize, HorizontalJustification.Right);
-                    if (Widgets.ButtonText(downRect, "⇓"))
+                    if (Widgets.ButtonText(downRect, "\\/"))
                         onMovement(GetMovementAmount(1));
                 }
             }
@@ -685,7 +685,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             var locSettings = columnSettings;
 
-            var scrollLayoutAggregator = new RectAggregator(scrollInnerContainer.TopPartPixels(0).Pad(left: MarginSize), Instance.GetHashCode(), new(1, 1));
+            var scrollLayoutAggregator = new RectAggregator(scrollInnerContainer.TopPartPixels(0).Pad(left: MarginSize), Instance.GetHashCode(), new(0, 0));
             for (var i = 0; i < settings.Count; i++)
             {
                 var setting = settings[i];

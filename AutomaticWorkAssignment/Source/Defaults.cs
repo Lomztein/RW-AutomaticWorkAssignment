@@ -262,6 +262,7 @@ namespace Lomzie.AutomaticWorkAssignment
             spec.Name = "Fallbacks";
             spec.TargetWorkers = new PercentagePawnAmount() { Percentage = 1 };
             spec.RequireFullPawnCapability = false;
+            spec.IncludeSpecialists = true;
             workTypes = DefDatabase<WorkTypeDef>.AllDefsListForReading.Where(x => x.naturalPriority < 1000)
                 .Where(x => x.relevantSkills.Count == 0).ToList();
             workTypes.SortBy(x => -x.naturalPriority);
