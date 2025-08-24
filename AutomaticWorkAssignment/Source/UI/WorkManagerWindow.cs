@@ -797,6 +797,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                     if (Widgets.ButtonImage(helpRect, TexButton.Info))
                         handler.GetHelp();
                     TooltipHandler.TipRegion(helpRect, "AWA.GetHelp".Translate());
+                    UIHighlighter.HighlightOpportunity(helpRect, $"MainTab-Lomzie_WorkManagerWindow-{handler.GetType().Name}-GetHelp");
                 }
                 rowHeight = handler.Handle(new Vector2(localLayout.Rect.x, localLayout.Rect.yMax), localLayout.Rect.width, setting);
             }

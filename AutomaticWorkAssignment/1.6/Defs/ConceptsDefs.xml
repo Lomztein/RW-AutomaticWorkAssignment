@@ -44,4 +44,18 @@ Select one of them to see its details.</helpText>
 			<li>MainTab-Lomzie_WorkManagerWindow-Closed</li>
 		</highlightTags>
 	</ConceptDef>
+	<ConceptDef>
+		<defName>AWA_FormulaEditor</defName>
+		<label>﹝AWA﹞ Formula editor</label>
+		<priority>100</priority>
+		<needsOpportunity>True</needsOpportunity>
+		<helpText>The formula editor allow you to make complex fitness calculation easily. You can click on the help icon to open the online documentation.
+		
+Once you're satisfied with your formula, press the "Commit" button and bind each variable in your formula.</helpText>
+		<highlightTags>
+			<li>MainTab-Lomzie_WorkManagerWindow-Closed</li>
+			<li>MainTab-Lomzie_WorkManagerWindow-FormulaPawnFitnessUIHandler-GetHelp</li>
+			<li>MainTab-Lomzie_WorkManagerWindow-FormulaPawnFitnessUIHandler-Commit</li>
+		</highlightTags>
+	</ConceptDef>
 </Defs>

@@ -14,5 +14,6 @@ namespace Lomzie.AutomaticWorkAssignment.Defs
         public static ConceptDef AWA_Welcome;
         public static ConceptDef AWA_WorkManagerWindow;
         public static ConceptDef AWA_WorkManagerWindow_WorkSpecificationDetails;
+        public static ConceptDef AWA_FormulaEditor;
     }
 }
