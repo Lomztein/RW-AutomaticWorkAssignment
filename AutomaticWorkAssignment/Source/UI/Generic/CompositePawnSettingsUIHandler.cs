@@ -9,7 +9,7 @@ using Verse;
 namespace Lomzie.AutomaticWorkAssignment.UI.Generic
 {
     public class CompositePawnSettingsUIHandler<TSettingCategory, TSetting, TSettingDef> : IPawnSettingUIHandler
-        where TSettingCategory : IPawnSetting where TSetting : TSettingCategory where TSettingDef : PawnSettingDef
+        where TSettingCategory : IPawnSetting where TSetting : IPawnSetting where TSettingDef : PawnSettingDef
     {
         public bool CanHandle(IPawnSetting pawnSetting)
             => pawnSetting is TSetting;

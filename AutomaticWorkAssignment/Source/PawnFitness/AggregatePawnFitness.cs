@@ -58,20 +58,20 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
         }
     }
 
-    public class CountPawnFitness : CompositePawnSetting<IPawnFitness>, IPawnFitness
+    public class CountPawnFitness : CompositePawnSetting<IPawnCondition>, IPawnFitness
     {
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
-            return InnerSettings.Select(x => (x as IPawnCondition).IsValid(pawn, specification, request)).Count(x => x == true);
+            return InnerSettings.Select(x => x.IsValid(pawn, specification, request)).Count(x => x == true);
         }
     }
 
-    public class CountPawnsPawnFitness : CompositePawnSetting<IPawnFitness>, IPawnFitness
+    public class CountPawnsPawnFitness : CompositePawnSetting<IPawnCondition>, IPawnFitness
     {
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (InnerSettings.Count > 0)
-                return InnerSettings.Sum(x => request.Pawns.Count(y => (x as IPawnCondition).IsValid(y, specification, request)));
+                return InnerSettings.Sum(x => request.Pawns.Count(y => x.IsValid(y, specification, request)));
             return request.Pawns.Count;
         }
     }

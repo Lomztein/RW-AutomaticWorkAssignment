@@ -11,4 +11,20 @@
     <label>on event</label>
     <description>Perform a task on a given event.</description>
   </Def>
+
+  <!--
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_DraftPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.DraftPawnPostProcessor</settingClass>
+    <label>draft</label>
+    <description>Draft the colonists. Useful for giving orders in response to events.</description>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_MoveToPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.MoveToPawnPostProcessor</settingClass>
+    <label>move to</label>
+    <description>Draft the pawn and move them to the given position.</description>
+  </Def>
+  -->
 </Defs>

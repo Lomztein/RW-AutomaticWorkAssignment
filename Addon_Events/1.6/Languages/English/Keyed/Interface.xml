@@ -1,4 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
   <AWA.EventSelect>Select event</AWA.EventSelect>
+  <AWA.PositionSelect>Select position</AWA.PositionSelect>
+  <AWA.Draft>Draft</AWA.Draft>
+  <AWA.Undraft>Undraft</AWA.Undraft>
 </LanguageData>

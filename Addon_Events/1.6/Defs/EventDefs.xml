@@ -5,4 +5,14 @@
     <label>on health condition</label>
     <description>Invoked when a health condition has been added.</description>
   </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.EventDef">
+    <defName>ThreatAppeared</defName>
+    <label>threat appeared</label>
+    <description>Invoked for all pawns when a threat appears on the map.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.EventDef">
+    <defName>ThreatCleared</defName>
+    <label>threat cleared</label>
+    <description>Invoked for all pawns when all threats are cleared from the map.</description>
+  </Def>
 </Defs>
