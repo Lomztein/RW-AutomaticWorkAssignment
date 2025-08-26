@@ -338,12 +338,14 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
 
             [
                 Theory,
-                InlineData("@", typeof(ParseException), "Invalid character '@'"),
-                InlineData("1a", typeof(ParseException), "Number '1a' cannot contain letters. Did you forget an operator (+, -, /, …) ?"),
+                InlineData("@", typeof(ParseException), "AWA.FormulaEditor.Error.InvalidChar unnamed->@"),
+                InlineData("1a", typeof(ParseException), "AWA.FormulaEditor.Error.Number.NoLetter unnamed->1a"),
             ]
-            public void ShouldThrowOnTokenizeInvalidFormula(string formula,
+            public void ShouldThrowOnTokenizeInvalidFormula(
+                string formula,
                 Type expectedExceptionType,
-                string? expectedMessage = null)
+                string? expectedMessage = null
+            )
             {
                 var exception = Assert.Throws(
                     expectedExceptionType,
@@ -373,8 +375,9 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 Theory,
                 InlineData(new object[] { }, typeof(ArgumentOutOfRangeException)), // Should have a better type and a clear message
                 InlineData(new object[] { OpenGroup }, typeof(ArgumentOutOfRangeException)), // Should have a better type and a clear message
-                InlineData(new object[] { "CLAMP", OpenGroup, 1, CloseGroup }, typeof(ParseException), "Bad arity for function CLAMP, expected 3 parameters, have 1"),
-                InlineData(new object[] { "MIN", OpenGroup, CloseGroup }, typeof(ParseException), "Bad arity for function MIN, expected at least 1 parameters, have 0"),
+                InlineData(new object[] { "CLAMP", OpenGroup, 1, CloseGroup }, typeof(ParseException), "AWA.FormulaEditor.Error.Arity.NotEq name->CLAMP actual->1 expected->3"),
+                InlineData(new object[] { "MIN", OpenGroup, CloseGroup }, typeof(ParseException), "AWA.FormulaEditor.Error.Arity.Min name->MIN actual->0 min->1 max->2147483646"),
+                InlineData(new object[] { "FOO", OpenGroup, CloseGroup }, typeof(ParseException), "AWA.FormulaEditor.Error.Function.NotExists name->FOO"),
             ]
             public void ShouldFailOnParse(
                 object[] tokens,
