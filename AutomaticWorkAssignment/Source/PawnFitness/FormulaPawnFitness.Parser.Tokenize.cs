@@ -99,7 +99,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                         }
                         if (IsValidNameChar(leading: false))
                         {
-                            throw new ParseException($"Number '{formula.Substring(start, i - start + 1)}' cannot contain letters. Did you forgot an operator (+, -, /, …) ?", new ArgumentException($"Invalid formula \"{formula}\" at index {i}", nameof(formula)));
+                            throw new ParseException($"Number '{formula.Substring(start, i - start + 1)}' cannot contain letters. Did you forget an operator (+, -, /, …) ?", new ArgumentException($"Invalid formula \"{formula}\" at index {i}", nameof(formula)));
                         }
                         string s = formula.Substring(start, i - start).Replace("_", "");
                         yield return new NumberToken(double.Parse(s, CultureInfo.InvariantCulture));

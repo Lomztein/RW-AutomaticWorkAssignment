@@ -339,7 +339,7 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
             [
                 Theory,
                 InlineData("@", typeof(ParseException), "Invalid character '@'"),
-                InlineData("1a", typeof(ParseException), "Number '1a' cannot contain letters. Did you forgot an operator (+, -, /, …) ?"),
+                InlineData("1a", typeof(ParseException), "Number '1a' cannot contain letters. Did you forget an operator (+, -, /, …) ?"),
             ]
             public void ShouldThrowOnTokenizeInvalidFormula(string formula,
                 Type expectedExceptionType,
