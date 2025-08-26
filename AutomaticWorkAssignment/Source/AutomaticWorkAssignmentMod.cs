@@ -33,7 +33,7 @@ namespace Lomzie.AutomaticWorkAssignment
         /// Open the browser for the given help file
         /// </summary>
         /// <param name="path">The <b>base filename</b> relative to the users documentation root.</param>
-        internal static void OpenWebDocumentation(string path) => Application.OpenURL(GetDocumentationUrl("FormulaEditor"));
+        internal static void OpenWebDocumentation(string path) => Application.OpenURL(GetDocumentationUrl(path));
         public static AutomaticWorkAssignmentSettings Settings;
 
         public AutomaticWorkAssignmentMod(ModContentPack content) : base(content)
