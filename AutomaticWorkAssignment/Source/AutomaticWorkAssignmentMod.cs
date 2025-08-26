@@ -29,6 +29,11 @@ namespace Lomzie.AutomaticWorkAssignment
         /// <param name="path">The <b>base filename</b> relative to the users documentation root.</param>
         /// <returns>The documentation URL</returns>
         internal static string GetDocumentationUrl(string path) => new Uri(DOCUMENTATION_BASE_URL, path + ".md").ToString();
+        /// <summary>
+        /// Open the browser for the given help file
+        /// </summary>
+        /// <param name="path">The <b>base filename</b> relative to the users documentation root.</param>
+        internal static void OpenWebDocumentation(string path) => Application.OpenURL(GetDocumentationUrl("FormulaEditor"));
         public static AutomaticWorkAssignmentSettings Settings;
 
         public AutomaticWorkAssignmentMod(ModContentPack content) : base(content)

@@ -13,9 +13,10 @@ namespace AutomaticWorkAssignment.UI
 {
     public class NestedPawnSettingUIHandler<T, D> : IPawnSettingUIHandler where T : IPawnSetting where D : PawnSettingDef
     {
-        public virtual Action? GetHelp => null;
+
         private readonly float _addConditionButtonSize = 32;
 
+        public virtual Action? HelpHandler(IPawnSetting setting) => setting.Def.documentationPath == null ? null : () => AutomaticWorkAssignmentMod.OpenWebDocumentation(setting.Def.documentationPath);
         public bool CanHandle(IPawnSetting pawnSetting)
             => pawnSetting is T;
 

@@ -791,11 +791,12 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             float rowHeight = 0f;
             if (handler != null)
             {
-                if (handler.GetHelp != null)
+                var getHelp = handler.HelpHandler(setting);
+                if (getHelp != null)
                 {
                     var helpRect = labelRect.NewCol(InputSize, HorizontalJustification.Right);
                     if (Widgets.ButtonImage(helpRect, TexButton.Info))
-                        handler.GetHelp();
+                        getHelp();
                     TooltipHandler.TipRegion(helpRect, "AWA.GetHelp".Translate());
                     UIHighlighter.HighlightOpportunity(helpRect, $"MainTab-Lomzie_WorkManagerWindow-{handler.GetType().Name}-GetHelp");
                 }

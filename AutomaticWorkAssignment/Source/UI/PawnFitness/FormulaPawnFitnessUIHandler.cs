@@ -1,7 +1,6 @@
 ﻿using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using RimWorld;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +10,6 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
 {
     public class FormulaPawnFitnessUIHandler : PawnSettingUIHandler<FormulaPawnFitness>
     {
-        public override Action? GetHelp => () => Application.OpenURL(AutomaticWorkAssignmentMod.GetDocumentationUrl("FormulaEditor"));
         protected override float Handle(Vector2 position, float width, FormulaPawnFitness pawnSetting)
         {
             // Teach how to use the formula editor
