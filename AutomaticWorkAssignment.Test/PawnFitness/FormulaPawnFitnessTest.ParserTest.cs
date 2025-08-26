@@ -200,12 +200,6 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                     #endregion Priorities
 
                     #region Function calls
-                    new FormulaTestCase("Call Tick",
-                        formula: "TICK()",
-                        linqExpr: "Tick()",
-                        syntheticTokens: ["TICK", OpenGroup, CloseGroup],
-                        evaluationResult: 0
-                    ),
                     new FormulaTestCase("Call Average on 1 value",
                         formula: "AVG(42)",
                         linqExpr: "new [] {42}.Average()",
@@ -373,7 +367,7 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 Theory,
                 InlineData(new object[] { }, typeof(ArgumentOutOfRangeException)), // Should have a better type and a clear message
                 InlineData(new object[] { OpenGroup }, typeof(ArgumentOutOfRangeException)), // Should have a better type and a clear message
-                InlineData(new object[] { "TICK", OpenGroup, 1, CloseGroup }, typeof(ParseException), "Bad arity for function TICK, expected 0 parameters, have 1"),
+                InlineData(new object[] { "CLAMP", OpenGroup, 1, CloseGroup }, typeof(ParseException), "Bad arity for function CLAMP, expected 3 parameters, have 1"),
                 InlineData(new object[] { "MIN", OpenGroup, CloseGroup }, typeof(ParseException), "Bad arity for function MIN, expected at least 1 parameters, have 0"),
             ]
             public void ShouldFailOnParse(
