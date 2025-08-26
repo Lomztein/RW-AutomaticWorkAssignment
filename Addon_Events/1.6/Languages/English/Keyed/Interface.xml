@@ -4,4 +4,6 @@
   <AWA.PositionSelect>Select position</AWA.PositionSelect>
   <AWA.Draft>Draft</AWA.Draft>
   <AWA.Undraft>Undraft</AWA.Undraft>
+  <AWA.OnArrival>On arrival</AWA.OnArrival>
+  <AWA.AbilitySelect>Select ability</AWA.AbilitySelect>
 </LanguageData>

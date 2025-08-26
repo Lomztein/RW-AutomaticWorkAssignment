@@ -138,4 +138,10 @@
     <label>any pawn</label>
     <description>Check if any working pawn meets the condition.</description>
   </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_IfPawnCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.IfPawnCondition</settingClass>
+    <label>if</label>
+    <description>If condition, return the result of another condition, otherwise return a third result.</description>
+  </Def>
 </Defs>

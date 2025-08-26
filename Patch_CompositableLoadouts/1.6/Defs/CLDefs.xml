@@ -18,4 +18,10 @@
     <label>clear loadout tags</label>
     <description>Clears all automatically added Compositable Loadout tags from the pawn.</description>
   </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_SatisfyLoadoutPawnPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts.SatisfyLoadoutPawnPostProcessor</settingClass>
+    <label>satisfy loadout</label>
+    <description>Order pawn to satisfy loadout.</description>
+  </Def>
 </Defs>

@@ -2,9 +2,9 @@
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
-    public class SlavePawnCondition : PawnSetting, IPawnCondition
+    public class BleedingPawnCondition : PawnSetting, IPawnCondition
     {
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
-            => pawn?.IsSlaveOfColony ?? false;
+            => pawn?.health.hediffSet.BleedRateTotal > 0;
     }
 }
