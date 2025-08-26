@@ -338,15 +338,21 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
 
             [
                 Theory,
-                InlineData("@", typeof(ArgumentException)),
-                InlineData("1a", typeof(ArgumentException)),
+                InlineData("@", typeof(ParseException), "Invalid character '@'"),
+                InlineData("1a", typeof(ParseException), "Number '1a' cannot contain letters. Did you forgot an operator (+, -, /, …) ?"),
             ]
-            public void ShouldThrowOnTokenizeInvalidFormula(string formula, Type exceptionType)
+            public void ShouldThrowOnTokenizeInvalidFormula(string formula,
+                Type expectedExceptionType,
+                string? expectedMessage = null)
             {
-                var ex = Assert.Throws(
-                    exceptionType,
+                var exception = Assert.Throws(
+                    expectedExceptionType,
                     () => TokenizeFormula(formula).ToList()
                 );
+                if (expectedMessage != null)
+                {
+                    Assert.Equal(expectedMessage, exception.Message);
+                }
             }
 
             public static IEnumerable<object[]> GetParseTokensData(params string[] sets) =>
@@ -372,18 +378,18 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
             ]
             public void ShouldFailOnParse(
                 object[] tokens,
-                Type expectedError,
-                string? message = null
+                Type expectedExceptionType,
+                string? expectedMessage = null
             )
             {
                 var context = new Context();
                 var exception = Assert.Throws(
-                    expectedError,
+                    expectedExceptionType,
                     () => context.ParseTokens(ToAst(TokensFromSynthetic(tokens)))
                 );
-                if (message != null)
+                if (expectedMessage != null)
                 {
-                    Assert.Equal(message, exception.Message);
+                    Assert.Equal(expectedMessage, exception.Message);
                 }
             }
 
