@@ -97,10 +97,13 @@ namespace Lomzie.AutomaticWorkAssignment
             ));
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<IfPawnFitness>(
-                new Nested<IfPawnFitness, PawnConditionDef>(x => x.IfCondition, (s, n) => s.IfCondition = (IPawnCondition)n),
-                new Nested<IfPawnFitness, PawnFitnessDef>(x => x.TrueFitness, (s, n) => s.TrueFitness = (IPawnFitness)n),
-                new Nested<IfPawnFitness, PawnFitnessDef>(x => x.FalseFitness, (s, n) => s.FalseFitness = (IPawnFitness)n),
-                new Nested<IfPawnFitness, PawnConditionDef>(x => x.IfCondition, (s, n) => s.IfCondition = (IPawnCondition)n)
+                new Nested<IfPawnFitness, PawnConditionDef>(x => x.IfCondition, (s, n) => s.IfCondition = (IPawnCondition)n, "AWA.ConditionSelect".Translate()),
+                new Label<IfPawnFitness>(x => "AWA.Return".Translate()),
+                new Nested<IfPawnFitness, PawnFitnessDef>(x => x.TrueFitness, (s, n) => s.TrueFitness = (IPawnFitness)n, "AWA.FunctionSelect".Translate()),
+                new Label<IfPawnFitness>(x => "AWA.Else".Translate()),
+                new Nested<IfPawnFitness, PawnConditionDef>(x => x.ElseCondition, (s, n) => s.IfCondition = (IPawnCondition)n, "AWA.ConditionSelect".Translate()),
+                new Label<IfPawnFitness>(x => "AWA.Return".Translate()),
+                new Nested<IfPawnFitness, PawnFitnessDef>(x => x.FalseFitness, (s, n) => s.FalseFitness = (IPawnFitness)n, "AWA.FunctionSelect".Translate())
             ));
 
             // Initialize condition UI handlers.
@@ -141,10 +144,13 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<WeaponPawnCondition>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<IfPawnCondition>(
-                new Nested<IfPawnCondition, PawnConditionDef>(x => x.IfCondition, (s, n) => s.IfCondition = (IPawnCondition)n),
-                new Nested<IfPawnCondition, PawnConditionDef>(x => x.TrueCondition, (s, n) => s.TrueCondition = (IPawnCondition)n),
-                new Nested<IfPawnCondition, PawnConditionDef>(x => x.FalseCondition, (s, n) => s.FalseCondition = (IPawnCondition)n),
-                new Nested<IfPawnCondition, PawnConditionDef>(x => x.IfCondition, (s, n) => s.IfCondition = (IPawnCondition)n)
+                new Nested<IfPawnCondition, PawnConditionDef>(x => x.IfCondition, (s, n) => s.IfCondition = (IPawnCondition)n, "AWA.ConditionSelect".Translate()),
+                new Label<IfPawnCondition>(x => "AWA.Return".Translate(), TextAnchor.MiddleLeft),
+                new Nested<IfPawnCondition, PawnConditionDef>(x => x.TrueCondition, (s, n) => s.TrueCondition = (IPawnCondition)n, "AWA.ConditionSelect".Translate()),
+                new Label<IfPawnCondition>(x => "AWA.Else".Translate(), TextAnchor.MiddleLeft),
+                new Nested<IfPawnCondition, PawnConditionDef>(x => x.ElseCondition, (s, n) => s.IfCondition = (IPawnCondition)n, "AWA.ConditionSelect".Translate()),
+                new Label<IfPawnCondition>(x => "AWA.Return".Translate(), TextAnchor.MiddleLeft),
+                new Nested<IfPawnCondition, PawnConditionDef>(x => x.FalseCondition, (s, n) => s.FalseCondition = (IPawnCondition)n, "AWA.ConditionSelect".Translate())
             ));
 
 

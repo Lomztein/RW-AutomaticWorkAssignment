@@ -14,11 +14,13 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
 
         private readonly Func<T, IPawnSetting> _getter;
         private readonly Action<T, IPawnSetting> _setter;
+        private string _selectLabel;
 
-        public Nested(Func<T, IPawnSetting> getter, Action<T, IPawnSetting> setter)
+        public Nested(Func<T, IPawnSetting> getter, Action<T, IPawnSetting> setter, string selectLabel = null)
         {
             _getter = getter;
             _setter = setter;
+            _selectLabel = selectLabel ?? "AWA.NestedSettingSelect".Translate();
         }
 
         public float Handle(Vector2 position, float width, T pawnSetting)
@@ -40,7 +42,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
             else
             {
                 Rect addSettingButtonRect = layout.NewRow(AddButtonSize);
-                if (Widgets.ButtonText(addSettingButtonRect, "AWA.NestedSettingSelect".Translate()))
+                if (Widgets.ButtonText(addSettingButtonRect, _selectLabel))
                 {
                     FloatMenuUtility.MakeMenu(GetDefs(), x => x.LabelCap, x => () => _setter(pawnSetting, PawnSetting.CreateFrom<IPawnSetting>(x)));
                 }

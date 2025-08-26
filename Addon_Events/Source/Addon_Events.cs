@@ -9,6 +9,7 @@ using Lomzie.AutomaticWorkAssignment.UI.Modular;
 using RimWorld;
 using System;
 using System.Linq;
+using UnityEngine;
 using Verse;
 
 namespace Lomztein.AutomaticWorkAssignments
@@ -25,6 +26,7 @@ namespace Lomztein.AutomaticWorkAssignments
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<BleedingPawnCondition>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<DraftedPawnCondition>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<StopWorkPawnPostProcessor>());
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<DoingWorkPawnCondition, WorkTypeDef>(x => DefDatabase<WorkTypeDef>.AllDefs, x => x.labelShort, x => x.WorkTypeDef?.labelShort ?? "AWA.WorkTypeSelect".Translate(), (s, w) => s.WorkTypeDef = w));
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<OnEventPawnPostProcessor>(
                 new Picker<OnEventPawnPostProcessor, EventDef>(map => DefDatabase<EventDef>.AllDefs, x => x.LabelCap, x => x.EventDef?.LabelCap ?? "AWA.EventSelect".Translate(), (pp, po) => pp.EventDef = po),
@@ -39,13 +41,13 @@ namespace Lomztein.AutomaticWorkAssignments
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<DoAfterDelayPawnPostProcessor>(
                 new Splitter<DoAfterDelayPawnPostProcessor>(
                     new TextFieldNumeric<float, DoAfterDelayPawnPostProcessor>(x => x.DelayHours, (x, v) => x.DelayHours = v),
-                    new Label<DoAfterDelayPawnPostProcessor>(x => "AWA.Hours".Translate())),
+                    new Label<DoAfterDelayPawnPostProcessor>(x => "AWA.Hours".Translate(), TextAnchor.MiddleLeft)),
                 new Nested<DoAfterDelayPawnPostProcessor, PawnPostProcessorDef>(x => x.Action, (x, p) => x.Action = (IPawnPostProcessor)p)));
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<DoRepeatPawnPostProcessor>(
                 new Splitter<DoRepeatPawnPostProcessor>(
                     new TextFieldNumeric<float, DoRepeatPawnPostProcessor>(x => x.DelayHours, (x, v) => x.DelayHours = v),
-                    new Label<DoRepeatPawnPostProcessor>(x => "AWA.Hours".Translate())),
+                    new Label<DoRepeatPawnPostProcessor>(x => "AWA.Hours".Translate(), TextAnchor.MiddleLeft)),
                 new Nested<DoRepeatPawnPostProcessor, PawnPostProcessorDef>(x => x.Action, (x, p) => x.Action = (IPawnPostProcessor)p)));
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<UseAbilityPawnPostProcessor>(new Picker<UseAbilityPawnPostProcessor, AbilityDef>(x => DefDatabase<AbilityDef>.AllDefs, x => x.LabelCap, x => x.AbilityDef?.LabelCap ?? "AWA.AbilitySelect".Translate(), (pp, ad) => pp.AbilityDef = ad)));

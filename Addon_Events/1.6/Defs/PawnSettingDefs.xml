@@ -10,6 +10,21 @@
     <description>Assign to pawns that are currently bleeding.</description>
   </Def>
 
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_DraftedCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.DraftedPawnCondition</settingClass>
+    <label>is drafted</label>
+    <description>Assign to pawns that are currently drafted.</description>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_DoingWorkCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.DoingWorkPawnCondition</settingClass>
+    <label>is doing work</label>
+    <description>Assign to pawns that are doing specific work.</description>
+  </Def>
+
+
   <!-- Post processors -->
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_OnEventPostProcessor</defName>
