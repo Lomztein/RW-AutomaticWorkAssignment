@@ -16,7 +16,9 @@ namespace AutomaticWorkAssignment.UI
 
         private readonly float _addConditionButtonSize = 32;
 
-        public virtual Action? HelpHandler(IPawnSetting setting) => setting.Def.documentationPath == null ? null : () => AutomaticWorkAssignmentMod.OpenWebDocumentation(setting.Def.documentationPath);
+        public virtual Action? HelpHandler(IPawnSetting setting) => setting.Def.documentationPath == null ?
+            null :
+            () => AutomaticWorkAssignmentMod.OpenWebDocumentation(setting.Def.documentationPath);
         public bool CanHandle(IPawnSetting pawnSetting)
             => pawnSetting is T;
 
