@@ -10,7 +10,9 @@ namespace Lomzie.AutomaticWorkAssignment
         public string Label => Def.LabelCap;
         public string Description => Def.description;
 
-        public PawnSettingDef Def;
+        private PawnSettingDef _def;
+        public PawnSettingDef Def { get => _def; private set => _def = value; }
+
 
         public static T CreateFrom<T>(PawnSettingDef def) where T : IPawnSetting
         {
@@ -24,7 +26,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public virtual void ExposeData()
         {
-            Scribe_Defs.Look(ref Def, "def");
+            Scribe_Defs.Look(ref _def, "def");
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (Def == null)

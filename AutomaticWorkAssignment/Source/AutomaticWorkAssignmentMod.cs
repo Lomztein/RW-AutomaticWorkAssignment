@@ -22,6 +22,18 @@ namespace Lomzie.AutomaticWorkAssignment
 {
     public class AutomaticWorkAssignmentMod : Mod
     {
+        private static readonly Uri DOCUMENTATION_BASE_URL = new("https://github.com/Lomztein/RW-AutomaticWorkAssignment/tree/main/Documentation/User/");
+        /// <summary>
+        /// Resolves the documentation URL for a given base filename. This is implemented this way so that when we migrate to a proper documentation website, only this function need to be modified.
+        /// </summary>
+        /// <param name="path">The <b>base filename</b> relative to the users documentation root.</param>
+        /// <returns>The documentation URL</returns>
+        internal static string GetDocumentationUrl(string path) => new Uri(DOCUMENTATION_BASE_URL, path + ".md").ToString();
+        /// <summary>
+        /// Open the browser for the given help file
+        /// </summary>
+        /// <param name="path">The <b>base filename</b> relative to the users documentation root.</param>
+        internal static void OpenWebDocumentation(string path) => Application.OpenURL(GetDocumentationUrl(path));
         public static AutomaticWorkAssignmentSettings Settings;
 
         public AutomaticWorkAssignmentMod(ModContentPack content) : base(content)

@@ -12,6 +12,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
     {
         protected override float Handle(Vector2 position, float width, FormulaPawnFitness pawnSetting)
         {
+            // Teach how to use the formula editor
+            LessonAutoActivator.TeachOpportunity(AWAConceptDefOf.AWA_FormulaEditor, OpportunityType.GoodToKnow);
+
             const int inset = 8;
             var layout = new RectAggregator(new Rect(position.x, position.y, width, 0), GetHashCode(), new(8, 1));
 
@@ -22,8 +25,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
             Rect buttonRect = layout.NewRow(AutomaticWorkAssignmentSettings.UILabelSizeBase);
             if (Widgets.ButtonText(buttonRect, "AWA.CommitSetting".Translate(), active: pawnSetting.LastException == null))
             {
+                PlayerKnowledgeDatabase.KnowledgeDemonstrated(AWAConceptDefOf.AWA_FormulaEditor, KnowledgeAmount.SpecificInteraction);
                 pawnSetting.Commit();
             }
+            UIHighlighter.HighlightOpportunity(buttonRect, $"MainTab-Lomzie_WorkManagerWindow-{typeof(FormulaPawnFitnessUIHandler).Name}-Commit");
 
             if (pawnSetting.LastException != null)
             {
