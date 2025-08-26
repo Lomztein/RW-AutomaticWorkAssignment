@@ -700,7 +700,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             {
                 var setting = settings[i];
 
-                Rect pawnSettingBlock = DoPawnSetting<TSetting>(
+                Rect pawnSettingBlock = DoPawnSetting(
                     ref scrollLayoutAggregator,
                     setting,
                     canMoveUp: i > 0,

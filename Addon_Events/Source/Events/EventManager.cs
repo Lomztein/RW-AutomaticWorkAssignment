@@ -51,11 +51,14 @@ namespace Lomzie.AutomaticWorkAssignment.Events
         public static void InvokeMapEvent(Map map, EventDef eventDef)
         {
             ResolveWorkRequest req = MapWorkManager.GetManager(map).MakeDefaultRequest();
-            var allPawns = map.mapPawns.AllHumanlikeSpawned;
+            var allPawns = map.mapPawns.AllHumanlikeSpawned.ListFullCopy();
             foreach (var pawn in allPawns)
             {
                 PawnEventManager pawnManager = _instance.GetPawnEventManager(pawn);
-                pawnManager.Invoke(eventDef, req);
+                if (pawnManager != null)
+                {
+                    pawnManager.Invoke(eventDef, req);
+                }
             }
         }
 

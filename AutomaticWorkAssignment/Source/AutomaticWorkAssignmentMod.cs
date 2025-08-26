@@ -80,8 +80,8 @@ namespace Lomzie.AutomaticWorkAssignment
 
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<InvertPawnFitness, PawnFitnessDef>());
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<ConditionPawnFitness, PawnConditionDef>());
-            PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<IPawnFitness, CountPawnFitness, PawnConditionDef>("AWA.ConditionAdd".Translate(), false));
-            PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<IPawnFitness, CountPawnsPawnFitness, PawnConditionDef>("AWA.ConditionAdd".Translate(), false));
+            PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<IPawnCondition, CountPawnFitness, PawnConditionDef>("AWA.ConditionAdd".Translate(), false));
+            PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<IPawnCondition, CountPawnsPawnFitness, PawnConditionDef>("AWA.ConditionAdd".Translate(), false));
             PawnSettingUIHandlers.AddHandler(new ConstantPawnFitnessUIHandler());
             PawnSettingUIHandlers.AddHandler(new FormulaPawnFitnessUIHandler());
 
@@ -156,6 +156,7 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SetMedicalCarePawnPostProcessor, MedicalCareCategory>(
                 (m) => (MedicalCareCategory[])Enum.GetValues(typeof(MedicalCareCategory)), (x) => MedicalCareUtility.GetLabel(x), (x) => MedicalCareUtility.GetLabel(x.MedicalCare), (pp, po) => pp.MedicalCare = po));
 
+            PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<IPawnPostProcessor, DoAllPawnPostProcessor, PawnPostProcessorDef>("AWA.PostProcessorAdd".Translate(), false));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SetAllowedAreaPawnPostProcessor, Area>(
                 (m) => new List<Area>() { null }.Concat(Current.Game.CurrentMap.areaManager.AllAreas).Where(x => x?.AssignableAsAllowed() ?? true), (x) => x?.Label ?? "AWA.Everywhere".Translate(), (x) => x?.AllowedArea?.Label ?? "AWA.Everywhere".Translate(), (pp, po) => pp.AllowedArea = po));
 
@@ -174,6 +175,8 @@ namespace Lomzie.AutomaticWorkAssignment
             // Biotech
             if (ModLister.BiotechInstalled)
             {
+                PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<MechanoidCountPawnFitness, PawnKindDef>(x => new PawnKindDef[] { null }.Concat(DefDatabase<PawnKindDef>.AllDefs.Where(x => x.RaceProps.IsMechanoid)), x => x?.LabelCap ?? "AWA.All".Translate(), x => x.MechanoidDef?.LabelCap ?? "AWA.All".Translate(), (s, d) => s.MechanoidDef = d));
+
                 PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<DevelopmentalStagePawnCondition, DevelopmentalStage>(
                     (m) => ((DevelopmentalStage[])Enum.GetValues(typeof(DevelopmentalStage))).ToList(), x => x.ToString(), x => x?.DevelopmentalStage.ToString() ?? "AWA.StageSelect".Translate(), (c, s) => c.DevelopmentalStage = s));
                 PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<GenePawnCondition, GeneDef>(
@@ -182,6 +185,7 @@ namespace Lomzie.AutomaticWorkAssignment
                     (m) => DefDatabase<XenotypeDef>.AllDefs, x => x.LabelCap, x => x?.XenotypeDef?.LabelCap ?? "AWA.XenotypeSelect".Translate(), (c, s) => c.XenotypeDef = s));
                 PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<XenogermPawnCondition, CustomXenogerm>(
                     (m) => Current.Game.customXenogermDatabase.CustomXenogermsForReading, x => x.name, x => x.Xenogerm?.name ?? "AWA.XenotypeSelect".Translate(), (c, s) => c.Xenogerm = s));
+                PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<MechanoidsPawnCondition, PawnKindDef>(x => new PawnKindDef[] { null }.Concat(DefDatabase<PawnKindDef>.AllDefs.Where(x => x.RaceProps.IsMechanoid)), x => x?.LabelCap ?? "AWA.Any".Translate(), x => x.MechanoidDef?.LabelCap ?? "AWA.Any".Translate(), (s, d) => s.MechanoidDef = d));
             }
 
             // Royality

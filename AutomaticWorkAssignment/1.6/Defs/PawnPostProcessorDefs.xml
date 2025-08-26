@@ -90,4 +90,10 @@
     <label>if condition</label>
     <description>Perform a task if a pawn condition is met.</description>
   </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_DoAllPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.DoAllPawnPostProcessor</settingClass>
+    <label>do all</label>
+    <description>Perform every single task in the list.</description>
+  </Def>
 </Defs>

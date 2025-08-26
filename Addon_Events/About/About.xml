@@ -4,17 +4,13 @@
   <author>Lomzie</author>
   <url>https://github.com/Lomztein/RW-AutomaticWorkAssignment</url>
   <description>
-    This is a small addon mod to my Automatic Work Assignments mod, that adds features for automatically performing surgeries on pawns. This was split into its own seperate mod, as I felt this feature would be outside the scope of the main mod.
+    The second addon mod to Automatic Work Assignments. This addon introduces the ability perform tasks when certain events occurs in the game. This can be used for, among other things, set all colonists allowed area to a safe-zone when a threat appears.
     
-    The central feature of this mod is the new "Add bill" on assignment task, that, well adds a surgery bill to the pawn. This can used to automatically augment your pawns with bionics or implants, or automatically replace missing limbs.
+    It works through a new "on event" on-assignment task. This allows you to set the event type, and the task that should be executed when the event is invoked. This system allows even automation, by providing the option to react dynamically.
     
-    The "Add bill" task tries to avoid adding bills that cannot be completed, such as if it cannot be performed on the pawn or if materials are missing. It will also only assign the amount of surgeries you have available parts for. This is imperfect though, but in my testing it works well enough for bionics at least.
+    This was split into an addon, partially due to the scope of the feature, as well as potential performance concerns. Of course we strive for as little performance impact as possible, but the nature of the mod does require things that risk having a performance impact.
     
-    This mod also adds a couple of new fitness functions and conditions, particularily useful to check the health of pawns and their parts.d
-    
-    It should go without saying that surgeries can still fail, and your pawns may die by an automated surgery just as with a regular surgery.
-    
-    Adding valid bills to pawns is a fairly complicated process to automate, and some bills might fail to work. Let me know if you have any issues and I'll look into fixing it.
+    So in order to only have this impact users that actually want the features, the mod was split into an addon.
   </description>
   <supportedVersions>
     <li>1.6</li>
