@@ -726,7 +726,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             ref RectAggregator layoutAggregator,
             string newSettingLabel,
             Action<TSetting> onNewSetting,
-            List<TSetting> settings)
+            IList<TSetting> settings)
             where TSetting : IPawnSetting where TSettingDef : PawnSettingDef
         {
             // row for new function.

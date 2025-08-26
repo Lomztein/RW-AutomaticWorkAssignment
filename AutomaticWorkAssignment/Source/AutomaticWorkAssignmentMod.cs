@@ -77,6 +77,8 @@ namespace Lomzie.AutomaticWorkAssignment
                 (m) => new HediffDef[] { null }.Concat(ImmunityMarginPawnFitness.GetApplicableHediffDefs()), x => x?.LabelCap ?? "AWA.WorstCase".Translate(), x => x?.Hediff?.LabelCap ?? "AWA.WorstCase".Translate(), (c, s) => c.Hediff = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<TendProgressPawnFitness, HediffDef>(
                 (m) => new HediffDef[] { null }.Concat(TendProgressPawnFitness.GetApplicableHediffDefs()), x => x?.LabelCap ?? "AWA.WorstCase".Translate(), x => x?.Hediff?.LabelCap ?? "AWA.WorstCase".Translate(), (c, s) => c.Hediff = s));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<HealthConditionSeverityPawnFitness, HediffDef>(
+                (m) => new HediffDef[] { null }.Concat(HealthConditionSeverityPawnFitness.GetApplicableHediffDefs()), x => x?.LabelCap ?? "AWA.WorstCase".Translate(), x => x?.Hediff?.LabelCap ?? "AWA.WorstCase".Translate(), (c, s) => c.Hediff = s));
 
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<InvertPawnFitness, PawnFitnessDef>());
             PawnSettingUIHandlers.AddHandler(new NestedPawnSettingUIHandler<ConditionPawnFitness, PawnConditionDef>());
@@ -92,6 +94,16 @@ namespace Lomzie.AutomaticWorkAssignment
                 new Nested<ModulusPawnFitness, PawnFitnessDef>(x => x.LeftHandSide, (x, setting) => x.LeftHandSide = setting as IPawnFitness),
                 new Label<ModulusPawnFitness>(x => "%"),
                 new Nested<ModulusPawnFitness, PawnFitnessDef>(x => x.RightHandSide, (x, setting) => x.RightHandSide = setting as IPawnFitness)
+            ));
+
+            PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<IfPawnFitness>(
+                new Nested<IfPawnFitness, PawnConditionDef>(x => x.IfCondition, (s, n) => s.IfCondition = (IPawnCondition)n, "AWA.ConditionSelect".Translate()),
+                new Label<IfPawnFitness>(x => "AWA.Return".Translate()),
+                new Nested<IfPawnFitness, PawnFitnessDef>(x => x.TrueFitness, (s, n) => s.TrueFitness = (IPawnFitness)n, "AWA.FunctionSelect".Translate()),
+                new Label<IfPawnFitness>(x => "AWA.Else".Translate()),
+                new Nested<IfPawnFitness, PawnConditionDef>(x => x.ElseCondition, (s, n) => s.IfCondition = (IPawnCondition)n, "AWA.ConditionSelect".Translate()),
+                new Label<IfPawnFitness>(x => "AWA.Return".Translate()),
+                new Nested<IfPawnFitness, PawnFitnessDef>(x => x.FalseFitness, (s, n) => s.FalseFitness = (IPawnFitness)n, "AWA.FunctionSelect".Translate())
             ));
 
             // Initialize condition UI handlers.
@@ -130,6 +142,17 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<StockpilePawnCondition>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));
             PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<ApparelPawnCondition>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));
             PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<WeaponPawnCondition>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));
+
+            PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<IfPawnCondition>(
+                new Nested<IfPawnCondition, PawnConditionDef>(x => x.IfCondition, (s, n) => s.IfCondition = (IPawnCondition)n, "AWA.ConditionSelect".Translate()),
+                new Label<IfPawnCondition>(x => "AWA.Return".Translate(), TextAnchor.MiddleLeft),
+                new Nested<IfPawnCondition, PawnConditionDef>(x => x.TrueCondition, (s, n) => s.TrueCondition = (IPawnCondition)n, "AWA.ConditionSelect".Translate()),
+                new Label<IfPawnCondition>(x => "AWA.Else".Translate(), TextAnchor.MiddleLeft),
+                new Nested<IfPawnCondition, PawnConditionDef>(x => x.ElseCondition, (s, n) => s.IfCondition = (IPawnCondition)n, "AWA.ConditionSelect".Translate()),
+                new Label<IfPawnCondition>(x => "AWA.Return".Translate(), TextAnchor.MiddleLeft),
+                new Nested<IfPawnCondition, PawnConditionDef>(x => x.FalseCondition, (s, n) => s.FalseCondition = (IPawnCondition)n, "AWA.ConditionSelect".Translate())
+            ));
+
 
             // Initialize post processor UI handlers.
             PawnSettingUIHandlers.AddHandler(new SetTitlePawnPostProcessorUIHandler());

@@ -21,5 +21,10 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public void Set(object key, T value)
             => _dict[key] = value;
+
+        public IEnumerable<T> GetValues ()
+        {
+            return _dict.Values;
+        }
     }
 }

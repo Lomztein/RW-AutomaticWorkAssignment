@@ -73,6 +73,12 @@
     <description>The overall health percentage of the pawn.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_HealthConditionSeverityPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.HealthConditionSeverityPawnFitness</settingClass>
+    <label>health condition severity</label>
+    <description>Return the severity of the given, or worst condition.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_ImmunityMarginPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ImmunityMarginPawnFitness</settingClass>
     <label>immunity margin</label>
@@ -162,5 +168,11 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CountPawnsPawnFitness</settingClass>
     <label>count colonists</label>
     <description>Count amount of colonists that pass given conditions, or number of colonists if empty.</description>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_IfPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.IfPawnFitness</settingClass>
+    <label>if</label>
+    <description>If condition, return one value, otherwise another.</description>
   </Def>
 </Defs>

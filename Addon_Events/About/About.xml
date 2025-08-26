@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>AWA Addon: Events</name>
+  <name>AWA Addon: Events and Commands</name>
   <author>Lomzie</author>
   <url>https://github.com/Lomztein/RW-AutomaticWorkAssignment</url>
   <description>
@@ -15,7 +15,7 @@
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
-  <packageId>Lomzie.AWAEvents</packageId>
+  <packageId>Lomzie.AWAEventsAndCommands</packageId>
   <modDependencies>
     <li>
       <packageId>lomzie.automaticworkassignment</packageId>
