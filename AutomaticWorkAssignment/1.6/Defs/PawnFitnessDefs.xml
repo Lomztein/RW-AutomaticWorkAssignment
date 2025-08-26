@@ -155,6 +155,7 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness</settingClass>
     <label>formula</label>
     <description>Use a custom formula.</description>
+	<documentationPath>FormulaEditor</documentationPath>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_CountPawnFitness</defName>

@@ -11,6 +11,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
     public class CompositePawnSettingsUIHandler<TSettingCategory, TSetting, TSettingDef> : IPawnSettingUIHandler
         where TSettingCategory : IPawnSetting where TSetting : IPawnSetting where TSettingDef : PawnSettingDef
     {
+        public virtual Action? HelpHandler(IPawnSetting setting) => setting.Def.documentationPath == null ?
+            null :
+            () => AutomaticWorkAssignmentMod.OpenWebDocumentation(setting.Def.documentationPath);
+
         public bool CanHandle(IPawnSetting pawnSetting)
             => pawnSetting is TSetting;
 
