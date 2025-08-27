@@ -39,7 +39,7 @@ namespace Lomzie.AutomaticWorkAssignment
         public AutomaticWorkAssignmentMod(ModContentPack content) : base(content)
         {
             Settings = GetSettings<AutomaticWorkAssignmentSettings>();
-            LongEventHandler.ExecuteWhenFinished(InitializePawnSettingUIHandlers);
+            LongEventHandler.ExecuteWhenFinished(Initialize);
         }
 
         public override void DoSettingsWindowContents(Rect inRect)
@@ -51,7 +51,7 @@ namespace Lomzie.AutomaticWorkAssignment
         public override string SettingsCategory()
             => "Automatic Work Assignment";
 
-        private void InitializePawnSettingUIHandlers()
+        private void Initialize()
         {
             // Initialize fitness UI handlers.
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<PassionCountPawnFitness>());

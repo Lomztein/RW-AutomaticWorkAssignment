@@ -106,6 +106,11 @@
       <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
       <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=2009463077</steamWorkshopUrl>
     </li>
+    <li>
+      <packageId>kathanon.floatsubmenu</packageId>
+      <displayName>Float Sub-Menus</displayName>
+      <steamWorkshopUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=2864015430</steamWorkshopUrl>
+    </li>
   </modDependencies>
   <loadAfter>
     <li>Ludeon.RimWorld</li>
@@ -115,6 +120,7 @@
     <li>Ludeon.RimWorld.Anomaly</li>
     <li>Ludeon.RimWorld.Odyssey</li>
     <li>brrainz.harmony</li>
+    <li>kathanon.floatsubmenu</li>
     <li>VouLT.BetterPawnControl</li>
     <li>saucypigeon.pawnbadge</li>
     <li>ceteam.combatextended</li>

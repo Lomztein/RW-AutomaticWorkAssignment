@@ -20,7 +20,7 @@
       <HintPath>$(SteamAppsPath)\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="FloatSubMenu">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\2864015430\1.6\Assemblies\FloatSubMenu.dll</HintPath>
+      <HintPath>$(SteamAppsPath)\workshop\content\294100\2864015430\1.6\Assemblies\FloatSubMenu.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(SteamAppsPath)\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>

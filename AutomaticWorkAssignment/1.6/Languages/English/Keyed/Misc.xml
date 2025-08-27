@@ -4,4 +4,5 @@
   <AWA.WorkUnsatisfied>Work unsatisfied</AWA.WorkUnsatisfied>
   <AWA.WorkAlertExplanation>Work specifications can not be minimally satisfied by applicable pawns. Substitutes may be assigned.</AWA.WorkAlertExplanation>
   <AWA.SubstituteMessage>{0} has become unable to do their critical {1} work, and {2} has been chosen to substitute.</AWA.SubstituteMessage>
+  <AWA.Warning.FloatSubMenusNotActive>WARNING: Float Sub-Menus not detected.\nAutomatic Work Assignment depends on Float Sub-Menus to work.\n\nClick confirm to open Workshop page.</AWA.Warning.FloatSubMenusNotActive>
 </LanguageData>
