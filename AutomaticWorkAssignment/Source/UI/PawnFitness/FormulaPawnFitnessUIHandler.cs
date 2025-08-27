@@ -23,7 +23,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
             pawnSetting.SourceString = newFormula;
 
             Rect buttonRect = layout.NewRow(AutomaticWorkAssignmentSettings.UILabelSizeBase);
-            if (Widgets.ButtonText(buttonRect, "AWA.CommitSetting".Translate(), active: pawnSetting.LastException == null))
+            if (Widgets.ButtonText(buttonRect, "AWA.FormulaEditor.Commit".Translate(), active: pawnSetting.LastException == null))
             {
                 PlayerKnowledgeDatabase.KnowledgeDemonstrated(AWAConceptDefOf.AWA_FormulaEditor, KnowledgeAmount.SpecificInteraction);
                 pawnSetting.Commit();

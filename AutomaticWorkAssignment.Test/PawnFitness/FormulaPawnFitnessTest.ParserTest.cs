@@ -200,12 +200,6 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                     #endregion Priorities
 
                     #region Function calls
-                    new FormulaTestCase("Call Tick",
-                        formula: "TICK()",
-                        linqExpr: "Tick()",
-                        syntheticTokens: ["TICK", OpenGroup, CloseGroup],
-                        evaluationResult: 0
-                    ),
                     new FormulaTestCase("Call Average on 1 value",
                         formula: "AVG(42)",
                         linqExpr: "new [] {42}.Average()",
@@ -344,15 +338,23 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
 
             [
                 Theory,
-                InlineData("@", typeof(ArgumentException)),
-                InlineData("1a", typeof(ArgumentException)),
+                InlineData("@", typeof(ParseException), "AWA.FormulaEditor.Error.InvalidChar unnamed->@"),
+                InlineData("1a", typeof(ParseException), "AWA.FormulaEditor.Error.Number.NoLetter unnamed->1a"),
             ]
-            public void ShouldThrowOnTokenizeInvalidFormula(string formula, Type exceptionType)
+            public void ShouldThrowOnTokenizeInvalidFormula(
+                string formula,
+                Type expectedExceptionType,
+                string? expectedMessage = null
+            )
             {
-                var ex = Assert.Throws(
-                    exceptionType,
+                var exception = Assert.Throws(
+                    expectedExceptionType,
                     () => TokenizeFormula(formula).ToList()
                 );
+                if (expectedMessage != null)
+                {
+                    Assert.Equal(expectedMessage, exception.Message);
+                }
             }
 
             public static IEnumerable<object[]> GetParseTokensData(params string[] sets) =>
@@ -373,23 +375,24 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 Theory,
                 InlineData(new object[] { }, typeof(ArgumentOutOfRangeException)), // Should have a better type and a clear message
                 InlineData(new object[] { OpenGroup }, typeof(ArgumentOutOfRangeException)), // Should have a better type and a clear message
-                InlineData(new object[] { "TICK", OpenGroup, 1, CloseGroup }, typeof(ParseException), "Bad arity for function TICK, expected 0 parameters, have 1"),
-                InlineData(new object[] { "MIN", OpenGroup, CloseGroup }, typeof(ParseException), "Bad arity for function MIN, expected at least 1 parameters, have 0"),
+                InlineData(new object[] { "CLAMP", OpenGroup, 1, CloseGroup }, typeof(ParseException), "AWA.FormulaEditor.Error.Arity.NotEq name->CLAMP actual->1 expected->3"),
+                InlineData(new object[] { "MIN", OpenGroup, CloseGroup }, typeof(ParseException), "AWA.FormulaEditor.Error.Arity.Min name->MIN actual->0 min->1 max->2147483646"),
+                InlineData(new object[] { "FOO", OpenGroup, CloseGroup }, typeof(ParseException), "AWA.FormulaEditor.Error.Function.NotExists name->FOO"),
             ]
             public void ShouldFailOnParse(
                 object[] tokens,
-                Type expectedError,
-                string? message = null
+                Type expectedExceptionType,
+                string? expectedMessage = null
             )
             {
                 var context = new Context();
                 var exception = Assert.Throws(
-                    expectedError,
+                    expectedExceptionType,
                     () => context.ParseTokens(ToAst(TokensFromSynthetic(tokens)))
                 );
-                if (message != null)
+                if (expectedMessage != null)
                 {
-                    Assert.Equal(message, exception.Message);
+                    Assert.Equal(expectedMessage, exception.Message);
                 }
             }
 

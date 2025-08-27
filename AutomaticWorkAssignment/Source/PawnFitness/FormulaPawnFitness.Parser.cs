@@ -94,6 +94,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 
         public class ParseException : Exception
         {
+            private readonly TranslatableString message;
+
             public override string Message
             {
                 get
@@ -102,11 +104,14 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     {
                         return ex.Message;
                     }
-                    return base.Message;
+                    return message.Translate();
                 }
             }
             public ParseException() { }
-            public ParseException(string message, Exception? innerException = null) : base(message, innerException) { }
+            public ParseException(TranslatableString message, Exception? innerException = null) : base(message.Key, innerException)
+            {
+                this.message = message;
+            }
 
         }
         internal partial class Parser
@@ -194,22 +199,22 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                 }
                                 if (callParams.Length != expected.Value)
                                 {
-                                    throw new ParseException($"Bad arity for function {name}, expected {expected.Value} parameters, have {callParams.Length}");
+                                    throw new ParseException(new("AWA.FormulaEditor.Error.Arity.NotEq", new Dictionary<string, object> { { "name", name }, { "actual", callParams.Length }, { "expected", expected.Value } }));
                                 }
                                 return;
                             }
-                            string rangeMessage;
+                            string arityType;
                             if (min.HasValue && max.HasValue)
                             {
-                                rangeMessage = $"between {min.Value} and {max.Value}";
+                                arityType = "Between";
                             }
                             else if (min.HasValue)
                             {
-                                rangeMessage = $"at least {min.Value}";
+                                arityType = "Min";
                             }
                             else if (max.HasValue)
                             {
-                                rangeMessage = $"at most {max.Value}";
+                                arityType = "Max";
                             }
                             else
                             {
@@ -220,7 +225,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                             var localMax = max ?? (int.MaxValue - 1);
                             if (callParams.Length < localMin || callParams.Length > max)
                             {
-                                throw new ParseException($"Bad arity for function {name}, expected {rangeMessage} parameters, have {callParams.Length}");
+                                throw new ParseException(new($"AWA.FormulaEditor.Error.Arity.{arityType}", new Dictionary<string, object> { { "name", name }, { "actual", callParams.Length }, { "min", localMin }, { "max", localMax } }));
                             }
                         }
                     }
@@ -375,9 +380,9 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                     }
                                     else
                                     {
-                                        throw new InvalidOperationException(
-                                            $"Operator {Enum.GetName(typeof(Operator), unaryExpr.Token.Value)} not supported at this point"
-                                        );
+                                        throw new ParseException(
+                                            new("AWA.FormulaEditor.Error.Operator.NotHere", Enum.GetName(typeof(Operator), unaryExpr.Token.Value)),
+                                            new InvalidOperationException($"Operator {Enum.GetName(typeof(Operator), unaryExpr.Token.Value)} not supported at this point"));
                                     }
                                 }
                                 break;
@@ -402,11 +407,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                                         astExprMap[binaryExpr.Children[0]]
                                                     );
                                                 }
-                                                else if (lit.Token.Value == 3)
-                                                {
-                                                    // Not supported in that dotnet version
-                                                    // root = Expression.Call(((Func<double, double>)Math.Cbrt).Method, npnExpr[anyOperator.Children[0]]);
-                                                }
+                                                // Not supported in that dotnet version
+                                                //else if (lit.Token.Value == 3)
+                                                //{
+                                                //    last = Expression.Call(((Func<double, double>)Math.Cbrt).Method, astExprMap[binaryExpr.Children[0]]);
+                                                //}
                                             }
                                             last ??= wellKnownFunctions["ROOT"](
                                                 astExprMap[binaryExpr.Children[0]],
@@ -444,9 +449,9 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                             );
                                             break;
                                         default:
-                                            throw new InvalidOperationException(
-                                                $"Operator {Enum.GetName(typeof(Operator), binaryExpr.Token.Value)} not supported at this point"
-                                            );
+                                            throw new ParseException(
+                                                new("AWA.FormulaEditor.Error.Operator.NotHere", Enum.GetName(typeof(Operator), binaryExpr.Token.Value)),
+                                                new InvalidOperationException($"Operator {Enum.GetName(typeof(Operator), binaryExpr.Token.Value)} not supported at this point"));
                                     }
                                 }
                                 break;
@@ -463,9 +468,9 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                                     }
                                     else
                                     {
-                                        throw new NotImplementedException(
-                                            $"Method call \"{call.Token.Value}\" is not implemented"
-                                        );
+                                        throw new ParseException(
+                                            new("AWA.FormulaEditor.Error.Function.NotExists", new Dictionary<string, object> { { "name", call.Token.Value } }),
+                                            new NotImplementedException($"Method call \"{call.Token.Value}\" is not implemented"));
                                     }
                                 }
                                 break;
@@ -520,7 +525,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 }
                 catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is InvalidOperationException || ex is ParseException)
                 {
-                    throw new ParseException("Formula is invalid", ex);
+                    throw new ParseException(new("AWA.FormulaEditor.Error.Invalid"), ex);
                 }
             }
         }
