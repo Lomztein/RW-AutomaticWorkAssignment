@@ -16,7 +16,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
             Rect recipeRect = new Rect(position, new Vector2(width, _buttonSize));
             if (Widgets.ButtonText(recipeRect, pawnPostProcessor.HediffDef?.LabelCap ?? "AWA.ConditionSelect".Translate()))
             {
-                FloatMenuUtility.MakeMenu(DefDatabase<HediffDef>.AllDefs, x => x.LabelCap, x => () => pawnPostProcessor.HediffDef = x);
+                SearchableFloatMenu.MakeMenu(DefDatabase<HediffDef>.AllDefs, x => x.LabelCap, x => () => pawnPostProcessor.HediffDef = x);
             }
             y += _buttonSize;
             position.y += _buttonSize;
@@ -33,7 +33,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
 
             if (Widgets.ButtonText(bodyPartRect, pawnPostProcessor.HediffPart?.LabelCap ?? "AWA.BodyPartSelect".Translate()))
             {
-                FloatMenuUtility.MakeMenu(validBodyParts, x => x.LabelCap, x => () => pawnPostProcessor.HediffPart = x);
+                SearchableFloatMenu.MakeMenu(validBodyParts, x => x.LabelCap, x => () => pawnPostProcessor.HediffPart = x);
             }
             y += _buttonSize;
             return y;

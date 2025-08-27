@@ -8,6 +8,8 @@
   <AWA.FunctionAdd>Add function</AWA.FunctionAdd>
   <AWA.PostProcessorAdd>Add on assignment</AWA.PostProcessorAdd>
   <AWA.PostProcessorSelect>Select on assignment</AWA.PostProcessorSelect>
+  <AWA.TaskAdd>Add task</AWA.TaskAdd>
+  <AWA.TaskSelect>Select task</AWA.TaskSelect>
   <AWA.SkillSelect>Select skill</AWA.SkillSelect>
   <AWA.SkillAdd>Add skill</AWA.SkillAdd>
   <AWA.PawnSelect>Select pawn</AWA.PawnSelect>
@@ -126,6 +128,10 @@
   <AWA.SettingsAutoMigrateOnGravshipJumpTooltip>Automatically migrate work specifications to new map when performing a gravship jump. If disabled, default configuration will be used instead.</AWA.SettingsAutoMigrateOnGravshipJumpTooltip>
   <AWA.SettingsDefaultConfigurationFile>Default configuration file</AWA.SettingsDefaultConfigurationFile>
   <AWA.SettingsDefaultConfigurationFileNoneSelected>Default</AWA.SettingsDefaultConfigurationFileNoneSelected>
+  <AWA.SettingsUseSubMenus>Use pawn setting submenus</AWA.SettingsUseSubMenus>
+  <AWA.SettingsUseSubMenusTooltip>Group pawn settings (fitness, conditions, on-assignments tasks) in categories during selection.</AWA.SettingsUseSubMenusTooltip>
+  <AWA.SettingsAlwaysFlattenSubmenus>Always flatten pawn setting submenus</AWA.SettingsAlwaysFlattenSubmenus>
+  <AWA.SettingsAlwaysFlattenSubmenusTooltip>Toggle whether or not a given pawn setting category should always be flattened.</AWA.SettingsAlwaysFlattenSubmenusTooltip>
   
   <AWA.SettingsHeaderUI>UI settings</AWA.SettingsHeaderUI>
   <AWA.SettingsManagerWindowWidth>Manager window width (Default: {0})</AWA.SettingsManagerWindowWidth>

@@ -35,7 +35,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
             if (Widgets.ButtonText(buttonRect, _labelGetter(pawnSetting)))
             {
                 var options = GetFloatMenuOptions(pawnSetting).ToList();
-                Find.WindowStack.Add(new FloatMenu(options));
+                Find.WindowStack.Add(new SearchableFloatMenu(options));
             }
 
             y += buttonRect.height;

@@ -44,7 +44,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
                 Rect addSettingButtonRect = layout.NewRow(AddButtonSize);
                 if (Widgets.ButtonText(addSettingButtonRect, _selectLabel))
                 {
-                    FloatMenuUtility.MakeMenu(GetDefs(), x => x.LabelCap, x => () => _setter(pawnSetting, PawnSetting.CreateFrom<IPawnSetting>(x)));
+                    Utils.MakeMenuForSettingDefs(GetDefs(), () => x => _setter(pawnSetting, PawnSetting.CreateFrom<IPawnSetting>(x)));
                 }
             }
 
@@ -52,7 +52,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
         }
 
         private IEnumerable<D> GetDefs()
-            => DefDatabase<D>.AllDefs;
+            => PawnSettingDef.GetSorted<D>();
 
         private IEnumerator DelayedRemoveInnerSetting(T pawnSetting)
         {

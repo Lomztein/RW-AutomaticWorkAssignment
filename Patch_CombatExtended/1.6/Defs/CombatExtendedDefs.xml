@@ -5,5 +5,6 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.Patches.CombatExtended.SetLoadoutPawnPostProcessor</settingClass>
     <label>set loadout</label>
     <description>Set the Combat Extended loadout of the pawn.</description>
+    <category>Equipment</category>
   </Def>
 </Defs>

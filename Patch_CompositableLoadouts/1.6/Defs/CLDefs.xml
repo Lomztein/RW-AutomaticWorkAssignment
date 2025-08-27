@@ -1,27 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>CompositeLoadouts</defName>
+    <label>Composite Loadouts</label>
+  </Def>
+  
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_AddTagPawnPostProcessor</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts.AddTagPawnPostProcessor</settingClass>
     <label>add loadout tag</label>
     <description>Adds the given Compositable Loadout tag to the pawn.</description>
+    <category>CompositeLoadouts</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_RemoveTagPawnPostProcessor</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts.RemoveTagPawnPostProcessor</settingClass>
     <label>remove loadout tag</label>
     <description>Removes the given Compositable Loadout tag to the pawn.</description>
+    <category>CompositeLoadouts</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_ClearTagsPawnPostProcessor</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts.ClearTagsPawnPostProcessor</settingClass>
     <label>clear loadout tags</label>
     <description>Clears all automatically added Compositable Loadout tags from the pawn.</description>
+    <category>CompositeLoadouts</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_SatisfyLoadoutPawnPostProcessor</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts.SatisfyLoadoutPawnPostProcessor</settingClass>
     <label>satisfy loadout</label>
     <description>Order pawn to satisfy loadout.</description>
+    <category>CompositeLoadouts</category>
   </Def>
 </Defs>

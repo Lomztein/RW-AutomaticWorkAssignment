@@ -5,5 +5,6 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.Patches.VanillaSkillsExpanded.HasExpertisePawnCondition</settingClass>
     <label>has expertise</label>
     <description>Assign to pawn with the given expertise.</description>
+    <category>Skills</category>
   </Def>
 </Defs>

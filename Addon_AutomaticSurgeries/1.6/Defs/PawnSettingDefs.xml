@@ -6,6 +6,7 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.PartEffeciencyPawnFitness</settingClass>
     <label>part effeciency</label>
     <description>Return effeciency of a body part.</description>
+    <category>Health</category>
   </Def>
   
   <!-- Conditions -->
@@ -14,18 +15,21 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PartHediffPawnCondition</settingClass>
     <label>part condition</label>
     <description>Assign to pawns with the given body part condition.</description>
+    <category>Health</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_AnyPartHediffCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PartAnyHediffPawnCondition</settingClass>
     <label>any part condition</label>
     <description>Assign to pawns with any condition on the given part.</description>
+    <category>Health</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_PartMissingCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PartMissingPawnCondition</settingClass>
     <label>part missing</label>
     <description>Assign to pawns without the given body part.</description>
+    <category>Health</category>
   </Def>
 
   <!-- Post processors -->
@@ -34,5 +38,6 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.AddBillPawnPostProcessor</settingClass>
     <label>add bill</label>
     <description>Add medical bill to pawn.</description>
+    <category>Health</category>
   </Def>
 </Defs>

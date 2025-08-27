@@ -5,17 +5,20 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.RoyaltyTitlePawnCondition</settingClass>
     <label>has title</label>
     <description>Check if the pawn has the given royalty title.</description>
+    <category>Royalty</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_FavorFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.FavorPawnFitness</settingClass>
     <label>faction favor</label>
     <description>Returns pawns favor for the given, or highest if any, faction.</description>
+    <category>Royalty</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_RoyalSeniorityFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.RoyalSeniorityPawnFitness</settingClass>
     <label>faction seniority</label>
     <description>Returns pawns royal seniority (rank) for the given, or highest if any, faction.</description>
+    <category>Royalty</category>
   </Def>
 </Defs>

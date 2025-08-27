@@ -1,153 +1,177 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
-    <defName>Lomzie_LearnRateFitness</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.LearnRatePawnFitness</settingClass>
-    <label>learning rate</label>
-    <description>Pawn learning rate for related skills.</description>
-  </Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
-    <defName>Lomzie_SkillLevelFitness</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.SkillLevelPawnFitness</settingClass>
-    <label>skill level</label>
-    <description>Sum of skill level for related skills.</description>
-</Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_StatPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.StatPawnFitness</settingClass>
     <label>stat</label>
     <description>The value of the given stat.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_LearnRateFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.LearnRatePawnFitness</settingClass>
+    <label>learning rate</label>
+    <description>Pawn learning rate for related skills.</description>
+    <category>Skills</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_SkillLevelFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.SkillLevelPawnFitness</settingClass>
+    <label>skill level</label>
+    <description>Sum of skill level for related skills.</description>
+    <category>Skills</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_PassionCountPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.PassionCountPawnFitness</settingClass>
     <label>passion count</label>
     <description>Total number of a the given pawns passions.</description>
+    <category>Skills</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_CommitmentPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CommitmentPawnFitness</settingClass>
     <label>commitment</label>
     <description>How much the pawn is already committed.</description>
+    <category>Misc</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_OrderingPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.OrderingPawnFitness</settingClass>
     <label>ordering</label>
     <description>The index of the pawn when ordered by fitness.</description>
+    <category>Misc</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_PassionLevelPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.PassionLevelPawnFitness</settingClass>
     <label>passion level</label>
     <description>Priorize pawns with the higher passion levels in relevant skills.</description>
+    <category>Skills</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_AgePawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.AgePawnFitness</settingClass>
     <label>age</label>
     <description>Priorize older pawns.</description>
+    <category>Health</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_NeedPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.NeedPawnFitness</settingClass>
     <label>need</label>
     <description>Prioritize pawn by a given need.</description>
+    <category>Health</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_ConditionPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ConditionPawnFitness</settingClass>
     <label>condition</label>
     <description>Priorize pawns with the given condition.</description>
+    <category>Conditional</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_CapacityPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CapacityPawnFitness</settingClass>
     <label>capacity</label>
     <description>The given capacity of the pawn.</description>
+    <category>Health</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_HealthPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.HealthPawnFitness</settingClass>
     <label>health</label>
     <description>The overall health percentage of the pawn.</description>
+    <category>Health</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_HealthConditionSeverityPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.HealthConditionSeverityPawnFitness</settingClass>
     <label>health condition severity</label>
     <description>Return the severity of the given, or worst condition.</description>
+    <category>Health</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_ImmunityMarginPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ImmunityMarginPawnFitness</settingClass>
     <label>immunity margin</label>
     <description>The margin between severity and immunity, either min of all, or a select condition.</description>
+    <category>Health</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_TendProgressPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.TendProgressPawnFitness</settingClass>
     <label>tend progress</label>
     <description>How far tending has progress for the worst case, or a select condition.</description>
+    <category>Health</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_InvertPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.InvertPawnFitness</settingClass>
     <label>invert</label>
     <description>Invert the fitness, so that positive becomes negative.</description>
+    <category>Math</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_StockpilePawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.StockpilePawnFitness</settingClass>
     <label>stockpile</label>
     <description>Return stockpile of the filtered items.</description>
+    <category>Map</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_MechanoidCountPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.MechanoidCountPawnFitness</settingClass>
     <label>mechanoid amount</label>
     <description>Return the amount of a mechanitors mechanoids.</description>
+    <category>Biotech</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_ConstantPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ConstantPawnFitness</settingClass>
     <label>constant</label>
+    <category>Math</category>
     <description>Constant fitness value.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_SumPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.SumPawnFitness</settingClass>
     <label>sum</label>
+    <category>Math</category>
     <description>Sum nested fitness functions.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_ProductPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ProductPawnFitness</settingClass>
     <label>multiply</label>
+    <category>Math</category>
     <description>Multiply nested fitness functions.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_ModulusPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ModulusPawnFitness</settingClass>
     <label>modulus</label>
+    <category>Math</category>
     <description>Modulus two fitness functions.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_MinPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.MinPawnFitness</settingClass>
     <label>min</label>
+    <category>Math</category>
     <description>Min nested fitness functions.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_MaxPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.MaxPawnFitness</settingClass>
     <label>max</label>
+    <category>Math</category>
     <description>Max nested fitness functions.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_AveragePawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.AveragePawnFitness</settingClass>
     <label>average</label>
+    <category>Math</category>
     <description>Average of nested fitness functions.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
@@ -155,6 +179,7 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.FormulaPawnFitness</settingClass>
     <label>formula</label>
     <description>Use a custom formula.</description>
+    <category>Math</category>
 	<documentationPath>FormulaEditor</documentationPath>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
@@ -162,17 +187,20 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CountPawnFitness</settingClass>
     <label>count</label>
     <description>Count passed pawn conditions.</description>
+    <category>Conditional</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_CountPawnsPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CountPawnsPawnFitness</settingClass>
     <label>count colonists</label>
     <description>Count amount of colonists that pass given conditions, or number of colonists if empty.</description>
+    <category>Conditional</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_IfPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.IfPawnFitness</settingClass>
     <label>if</label>
     <description>If condition, return one value, otherwise another.</description>
+    <category>Conditional</category>
   </Def>
 </Defs>

@@ -45,7 +45,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
             Rect buttonRect = new Rect(position, new Vector2(width, _buttonSize));
             if (Widgets.ButtonText(buttonRect, newLabel))
             {
-                FloatMenuUtility.MakeMenu(DefDatabase<TDef>.AllDefs, x => x.LabelCap, x => () => onNewSetting(PawnSetting.CreateFrom<TSetting>(x)));
+                Utils.MakeMenuForSettingDefs(PawnSettingDef.GetSorted<TDef>(), () => (x) => onNewSetting(PawnSetting.CreateFrom<TSetting>(x)));
             }
             return _buttonSize;
         }

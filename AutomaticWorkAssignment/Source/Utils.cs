@@ -1,6 +1,10 @@
-﻿using RimWorld;
+﻿using FloatSubMenus;
+using Lomzie.AutomaticWorkAssignment.Defs;
+using RimWorld;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Verse;
@@ -182,5 +186,41 @@ namespace Lomzie.AutomaticWorkAssignment
             }
             return false;
         }
+
+        public static void MakeMenuForSettingDefs<T>(IEnumerable<T> defs, Func<Action<T>> actionGetter) where T: PawnSettingDef
+            => Find.WindowStack.Add(new FloatMenu(MakeOptionsForSettingsDefs(defs, actionGetter).ToList()));
+
+        private static IEnumerable<FloatMenuOption> MakeOptionsForSettingsDefs<T> (IEnumerable<T> defs, Func<Action<T>> actionGetter) where T : PawnSettingDef
+        {
+            yield return new FloatMenuSearch(true);
+            var groups = defs.GroupBy(x => x.category);
+            var categories = new List<IGrouping<PawnSettingCategoryDef, T>>();
+
+            foreach (var group in groups)
+            {
+                if (group.Key == null || ShouldFlattenPawnSettingCategory(group.Key))
+                {
+                    foreach (var element in group)
+                    {
+                        yield return MakeOptionForSingleDef(element, actionGetter());
+                    }
+                }
+                else
+                    categories.Add(group);
+            }
+
+            foreach (var category in categories)
+            {
+                yield return new FloatSubMenu($" > [{category.Key.LabelCap}]", category.Select(x => MakeOptionForSingleDef(x, actionGetter())).ToList());
+            }
+        }
+
+        private static FloatMenuOption MakeOptionForSingleDef<T>(T def, Action<T> onSelected) where T : PawnSettingDef
+        {
+            return new FloatMenuOption(def.LabelCap, () => onSelected(def));
+        }
+
+        private static bool ShouldFlattenPawnSettingCategory(PawnSettingCategoryDef pawnSettingCategoryDef)
+            => !AutomaticWorkAssignmentSettings.UseSubMenus || AutomaticWorkAssignmentSettings.AlwaysFlattenPawnSettingCategorySubmenu(pawnSettingCategoryDef);
     }
 }

@@ -16,7 +16,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
             Rect recipeRect = new Rect(position, new Vector2(width, _buttonSize));
             if (Widgets.ButtonText(recipeRect, pawnPostProcessor.BillRecipeDef?.LabelCap ?? "AWA.OperationSelect".Translate()))
             {
-                FloatMenuUtility.MakeMenu(AddBillPawnPostProcessor.GetValidRecipies(), x => x.LabelCap, x => () => pawnPostProcessor.BillRecipeDef = x);
+                SearchableFloatMenu.MakeMenu(AddBillPawnPostProcessor.GetValidRecipies(), x => x.LabelCap, x => () => pawnPostProcessor.BillRecipeDef = x);
             }
             y += _buttonSize;
             if (pawnPostProcessor.BillRecipeDef != null && pawnPostProcessor.BillRecipeDef.targetsBodyPart)
@@ -31,7 +31,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
 
                 if (Widgets.ButtonText(bodyPartRect, pawnPostProcessor.BodyPartRecord?.LabelCap ?? "AWA.BodyPartSelect".Translate()))
                 {
-                    FloatMenuUtility.MakeMenu(validBodyParts, x => x.LabelCap, x => () => pawnPostProcessor.BodyPartRecord = x);
+                    SearchableFloatMenu.MakeMenu(validBodyParts, x => x.LabelCap, x => () => pawnPostProcessor.BodyPartRecord = x);
                 }
                 y += _buttonSize;
             }

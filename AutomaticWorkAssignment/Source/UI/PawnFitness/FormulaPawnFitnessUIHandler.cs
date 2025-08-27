@@ -68,10 +68,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
                         Rect addConditionButtonRect = bindingsLayout.NewRow(AutomaticWorkAssignmentSettings.UIButtonSizeBase);
                         if (Widgets.ButtonText(addConditionButtonRect, "AWA.NestedSettingSelect".Translate()))
                         {
-                            FloatMenuUtility.MakeMenu(
-                                objects: GetDefs(),
-                                labelGetter: def => def.LabelCap,
-                                actionGetter: def => () => pawnSetting.bindingSettings.SetOrAdd(bindingName, PawnSetting.CreateFrom<IPawnFitness>(def)));
+                            Utils.MakeMenuForSettingDefs(
+                                GetDefs(),
+                                actionGetter: () => (def) => pawnSetting.bindingSettings.SetOrAdd(bindingName, PawnSetting.CreateFrom<IPawnFitness>(def)));
                         }
                     }
                 }
@@ -82,7 +81,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
         }
 
         private IEnumerable<PawnFitnessDef> GetDefs()
-            => DefDatabase<PawnFitnessDef>.AllDefs;
+            => PawnFitnessDef.GetSorted();
         private IEnumerator DelayedRemoveInnerSetting(string name, FormulaPawnFitness setting)
         {
             yield return new WaitForEndOfFrame();

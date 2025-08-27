@@ -1,147 +1,170 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
-    <defName>Lomzie_SkillLevelCondition</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.SkillLevelPawnCondition</settingClass>
-    <label>skill level</label>
-    <description>Check if pawns skill level is within a given range.</description>
-  </Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
-    <defName>Lomzie_HasPassionCondition</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PassionPawnCondition</settingClass>
-    <label>has passion</label>
-    <description>Assign to pawns with any passion in the given skill.</description>
-  </Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
-    <defName>LomzieLearningSaturatedCondition</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.LearningSaturatedPawnCondition</settingClass>
-    <label>learning saturated</label>
-    <description>Check if pawn has a particular skill learning saturated.</description>
-  </Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
-    <defName>Lomzie_HasHediffCondition</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.HediffPawnCondition</settingClass>
-    <label>health condition</label>
-    <description>Assign to pawns with the given health condition.</description>
-  </Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
-    <defName>Lomzie_IsSpecificPawn</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.SpecificPawnCondition</settingClass>
-    <label>is specific pawn</label>
-    <description>Assign to specific pawns.</description>
-  </Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_HasTraitCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.TraitPawnCondition</settingClass>
     <label>has trait</label>
     <description>Assign to pawns with the given trait.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_SkillLevelCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.SkillLevelPawnCondition</settingClass>
+    <label>skill level</label>
+    <description>Check if pawns skill level is within a given range.</description>
+    <category>Skills</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_HasPassionCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PassionPawnCondition</settingClass>
+    <label>has passion</label>
+    <description>Assign to pawns with any passion in the given skill.</description>
+    <category>Skills</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>LomzieLearningSaturatedCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.LearningSaturatedPawnCondition</settingClass>
+    <label>learning saturated</label>
+    <description>Check if pawn has a particular skill learning saturated.</description>
+    <category>Skills</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_HasHediffCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.HediffPawnCondition</settingClass>
+    <label>health condition</label>
+    <description>Assign to pawns with the given health condition.</description>
+    <category>Health</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_IsSpecificPawn</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.SpecificPawnCondition</settingClass>
+    <label>is specific pawn</label>
+    <description>Assign to specific pawns.</description>
+    <category>Misc</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_WeaponClassPawnCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.WeaponClassPawnCondition</settingClass>
     <label>weapon class</label>
     <description>Assign to pawns with a weapon of the given class.</description>
+    <category>Equipment</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_IsGuest</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.GuestPawnCondition</settingClass>
     <label>is guest</label>
     <description>Assign to guest pawns.</description>
+    <category>Misc</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_IsGender</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.GenderPawnCondition</settingClass>
     <label>is gender</label>
     <description>Check if pawn is of a given gender.</description>
+    <category>Health</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_CommitmentLimit</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.CommitmentLimitPawnCondition</settingClass>
     <label>commitment limit</label>
     <description>Assign to pawns less committed than the limit.</description>
+    <category>Misc</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_WorkCapable</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.WorkCapablePawnCondition</settingClass>
     <label>is capable of work</label>
     <description>Assign to pawns capable of the given work types.</description>
+    <category>Skills</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_HasStockpile</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.StockpilePawnCondition</settingClass>
     <label>has stockpile</label>
     <description>Check if any of the allowed items are available.</description>
+    <category>Map</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_HasApparel</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.ApparelPawnCondition</settingClass>
     <label>has apparel</label>
     <description>Check if the pawn is wearing the given apparel.</description>
+    <category>Equipment</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_HasWeapon</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.WeaponPawnCondition</settingClass>
     <label>has weapon</label>
     <description>Check if the pawn is carrying the given weapon.</description>
+    <category>Equipment</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_PlanetLayer</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PlanetLayerPawnCondition</settingClass>
     <label>on planet layer</label>
     <description>Check if the pawn is on a given planet layer.</description>
+    <category>Map</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_Mechanoids</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.MechanoidsPawnCondition</settingClass>
     <label>has mechanoids</label>
     <description>Check if the pawn has the given mechanoids.</description>
+    <category>Biotech</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_CompareFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.CompareFitnessPawnCondition</settingClass>
     <label>compare fitness</label>
     <description>Compare two different fitness values.</description>
+    <category>Compare</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_FitnessInRange</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.FitnessInRangePawnCondition</settingClass>
     <label>fitness in range</label>
     <description>Check if a fitness value is within a given range.</description>
+    <category>Compare</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_AssignmentPawnCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.AssignmentPawnCondition</settingClass>
     <label>has assignment</label>
     <description>Check if the pawn has been assigned to a specific work specification.</description>
+    <category>Misc</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_NotCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.NotPawnCondition</settingClass>
     <label>not</label>
     <description>Invert the internal condition.</description>
+    <category>Logic</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_AnyCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.AnyPawnCondition</settingClass>
     <label>any</label>
     <description>Check any internal condition.</description>
+    <category>Logic</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_AllCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.AllPawnCondition</settingClass>
     <label>all</label>
     <description>Check all internal condition.</description>
+    <category>Logic</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_AnyPawnCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.AnyPawnPawnCondition</settingClass>
     <label>any pawn</label>
     <description>Check if any working pawn meets the condition.</description>
+    <category>Logic</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_IfPawnCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.IfPawnCondition</settingClass>
     <label>if</label>
     <description>If condition, return the result of another condition, otherwise return a third result.</description>
+    <category>Logic</category>
   </Def>
 </Defs>

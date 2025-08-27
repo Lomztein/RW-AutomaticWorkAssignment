@@ -62,6 +62,11 @@ namespace Lomztein.AutomaticWorkAssignments
                 new Picker<UseAbilityOnEnemyPawnPostProcessor, AbilityDef>(x => DefDatabase<AbilityDef>.AllDefs, x => x.LabelCap, x => x.AbilityDef?.LabelCap ?? "AWA.AbilitySelect".Translate(), (pp, ad) => pp.AbilityDef = ad),
                 new Composite<UseAbilityOnEnemyPawnPostProcessor, IPawnFitness, PawnFitnessDef>(x => x.Fitness, "AWA.FunctionAdd".Translate()),
                 new Composite<UseAbilityOnEnemyPawnPostProcessor, IPawnCondition, PawnConditionDef>(x => x.Conditions, "AWA.ConditionAdd".Translate())));
+
+            PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<DoOnConditionChangedPawnPostProcessor>(
+                new Nested<DoOnConditionChangedPawnPostProcessor, PawnConditionDef>(x => x.Condition, (x, y) => x.Condition = (IPawnCondition)y, "AWA.ConditionSelect".Translate()),
+                new Nested<DoOnConditionChangedPawnPostProcessor, PawnConditionDef>(x => x.Action, (x, y) => x.Action = (IPawnPostProcessor)y, "AWA.TaskSelect".Translate())
+                ));
         }
     }
 }

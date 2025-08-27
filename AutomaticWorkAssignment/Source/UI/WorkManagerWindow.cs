@@ -740,8 +740,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             if (Widgets.ButtonInvisible(newRect))
             {
-                var defs = GenDefDatabase.GetAllDefsInDatabaseForDef(typeof(TSettingDef)).Cast<TSettingDef>();
-                FloatMenuUtility.MakeMenu(defs, x => x.LabelCap, x => () => onNewSetting(PawnSetting.CreateFrom<TSetting>(x)));
+                var defs = PawnSettingDef.GetSorted<TSettingDef>();
+                Utils.MakeMenuForSettingDefs(defs, () => (x) => onNewSetting(PawnSetting.CreateFrom<TSetting>(x)));
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Lomzie.AutomaticWorkAssignment;
+﻿using FloatSubMenus;
+using Lomzie.AutomaticWorkAssignment;
 using Lomzie.AutomaticWorkAssignment.UI;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace AutomaticWorkAssignment.UI.Generic
             if (Widgets.ButtonText(buttonRect, _labelGetter(pawnSetting)))
             {
                 var options = GetFloatMenuOptions(pawnSetting).ToList();
-                Find.WindowStack.Add(new FloatMenu(options));
+                Find.WindowStack.Add(new SearchableFloatMenu(options));
             }
 
             y += buttonRect.height;

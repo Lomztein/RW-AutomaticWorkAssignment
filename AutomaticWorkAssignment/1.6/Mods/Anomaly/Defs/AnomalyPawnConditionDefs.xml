@@ -5,5 +5,6 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.MutantPawnCondition</settingClass>
     <label>is mutant</label>
     <description>Assign to mutant pawns such as ghouls.</description>
+    <category>Anomaly</category>
   </Def>
 </Defs>

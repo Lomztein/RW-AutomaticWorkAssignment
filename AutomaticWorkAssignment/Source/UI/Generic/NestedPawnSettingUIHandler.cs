@@ -45,7 +45,7 @@ namespace AutomaticWorkAssignment.UI
                 Rect addConditionButtonRect = layout.NewRow(_addConditionButtonSize);
                 if (Widgets.ButtonText(addConditionButtonRect, "AWA.NestedSettingSelect".Translate()))
                 {
-                    FloatMenuUtility.MakeMenu(GetDefs(), x => x.LabelCap, x => () => pawnSetting.InnerSetting = PawnSetting.CreateFrom<IPawnSetting>(x));
+                    Utils.MakeMenuForSettingDefs(GetDefs(), () => (x) => pawnSetting.InnerSetting = PawnSetting.CreateFrom<IPawnSetting>(x));
                 }
             }
 
@@ -53,7 +53,7 @@ namespace AutomaticWorkAssignment.UI
         }
 
         private IEnumerable<D> GetDefs()
-            => DefDatabase<D>.AllDefs;
+            => PawnSettingDef.GetSorted<D>();
 
         private IEnumerator DelayedRemoveInnerSetting(NestedPawnSetting setting)
         {

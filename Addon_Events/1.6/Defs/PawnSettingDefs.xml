@@ -8,6 +8,7 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.BleedingPawnCondition</settingClass>
     <label>is bleeding</label>
     <description>Assign to pawns that are currently bleeding.</description>
+    <category>Health</category>
   </Def>
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
@@ -15,6 +16,7 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.DraftedPawnCondition</settingClass>
     <label>is drafted</label>
     <description>Assign to pawns that are currently drafted.</description>
+    <category>Misc</category>
   </Def>
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
@@ -22,8 +24,8 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.DoingWorkPawnCondition</settingClass>
     <label>is doing work</label>
     <description>Assign to pawns that are doing specific work.</description>
+    <category>Misc</category>
   </Def>
-
 
   <!-- Post processors -->
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
@@ -31,6 +33,7 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.OnEventPawnPostProcessor</settingClass>
     <label>on event</label>
     <description>Perform a task on a given event.</description>
+    <category>Events</category>
   </Def>
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
@@ -38,6 +41,7 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.StopWorkPawnPostProcessor</settingClass>
     <label>stop working</label>
     <description>Immidately stop all work.</description>
+    <category>Commands</category>
   </Def>
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
@@ -45,6 +49,7 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.DraftPawnPostProcessor</settingClass>
     <label>draft</label>
     <description>Draft the colonists. Useful for giving orders in response to events.</description>
+    <category>Commands</category>
   </Def>
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
@@ -52,6 +57,7 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.MoveToPawnPostProcessor</settingClass>
     <label>move to</label>
     <description>Draft the pawn and move them to the given position.</description>
+    <category>Commands</category>
   </Def>
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
@@ -59,6 +65,7 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.DoAfterDelayPawnPostProcessor</settingClass>
     <label>do after delay</label>
     <description>Perform the given action after a set delay.</description>
+    <category>Events</category>
   </Def>
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
@@ -66,6 +73,15 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.DoRepeatPawnPostProcessor</settingClass>
     <label>do repeatedly</label>
     <description>Perform the given action repeatedly with a set delay.</description>
+    <category>Events</category>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_DoOnConditionChangedPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.DoOnConditionChangedPawnPostProcessor</settingClass>
+    <label>do on condition changed</label>
+    <description>Perform the given action after the given condition has changed.</description>
+    <category>Events</category>
   </Def>
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
@@ -73,6 +89,7 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.UseAbilityPawnPostProcessor</settingClass>
     <label>use ability on self</label>
     <description>Use the given ability on self, or at own position.</description>
+    <category>Commands</category>
   </Def>
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
@@ -80,6 +97,7 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.UseAbilityOnAllyPawnPostProcessor</settingClass>
     <label>use ability on ally</label>
     <description>Use the given ability on an ally, selected through fitness and conditions.</description>
+    <category>Commands</category>
   </Def>
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
@@ -87,5 +105,6 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.UseAbilityOnEnemyPawnPostProcessor</settingClass>
     <label>use ability on enemy</label>
     <description>Use the given ability on an enemy, selected through fitness and conditions.</description>
+    <category>Commands</category>
   </Def>
 </Defs>

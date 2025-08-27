@@ -1,4 +1,7 @@
-﻿using RimWorld;
+﻿using FloatSubMenus;
+using Lomzie.AutomaticWorkAssignment.Defs;
+using RimWorld;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -17,6 +20,8 @@ namespace Lomzie.AutomaticWorkAssignment
         public static bool LogEnabled = false;
         private static string _defaultConfigurationFile = null;
         public static bool RedCriticalAlert = true;
+        public static bool UseSubMenus = true;
+        private static List<string> _alwaysFlattenPawnSettingCategoryDefNames = new List<string>();
 
         public static FileInfo DefaultConfigurationFile => string.IsNullOrEmpty(_defaultConfigurationFile) ? null : IO.GetFile(_defaultConfigurationFile, IO.GetConfigDirectory());
 
@@ -63,6 +68,12 @@ namespace Lomzie.AutomaticWorkAssignment
             listing.CheckboxLabeled("AWA.SettingsIgnoreUnmanagedWork".Translate(), ref IgnoreUnmanagedWorkTypes);
             listing.CheckboxLabeled("AWA.SettingsAdditionalLogging".Translate(), ref LogEnabled, tooltip: "AWA.SettingsAdditionalLoggingTooltip".Translate());
             listing.CheckboxLabeled("AWA.SettingsRedCriticalAlert".Translate(), ref RedCriticalAlert, tooltip: "AWA.SettingsRedCriticalAlertTooltip".Translate());
+            listing.CheckboxLabeled("AWA.SettingsUseSubMenus".Translate(), ref UseSubMenus, tooltip: "AWA.SettingsUseSubMenusTooltip".Translate());
+
+            if (UseSubMenus && listing.ButtonText("AWA.SettingsAlwaysFlattenSubmenus".Translate()))
+            {
+                Find.WindowStack.Add(new FloatMenu(PawnSettingCategoryDef.GetSorted().Select(x => new FloatMenuToggleOption(x.LabelCap, () => ToggleFlattenSubmenu(x), () => _alwaysFlattenPawnSettingCategoryDefNames.Any(y => x.defName == y), () => false)).Cast<FloatMenuOption>().ToList()));
+            }
 
             if (ModsConfig.OdysseyActive)
                 listing.CheckboxLabeled("AWA.SettingsAutoMigrateOnGravshipJump".Translate(), ref AutoMigrateOnGravshipJump, tooltip: "AWA.SettingsAutoMigrateOnGravshipJumpTooltip".Translate());
@@ -102,6 +113,12 @@ namespace Lomzie.AutomaticWorkAssignment
             }
         }
 
+        private static void ToggleFlattenSubmenu(PawnSettingCategoryDef def)
+        {
+            if (_alwaysFlattenPawnSettingCategoryDefNames.RemoveAll(x => def.defName == x) == 0)
+                _alwaysFlattenPawnSettingCategoryDefNames.Add(def.defName);
+        }
+
         private static void OpenDefaultConfigurationMenu()
         {
             FloatMenuUtility.MakeMenu(Enumerable.Concat(new string[] { null }, IO.GetConfigFiles().Select(x => x.Name)), x => x ?? "AWA.SettingsDefaultConfigurationFileNoneSelected".Translate(), (x) => () => SelectDefaultConfiguration(x));
@@ -111,6 +128,10 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             _defaultConfigurationFile = fileName;
         }
+
+        public static bool AlwaysFlattenPawnSettingCategorySubmenu(PawnSettingCategoryDef category) 
+            => _alwaysFlattenPawnSettingCategoryDefNames.Any(x => x == category.defName);
+
 
         public override void ExposeData()
         {
@@ -122,10 +143,18 @@ namespace Lomzie.AutomaticWorkAssignment
             Scribe_Values.Look(ref RedCriticalAlert, "redCriticalAlert", true);
             Scribe_Values.Look(ref AutoMigrateOnGravshipJump, "autoMigrateOnGravshipJump", true);
             Scribe_Values.Look(ref _defaultConfigurationFile, "defaultConfigurationFile", null);
+            Scribe_Values.Look(ref UseSubMenus, "useSubMenus", true);
+            Scribe_Collections.Look(ref _alwaysFlattenPawnSettingCategoryDefNames, "alwaysFlattenSubmenu");
             Scribe_Values.Look(ref ManagerWindowHeight, "managerWindowHeight", MANAGER_WINDOW_HEIGHT_DEFAULT);
             Scribe_Values.Look(ref ManagerListSectionWidth, "managerListSectionWidth", MANAGER_LIST_SECTION_WIDTH_DEFAULT);
             Scribe_Values.Look(ref ManagerMainSectionWidth, "managerMainSectionWidth", MANAGER_MAIN_SECTION_WIDTH_DEFAULT);
             Scribe_Values.Look(ref ManagerSettingsSectionWidth, "managerSettingsSectionWidth", MANAGER_SETTINGS_SECTION_WIDTH_DEFAULT);
+
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if (_alwaysFlattenPawnSettingCategoryDefNames == null) _alwaysFlattenPawnSettingCategoryDefNames = new List<string>();
+                _alwaysFlattenPawnSettingCategoryDefNames = _alwaysFlattenPawnSettingCategoryDefNames.Where(x => !string.IsNullOrEmpty(x)).ToList();
+            }
         }
     }
 }

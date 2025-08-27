@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Royalty</defName>
+    <label>Royalty</label>
+    <order>5000</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Biotech</defName>
+    <label>Biotech</label>
+    <order>7000</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Math</defName>
+    <label>Math</label>
+    <order>50000</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Health</defName>
+    <label>Health</label>
+    <order>2000</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Conditional</defName>
+    <label>Conditional</label>
+    <order>4000</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Logic</defName>
+    <label>Logic</label>
+    <order>4200</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Compare</defName>
+    <label>Compare</label>
+    <order>4100</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Misc</defName>
+    <label>Misc</label>
+    <order>100000</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Skills</defName>
+    <label>Skills</label>
+    <order>1000</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Equipment</defName>
+    <label>Equipment</label>
+    <order>3000</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Commands</defName>
+    <label>Commands</label>
+    <order>90000</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Events</defName>
+    <label>Events</label>
+    <order>80000</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Ideology</defName>
+    <label>Ideology</label>
+    <order>6000</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Anomaly</defName>
+    <label>Anomaly</label>
+    <order>8000</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Odyssey</defName>
+    <label>Odyssey</label>
+    <order>9000</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Manage</defName>
+    <label>Manage</label>
+    <order>1100</order>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>Map</defName>
+    <label>Map</label>
+    <order>3500</order>
+  </Def>
+</Defs>
+
+

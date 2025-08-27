@@ -69,7 +69,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
             Rect rect = new Rect(position, new Vector2(width, _buttonSize));
             if (Widgets.ButtonText(rect, label))
             {
-                FloatMenuUtility.MakeMenu(DefDatabase<PawnFitnessDef>.AllDefs, x => x.LabelCap, x => () => pawnSetting.InnerSettings[operandIndex] = PawnSetting.CreateFrom<IPawnFitness>(x));
+                Utils.MakeMenuForSettingDefs(PawnFitnessDef.GetSorted(), () => x => pawnSetting.InnerSettings[operandIndex] = PawnSetting.CreateFrom<IPawnFitness>(x));
             }
             return _buttonSize;
         }
