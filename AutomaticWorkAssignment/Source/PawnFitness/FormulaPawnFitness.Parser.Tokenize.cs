@@ -91,7 +91,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                             {
                                 if (hasDecimalSep)
                                 {
-                                    throw new ArgumentException($"Invalid number: '{formula[i]}' (formula is \"{formula}\", invalid at index {i})", nameof(formula));
+                                    throw new ParseException(new("AWA.FormulaEditor.Error.Number.MultiSep", formula.Substring(start, i - start)), new ArgumentException($"Invalid formula \"{formula}\" at index {i}", nameof(formula)));
                                 }
                                 hasDecimalSep = true;
                             }
@@ -99,7 +99,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                         }
                         if (IsValidNameChar(leading: false))
                         {
-                            throw new ArgumentException($"Invalid number: '{formula[i]}' (formula is \"{formula}\", invalid at index {i})", nameof(formula));
+                            throw new ParseException(new("AWA.FormulaEditor.Error.Number.NoLetter", formula.Substring(start, i - start + 1)), new ArgumentException($"Invalid formula \"{formula}\" at index {i}", nameof(formula)));
                         }
                         string s = formula.Substring(start, i - start).Replace("_", "");
                         yield return new NumberToken(double.Parse(s, CultureInfo.InvariantCulture));
@@ -137,7 +137,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                     }
                     else
                     {
-                        throw new ArgumentException($"Invalid character: '{formula[i]}' (formula is \"{formula}\", invalid at index {i})", nameof(formula));
+                        throw new ParseException(new("AWA.FormulaEditor.Error.InvalidChar", formula[i]), new ArgumentException($"Invalid formula \"{formula}\" at index {i}", nameof(formula)));
                     }
                 }
             }

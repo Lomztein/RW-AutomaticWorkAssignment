@@ -49,7 +49,17 @@
   <AWA.NewSettingAddDefault>Add</AWA.NewSettingAddDefault>
   <AWA.NestedSettingNoneSelected>None selected</AWA.NestedSettingNoneSelected>
   <AWA.NestedSettingSelect>Select</AWA.NestedSettingSelect>
-  <AWA.CommitSetting>Commit</AWA.CommitSetting>
+  <AWA.FormulaEditor.Commit>Commit</AWA.FormulaEditor.Commit>
+  <AWA.FormulaEditor.Error.Number.MultiSep>Number '{0}' has multiple decimal separator</AWA.FormulaEditor.Error.Number.MultiSep>
+  <AWA.FormulaEditor.Error.Number.NoLetter>Number '{0}' cannot contain letters. Did you forget an operator (+, -, /, …) ?</AWA.FormulaEditor.Error.Number.NoLetter>
+  <AWA.FormulaEditor.Error.InvalidChar>Invalid character '{0}'</AWA.FormulaEditor.Error.InvalidChar>
+  <AWA.FormulaEditor.Error.Function.NotExists>Function '{0}' does not exists</AWA.FormulaEditor.Error.Function.NotExists>
+  <AWA.FormulaEditor.Error.Operator.NotHere>Operator '{0}' is invalid here</AWA.FormulaEditor.Error.Operator.NotHere>
+  <AWA.FormulaEditor.Error.Invalid>The formula is invalid</AWA.FormulaEditor.Error.Invalid>
+  <AWA.FormulaEditor.Error.Arity.Min>Bad arity for function {0}, expected at least {2} parameters, have {1}</AWA.FormulaEditor.Error.Arity.Min>
+  <AWA.FormulaEditor.Error.Arity.Max>Bad arity for function {0}, expected at most {3} parameters, have {1}</AWA.FormulaEditor.Error.Arity.Max>
+  <AWA.FormulaEditor.Error.Arity.Between>Bad arity for function {0}, expected between {2} and {3} parameters, have {1}</AWA.FormulaEditor.Error.Arity.Between>
+  <AWA.FormulaEditor.Error.Arity.NotEq>Bad arity for function {0}, expected {2} parameters, have {1}</AWA.FormulaEditor.Error.Arity.NotEq>
   <AWA.BindingName>Variable &lt;b&gt;{0}&lt;/b&gt;</AWA.BindingName>
   <AWA.LeftOperandSet>Add left operand</AWA.LeftOperandSet>
   <AWA.RightOperandSet>Add right operand</AWA.RightOperandSet>
