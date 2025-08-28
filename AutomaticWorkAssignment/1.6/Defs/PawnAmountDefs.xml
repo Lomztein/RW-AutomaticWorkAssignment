@@ -2,20 +2,81 @@
 <Defs>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnAmountDef">
     <defName>Lomzie_IntPawnAmount</defName>
+    <label>constant</label>
     <defClass>Lomzie.AutomaticWorkAssignment.Amounts.IntPawnAmount</defClass>
     <description>Assign to a specific amount of pawns.</description>
     <icon>#</icon>
   </Def>
+  
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnAmountDef">
     <defName>Lomzie_PercentagePawnAmount</defName>
+    <label>percentage</label>
     <defClass>Lomzie.AutomaticWorkAssignment.Amounts.PercentagePawnAmount</defClass>
     <description>Assign to a percentage all pawns.</description>
     <icon>%</icon>
   </Def>
+  
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnAmountDef">
     <defName>Lomzie_BuildingPawnAmount</defName>
+    <label>building</label>
     <defClass>Lomzie.AutomaticWorkAssignment.Amounts.BuildingPawnAmount</defClass>
     <description>Syncronize worker count with amount of a building.</description>
     <icon>B</icon>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnAmountDef">
+    <defName>Lomzie_PrisonersPawnAmount</defName>
+    <label>prisoners</label>
+    <defClass>Lomzie.AutomaticWorkAssignment.Amounts.PrisonersPawnAmount</defClass>
+    <description>Syncronize worker count the amount of prisoners.</description>
+    <icon>P</icon>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnAmountDef">
+    <defName>Lomzie_SlavesPawnAmount</defName>
+    <label>slaves</label>
+    <defClass>Lomzie.AutomaticWorkAssignment.Amounts.SlavesPawnAmount</defClass>
+    <description>Syncronize worker count with the amount of colony slaves.</description>
+    <icon>S</icon>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnAmountDef">
+    <defName>Lomzie_GuestsPawnAmount</defName>
+    <label>guests</label>
+    <defClass>Lomzie.AutomaticWorkAssignment.Amounts.GuestsPawnAmount</defClass>
+    <description>Syncronize worker count with the amount of colony guests.</description>
+    <icon>G</icon>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnAmountDef">
+    <defName>Lomzie_StockpilePawnAmount</defName>
+    <label>stockpile</label>
+    <defClass>Lomzie.AutomaticWorkAssignment.Amounts.StockpilePawnAmount</defClass>
+    <description>Syncronize worker count with stockpile of items on map.</description>
+    <icon>S</icon>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnAmountDef">
+    <defName>Lomzie_FarmlandPawnAmount</defName>
+    <label>farmland</label>
+    <defClass>Lomzie.AutomaticWorkAssignment.Amounts.FarmlandPawnAmount</defClass>
+    <description>Syncronize worker count with the amount of farmland.</description>
+    <icon>F</icon>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnAmountDef">
+    <defName>Lomzie_AnimalsPawnAmount</defName>
+    <label>animals</label>
+    <defClass>Lomzie.AutomaticWorkAssignment.Amounts.AnimalsPawnAmount</defClass>
+    <description>Syncronize worker count with the amount of domesticated animals.</description>
+    <icon>A</icon>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnAmountDef">
+    <defName>Lomzie_MaxPawnAmount</defName>
+    <label>max</label>
+    <defClass>Lomzie.AutomaticWorkAssignment.Amounts.MaxPawnAmount</defClass>
+    <description>Use the max value of an internal list.</description>
+    <icon>MX</icon>
   </Def>
 </Defs>

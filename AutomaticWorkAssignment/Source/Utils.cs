@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using UnityEngine;
 using Verse;
 
@@ -222,5 +223,20 @@ namespace Lomzie.AutomaticWorkAssignment
 
         private static bool ShouldFlattenPawnSettingCategory(PawnSettingCategoryDef pawnSettingCategoryDef)
             => !AutomaticWorkAssignmentSettings.UseSubMenus || AutomaticWorkAssignmentSettings.AlwaysFlattenPawnSettingCategorySubmenu(pawnSettingCategoryDef);
+
+        public static string GetPreceptLabel(PreceptDef def)
+        {
+            if (def == null)
+                return null;
+
+            StringBuilder label = new();
+            if (def.issue != null)
+                label.Append(def.issue.LabelCap);
+            string defLabel = def.LabelCap;
+            if (!string.IsNullOrEmpty(defLabel))
+                label.Append(": " + def.LabelCap);
+
+            return label.ToString();
+        }
     }
 }

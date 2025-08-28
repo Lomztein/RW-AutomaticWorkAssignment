@@ -10,7 +10,6 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
 {
     public class ConditionalPawnPostProcessorUIHandler : PawnSettingUIHandler<ConditionalPawnPostProcessor>
     {
-        private readonly float _labelSize = 24;
         private readonly float _buttonSize = 32;
 
         protected override float Handle(Vector2 position, float width, ConditionalPawnPostProcessor pawnSetting)

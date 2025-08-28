@@ -34,24 +34,22 @@ namespace Lomzie.AutomaticWorkAssignment.Source.UI.Windows
 
         public override void DoWindowContents(Rect inRect)
         {
-            (Rect header, Rect body) = Utils.SplitRectVerticalUpper(inRect, HEADER_SIZE);
+            (Rect header, Rect body) = Utils.SplitRectVerticalUpper(inRect, HEADER_SIZE * 1.5f);
             if (Widgets.CloseButtonFor(inRect))
             {
                 Close();
             }
-
-            inRect = Utils.GetSubRectFraction(inRect, new Vector2(0f, 0.075f), new Vector2(1f, 1f));
 
             Text.Anchor = TextAnchor.MiddleCenter;
             Widgets.Label(header, Header);
             Text.Anchor = TextAnchor.UpperLeft;
 
             var height = _listHeight;
-            var scrollView = new Rect(0f, 0f, inRect.width, height);
-            if (height > inRect.height)
+            var scrollView = new Rect(0f, 0f, body.width, height);
+            if (height > body.height)
                 scrollView.width -= SCROLL_BAR_WIDTH;
 
-            Widgets.BeginScrollView(inRect, ref _listPosition, scrollView);
+            Widgets.BeginScrollView(body, ref _listPosition, scrollView);
             var scrollContent = scrollView;
 
             Widgets.BeginGroup(scrollContent);
@@ -61,7 +59,7 @@ namespace Lomzie.AutomaticWorkAssignment.Source.UI.Windows
             IList<T> list = GetList();
             foreach (T element in list)
             {
-                Rect fullRow = new Rect(0, cur.y, inRect.width, RowHeight);
+                Rect fullRow = new Rect(0, cur.y, scrollView.width, RowHeight);
                 Rect drawRow;
                 if (AllowRemove)
                 {
@@ -86,7 +84,7 @@ namespace Lomzie.AutomaticWorkAssignment.Source.UI.Windows
             if (AllowAdd)
             {
                 // row for new pawn.
-                var newRect = new Rect(0f, cur.y, inRect.width, AddButtonSize);
+                var newRect = new Rect(0f, cur.y, body.width, AddButtonSize);
                 newRect = Utils.ShrinkByMargin(newRect, 8f);
 
                 Text.Anchor = TextAnchor.MiddleCenter;

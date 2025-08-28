@@ -1,10 +1,12 @@
 using AutomaticWorkAssignment.UI;
 using AutomaticWorkAssignment.UI.Generic;
+using Lomzie.AutomaticWorkAssignment.Amounts;
 using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using Lomzie.AutomaticWorkAssignment.UI;
+using Lomzie.AutomaticWorkAssignment.UI.Amounts;
 using Lomzie.AutomaticWorkAssignment.UI.Generic;
 using Lomzie.AutomaticWorkAssignment.UI.Modular;
 using Lomzie.AutomaticWorkAssignment.UI.PawnConditions;
@@ -53,6 +55,25 @@ namespace Lomzie.AutomaticWorkAssignment
 
         private void Initialize()
         {
+            InitializeAmountHandlers();
+            InitializeSettingHandlers();
+        }
+
+        private void InitializeAmountHandlers()
+        {
+            PawnAmountUIHandlers.AddHandler(new IntPawnAmountUIHandler());
+            PawnAmountUIHandlers.AddHandler(new PercentagePawnAmountUIHandler());
+            PawnAmountUIHandlers.AddHandler(new BuildingPawnAmountUIHandler());
+            PawnAmountUIHandlers.AddHandler(new StockpilePawnAmountUIHandler());
+            PawnAmountUIHandlers.AddHandler(new MultiplierPawnAmountUIHandler<FarmlandPawnAmount>(x => x.Multiplier, (x, y) => x.Multiplier = y));
+            PawnAmountUIHandlers.AddHandler(new MultiplierPawnAmountUIHandler<AnimalsPawnAmount>(x => x.Multiplier, (x, y) => x.Multiplier = y));
+            PawnAmountUIHandlers.AddHandler(new MultiplierPawnAmountUIHandler<PrisonersPawnAmount>(x => x.Multiplier, (x, y) => x.Multiplier = y));
+            PawnAmountUIHandlers.AddHandler(new MultiplierPawnAmountUIHandler<SlavesPawnAmount>(x => x.Multiplier, (x, y) => x.Multiplier = y));
+            PawnAmountUIHandlers.AddHandler(new MultiplierPawnAmountUIHandler<GuestsPawnAmount>(x => x.Multiplier, (x, y) => x.Multiplier = y));
+            PawnAmountUIHandlers.AddHandler(new CompositePawnAmountUIHandler<MaxPawnAmount>(x => x.InnerAmounts, "AWA.MaxEdit"));
+        }
+
+        private void InitializeSettingHandlers() {
             // Initialize fitness UI handlers.
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<PassionCountPawnFitness>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<CommitmentPawnFitness>());
@@ -187,8 +208,11 @@ namespace Lomzie.AutomaticWorkAssignment
             // Ideology
             if (ModLister.IdeologyInstalled)
             {
+                PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<CertaintyPawnFitness>());
                 PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<IdeoRolePawnCondition, PreceptDef>(
                     (m) => DefDatabase<PreceptDef>.AllDefs.Where(x => x.roleTags != null && x.roleTags.Any()), x => x.LabelCap, x => x?.RoleDef?.LabelCap ?? "AWA.IdeoRoleSelect".Translate(), (c, s) => c.RoleDef = s));
+                PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<IdeoPreceptPawnCondition, PreceptDef>(
+                    (m) => DefDatabase<PreceptDef>.AllDefs, x => Utils.GetPreceptLabel(x), x => Utils.GetPreceptLabel(x.PreceptDef) ?? "AWA.IdeoPreceptSelect".Translate(), (c, s) => c.PreceptDef = s));
                 PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SetIdeoRolePawnPostProcessor, PreceptDef>(
                     (m) => DefDatabase<PreceptDef>.AllDefs.Where(x => x.roleTags != null && x.roleTags.Any()), x => x.LabelCap, x => x?.RoleDef?.LabelCap ?? "AWA.IdeoRoleSelect".Translate(), (c, s) => c.RoleDef = s));
                 PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<IdeoligionPawnCondition, Ideo>(

@@ -3,6 +3,7 @@ using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
+using Lomzie.AutomaticWorkAssignment.UI.Amounts;
 using Lomzie.AutomaticWorkAssignment.UI.Dialogs;
 using Lomzie.AutomaticWorkAssignment.UI.Windows;
 using RimWorld;
@@ -74,10 +75,6 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private Texture2D _searchIcon = ContentFinder<Texture2D>.Get("UI/Widgets/Search");
 
         private Vector2 _iconImageSize = new Vector2(24f, 24f);
-
-        private string _minPawnAmountBuffer;
-        private string _targetPawnAmountBuffer;
-
 
         public WorkManagerWindow()
         {
@@ -413,11 +410,11 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             // Min workers
             var minRects = Utils.GetLabeledContentWithFixedLabelSize(firstRowParts[1], labelWidth);
-            DoPawnAmountContents(minRects.labelRect, minRects.contentRect, "AWA.LabelMinWorkers".Translate(), _currentWorkSpecification.MinWorkers, _minPawnAmountBuffer, (x) => _currentWorkSpecification.MinWorkers = x);
+            DoPawnAmountContents(minRects.labelRect, minRects.contentRect, "AWA.LabelMinWorkers".Translate(), _currentWorkSpecification.MinWorkers, (x) => _currentWorkSpecification.MinWorkers = x);
 
             // Target workers
             var maxRects = Utils.GetLabeledContentWithFixedLabelSize(firstRowParts[2], labelWidth);
-            DoPawnAmountContents(maxRects.labelRect, maxRects.contentRect, "AWA.LabelTargetWorkers".Translate(), _currentWorkSpecification.TargetWorkers, _targetPawnAmountBuffer, (x) => _currentWorkSpecification.TargetWorkers = x);
+            DoPawnAmountContents(maxRects.labelRect, maxRects.contentRect, "AWA.LabelTargetWorkers".Translate(), _currentWorkSpecification.TargetWorkers, (x) => _currentWorkSpecification.TargetWorkers = x);
 
             if (Widgets.ButtonText(firstRowParts[3], "AWA.LabelCountAssigneesFrom".Translate()))
             {
@@ -846,7 +843,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             => Input.GetKey(KeyCode.LeftShift) ? sign * 1000 : sign;
 
         // TODO: Move handling of each type into own class.
-        private void DoPawnAmountContents(Rect labelRect, Rect contentRect, string label, IPawnAmount pawnAmount, string pawnAmountBuffer, Action<IPawnAmount> newPawnAmountType)
+        private void DoPawnAmountContents(Rect labelRect, Rect contentRect, string label, IPawnAmount pawnAmount, Action<IPawnAmount> newPawnAmountType)
         {
             Text.Anchor = TextAnchor.MiddleLeft;
 
@@ -854,40 +851,15 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Rect toggleRect = Utils.GetSubRectFraction(contentRect, new Vector2(0.8f, 0f), Vector2.one);
 
             Widgets.Label(labelRect, label);
-            if (pawnAmount is IntPawnAmount intPawnAmount)
-            {
-                Widgets.TextFieldNumeric(amountRect, ref intPawnAmount.Value, ref pawnAmountBuffer);
-            }
-            if (pawnAmount is PercentagePawnAmount percentagePawnAmount)
-            {
-                float percentage = percentagePawnAmount.Percentage * 100f;
-                Widgets.TextFieldNumeric(amountRect, ref percentage, ref pawnAmountBuffer, 0f, 100f);
-                percentagePawnAmount.Percentage = percentage / 100f;
-            }
-            if (pawnAmount is BuildingPawnAmount buildingPawnAmount)
-            {
-                Rect pickerRect = Utils.GetSubRectFraction(amountRect, Vector2.zero, new Vector2(0.7f, 1f));
-                Rect multLabelRect = Utils.GetSubRectFraction(amountRect, new Vector2(0.7f, 0f), new Vector2(0.8f, 1f));
-                Rect multRect = Utils.GetSubRectFraction(amountRect, new Vector2(0.8f, 0f), new Vector2(1f, 1f));
-                if (Widgets.ButtonText(pickerRect, buildingPawnAmount.BuildingDef?.LabelCap ?? "AWA.Select".Translate()))
-                {
-                    IEnumerable<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.Where(x => x.BuildableByPlayer);
-                    FloatMenuUtility.MakeMenu(defs, x => x.label, x => () => buildingPawnAmount.BuildingDef = x);
-                }
-                Text.Anchor = TextAnchor.MiddleCenter;
-                Widgets.Label(multLabelRect, "x");
-                Widgets.TextFieldNumeric(multRect, ref buildingPawnAmount.Multiplier, ref pawnAmountBuffer);
-                Text.Anchor = TextAnchor.UpperLeft;
-            }
+            PawnAmountUIHandlers.Handle(amountRect, pawnAmount);
 
             var pawnAmountDefs = DefDatabase<PawnAmountDef>.AllDefsListForReading;
             PawnAmountDef current = pawnAmountDefs.Find(x => x.defClass.IsInstanceOfType(pawnAmount));
             int currentIndex = pawnAmountDefs.IndexOf(current);
+
             if (Widgets.ButtonText(toggleRect, current.icon))
             {
-                Type newType = pawnAmountDefs[(currentIndex + 1) % pawnAmountDefs.Count].defClass;
-                IPawnAmount newPawnAmount = (IPawnAmount)Activator.CreateInstance(newType);
-                newPawnAmountType(newPawnAmount);
+                SearchableFloatMenu.MakeMenu(pawnAmountDefs, x => x.LabelCap, x => () => newPawnAmountType((IPawnAmount)Activator.CreateInstance(x.defClass)));
             }
             TooltipHandler.TipRegion(toggleRect, current.description);
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
@@ -8,6 +9,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
     public static class PawnSettingUIHandlers
     {
         private static List<IPawnSettingUIHandler> _handlers;
+        private static readonly CacheDict<IPawnSetting, IPawnSettingUIHandler> _cache = new CacheDict<IPawnSetting, IPawnSettingUIHandler>(60);
 
         public static void AddHandler(IPawnSettingUIHandler handler)
         {
@@ -18,9 +20,13 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         public static IPawnSettingUIHandler? GetHandler(IPawnSetting pawnSetting)
         {
+            if (_cache.TryGet(pawnSetting, out IPawnSettingUIHandler cachedHandler))
+                return cachedHandler;
+
             IPawnSettingUIHandler? handler = _handlers.FirstOrDefault(x => x.CanHandle(pawnSetting));
             if (handler != null)
             {
+                _cache.Set(pawnSetting, handler);
                 return handler;
             }
             Log.Warning($"Unable to handle PawnSetting of type {pawnSetting.GetType().Name}!");

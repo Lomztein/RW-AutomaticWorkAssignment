@@ -7,6 +7,15 @@
     <description>Assign to slave pawns.</description>
     <category>Ideology</category>
   </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_Certainty</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CertaintyPawnFitness</settingClass>
+    <label>certainty</label>
+    <description>Prioritize by pawn certainty in their beliefs.</description>
+    <category>Ideology</category>
+  </Def>
+  
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_HasIdeoRole</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.IdeoRolePawnCondition</settingClass>
@@ -14,6 +23,7 @@
     <description>Assign to pawns with the given role.</description>
     <category>Ideology</category>
   </Def>
+  
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_SetIdeoRole</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetIdeoRolePawnPostProcessor</settingClass>
@@ -21,11 +31,20 @@
     <description>Assign the given role to the pawn. Does not perform a ritual. May upset current holder.</description>
     <category>Ideology</category>
   </Def>
+  
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_IdeoCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.IdeoligionPawnCondition</settingClass>
     <label>has ideoligion</label>
     <description>Check if the pawn is a member of the given ideoligion.</description>
+    <category>Ideology</category>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_IdeoPreceptCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.IdeoPreceptPawnCondition</settingClass>
+    <label>has precept</label>
+    <description>Check if the pawns ideoligion has a given precept.</description>
     <category>Ideology</category>
   </Def>
 </Defs>

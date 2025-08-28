@@ -168,7 +168,13 @@ namespace Lomzie.AutomaticWorkAssignment
 
 
         public IEnumerable<Map> GetAllMaps()
-            => _allMaps.Get(CacheMaps);
+        {
+            if (_allMaps.TryGet(out IEnumerable<Map> maps))
+                return maps;
+            maps = CacheMaps();
+            _allMaps.Set(maps);
+            return maps;
+        }
 
         private IEnumerable<Map> CacheMaps()
         {
@@ -211,17 +217,26 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public IEnumerable<Pawn> GetAllPawns()
         {
-            return _cachedPawns.Get(CachePawns).Where(x => x != null);
+            return GetPawnCache().Where(x => x != null);
         }
 
         public IEnumerable<Pawn> GetAllAssignableNowPawns()
         {
-            return _cachedPawns.Get(CachePawns).Where(x => x != null && CanBeAssignedNow(x));
+            return GetPawnCache().Where(x => x != null && CanBeAssignedNow(x));
         }
 
         public IEnumerable<Pawn> GetAllEverAssignablePawns()
         {
-            return _cachedPawns.Get(CachePawns).Where(x => x != null && CanEverBeAssigned(x));
+            return GetPawnCache().Where(x => x != null && CanEverBeAssigned(x));
+        }
+
+        private IEnumerable<Pawn> GetPawnCache()
+        {
+            if (_cachedPawns.TryGet(out IEnumerable<Pawn> cachedPawns))
+                return cachedPawns;
+            cachedPawns = CachePawns();
+            _cachedPawns.Set(cachedPawns);
+            return cachedPawns;
         }
 
         public int GetPawnCount()

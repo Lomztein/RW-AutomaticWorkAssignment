@@ -7,13 +7,14 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
     public class Label<T> : IHandlerModule<T> where T : IPawnSetting
     {
         private readonly Func<T, string> _labelGetter;
-        private TextAnchor _anchor;
-        private float _size;
+        private readonly TextAnchor _anchor;
+        private readonly float _size;
 
         public Label(Func<T, string> labelGetter, TextAnchor textAnchor = TextAnchor.MiddleCenter, float size = AutomaticWorkAssignmentSettings.UIInputSizeBase)
         {
             _labelGetter = labelGetter;
             _size = size;
+            _anchor = textAnchor;
         }
 
         public float Handle(Vector2 position, float width, T pawnSetting)

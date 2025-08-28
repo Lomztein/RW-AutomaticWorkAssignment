@@ -34,6 +34,7 @@
   <AWA.All>All</AWA.All>
   <AWA.Auto>Auto</AWA.Auto>
   <AWA.IdeoSelect>Select ideoligion</AWA.IdeoSelect>
+  <AWA.IdeoPreceptSelect>Select precept</AWA.IdeoPreceptSelect>
   <AWA.WorkSpecSelect>Select spec</AWA.WorkSpecSelect>
   <AWA.SelectTitle>Select title</AWA.SelectTitle>
   <AWA.SelectSave>Select save</AWA.SelectSave>
@@ -47,6 +48,10 @@
   <AWA.If>If</AWA.If>
   <AWA.Else>Else</AWA.Else>
   <AWA.Return>Return</AWA.Return>
+  <AWA.Empty>Empty</AWA.Empty>
+  <AWA.CompositeAmountEdit>Edit composite amount</AWA.CompositeAmountEdit>
+  <AWA.AmountAdd>Add amount</AWA.AmountAdd>
+  <AWA.MaxEdit>Edit max ({0})</AWA.MaxEdit>
   
   <AWA.NewSettingAddDefault>Add</AWA.NewSettingAddDefault>
   <AWA.NestedSettingNoneSelected>None selected</AWA.NestedSettingNoneSelected>

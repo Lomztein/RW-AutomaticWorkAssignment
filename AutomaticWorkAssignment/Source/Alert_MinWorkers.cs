@@ -18,14 +18,15 @@ namespace Lomzie.AutomaticWorkAssignment
         private bool AnyCritical => _specsWithIssue.Any(x => x.Item1.IsCritical);
         public bool DisplayRedCritical => AnyCritical && RedCriticalAlert;
 
-        private Cache<AlertReport> _reportCache;
+        private Cache<AlertReport> _reportCache = new Cache<AlertReport>();
 
         public override AlertReport GetReport()
         {
-            if (_reportCache == null)
-                _reportCache = new Cache<AlertReport>(CacheReport);
-
-            return _reportCache.Get();
+            if (_reportCache.TryGet(out var report)) 
+                return report;
+            report = CacheReport();
+            _reportCache.Set(report);
+            return report;
         }
 
         private AlertReport CacheReport()
