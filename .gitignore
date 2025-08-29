@@ -363,6 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 **/PublishedFileId.txt
-**/Assemblies/*.{dll,pdb}
+**/Assemblies/*.pdb
+**/Assemblies/*.dll
 
 .rw.pid
