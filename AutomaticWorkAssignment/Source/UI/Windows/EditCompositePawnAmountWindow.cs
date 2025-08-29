@@ -37,7 +37,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Windows
         {
             (Rect label, Rect content) = Utils.SplitRectHorizontalLeft(inRect, inRect.height);
             Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(label, DefDatabase<PawnAmountDef>.AllDefs.First(x => x.defClass == element.GetType()).icon);
+            Widgets.Label(label, element.Icon);
             Text.Anchor = TextAnchor.UpperLeft;
             PawnAmountUIHandlers.Handle(content, element);
         }

@@ -1,4 +1,5 @@
 ﻿using Lomzie.AutomaticWorkAssignment.Amounts;
+using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
@@ -30,8 +31,8 @@ namespace Lomzie.AutomaticWorkAssignment
         public List<IPawnFitness> Fitness = new List<IPawnFitness>(); // Used to sort pawns, later elements are used to break earlier ties.
         public List<IPawnPostProcessor> PostProcessors = new List<IPawnPostProcessor>(); // Used to do additional things to pawns assigned to this work.
 
-        public IPawnAmount MinWorkers = new IntPawnAmount(); // Min workers, conditions will be ignored if applicable are below this.
-        public IPawnAmount TargetWorkers = new IntPawnAmount(); // Number of workers to be assigned this particular work.
+        public IPawnAmount MinWorkers = PawnAmount.CreateFrom(PawnAmountDefOf.Lomzie_IntPawnAmount); // Min workers, conditions will be ignored if applicable are below this.
+        public IPawnAmount TargetWorkers = PawnAmount.CreateFrom(PawnAmountDefOf.Lomzie_IntPawnAmount); // Number of workers to be assigned this particular work.
 
         public PawnWorkPriorities Priorities = PawnWorkPriorities.CreateEmpty(); // The actual work priorities to be assigned.
 
@@ -210,8 +211,8 @@ namespace Lomzie.AutomaticWorkAssignment
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                if (MinWorkers == null) MinWorkers = new IntPawnAmount();
-                if (TargetWorkers == null) TargetWorkers = new IntPawnAmount();
+                if (MinWorkers == null) MinWorkers = PawnAmount.CreateFrom(PawnAmountDefOf.Lomzie_IntPawnAmount);
+                if (TargetWorkers == null) TargetWorkers = PawnAmount.CreateFrom(PawnAmountDefOf.Lomzie_IntPawnAmount);
                 if (Priorities == null) Priorities = PawnWorkPriorities.CreateDefault();
                 if (Fitness == null) Fitness = new List<IPawnFitness>();
                 if (Conditions == null) Conditions = new List<IPawnCondition>();

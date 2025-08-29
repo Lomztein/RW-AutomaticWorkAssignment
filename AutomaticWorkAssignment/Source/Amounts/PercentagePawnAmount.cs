@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Lomzie.AutomaticWorkAssignment.Defs;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -24,6 +25,13 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
             value = Mathf.RoundToInt(colonistCount * Percentage);
 
             return _cache.Set(value);
+        }
+
+        public static PercentagePawnAmount Create(float percentage)
+        {
+            PercentagePawnAmount newPawnAmount = CreateFrom(PawnAmountDefOf.Lomzie_PercentagePawnAmount) as PercentagePawnAmount;
+            newPawnAmount.Percentage = percentage;
+            return newPawnAmount;
         }
     }
 }

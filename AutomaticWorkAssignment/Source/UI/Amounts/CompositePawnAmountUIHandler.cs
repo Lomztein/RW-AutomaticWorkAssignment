@@ -26,7 +26,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Amounts
 
             string innerString = inner.NullOrEmpty() ? 
                 "AWA.Empty".Translate() : 
-                string.Join(", ", inner.Select(x => DefDatabase<PawnAmountDef>.AllDefs.First(y => y.defClass == x.GetType()).icon));
+                string.Join(", ", inner.Select(x => x.Icon));
 
             if (Widgets.ButtonText(inRect, _label.Translate(innerString)))
             {

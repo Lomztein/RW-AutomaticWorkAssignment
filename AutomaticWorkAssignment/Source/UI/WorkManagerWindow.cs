@@ -874,15 +874,12 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Widgets.Label(labelRect, label);
             PawnAmountUIHandlers.Handle(amountRect, pawnAmount);
 
-            var pawnAmountDefs = DefDatabase<PawnAmountDef>.AllDefsListForReading;
-            PawnAmountDef current = pawnAmountDefs.Find(x => x.defClass.IsInstanceOfType(pawnAmount));
-            int currentIndex = pawnAmountDefs.IndexOf(current);
-
-            if (Widgets.ButtonText(toggleRect, current.icon))
+            if (Widgets.ButtonText(toggleRect, pawnAmount.Icon))
             {
+                var pawnAmountDefs = DefDatabase<PawnAmountDef>.AllDefs;
                 SearchableFloatMenu.MakeMenu(pawnAmountDefs, x => x.LabelCap, x => () => newPawnAmountType(PawnAmount.CreateFrom(x)));
             }
-            TooltipHandler.TipRegion(toggleRect, current.description);
+            TooltipHandler.TipRegion(toggleRect, pawnAmount.Description);
 
             Text.Anchor = TextAnchor.UpperLeft;
         }

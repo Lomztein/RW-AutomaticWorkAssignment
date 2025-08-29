@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using Lomzie.AutomaticWorkAssignment.Defs;
+using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.Amounts
 {
@@ -15,6 +16,13 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
         public override int GetCount(WorkSpecification spec, ResolveWorkRequest req)
         {
             return Value;
+        }
+
+        public static IntPawnAmount Create(int value)
+        {
+            IntPawnAmount newPawnAmount = CreateFrom(PawnAmountDefOf.Lomzie_IntPawnAmount) as IntPawnAmount;
+            newPawnAmount.Value = value;
+            return newPawnAmount;
         }
     }
 }
