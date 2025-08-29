@@ -30,7 +30,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Windows
         protected override void AddButtonClicked()
         {
             var list = GetList();
-            SearchableFloatMenu.MakeMenu(DefDatabase<PawnAmountDef>.AllDefs, x => x.LabelCap, x => () => list.Add((IPawnAmount)Activator.CreateInstance(x.defClass)));
+            SearchableFloatMenu.MakeMenu(DefDatabase<PawnAmountDef>.AllDefs, x => x.LabelCap, x => () => list.Add(PawnAmount.CreateFrom(x)));
         }
 
         protected override void DrawRow(Rect inRect, IPawnAmount element)

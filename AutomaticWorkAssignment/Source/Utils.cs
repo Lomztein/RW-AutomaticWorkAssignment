@@ -1,5 +1,8 @@
 ﻿using FloatSubMenus;
 using Lomzie.AutomaticWorkAssignment.Defs;
+using Lomzie.AutomaticWorkAssignment.PawnConditions;
+using Lomzie.AutomaticWorkAssignment.PawnFitness;
+using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using RimWorld;
 using System;
 using System.Collections;
@@ -149,6 +152,15 @@ namespace Lomzie.AutomaticWorkAssignment
             list.Insert(newIndex, element);
         }
 
+        public static bool ReplaceElement<T>(IList<T> list, T original, T @new)
+        {
+            int index = list.IndexOf(original);
+            if (index == -1)
+                return false;
+            list[index] = @new;
+            return true;
+        }
+
         // I would very much like an explanation as to why these utility functions are internal.
         private static MethodInfo _unclip = typeof(GUIContent).Assembly.GetType("UnityEngine.GUIClip").GetMethod("Unclip", new[] { typeof(Vector2) });
         public static void RotateAroundPivot(float angle, Vector2 pivotPoint)
@@ -168,6 +180,18 @@ namespace Lomzie.AutomaticWorkAssignment
             if (setting is PawnSetting pawnSetting && pawnSetting.Def == null)
                 return false;
             return true;
+        }
+
+        public static Type GetPawnSettingArchetype(this Type pawnSettingType)
+        {
+            if (typeof(IPawnFitness).IsAssignableFrom(pawnSettingType))
+                return typeof(IPawnFitness);
+            if (typeof(IPawnCondition).IsAssignableFrom(pawnSettingType))
+                return typeof(IPawnCondition);
+            if (typeof(IPawnPostProcessor).IsAssignableFrom(pawnSettingType))
+                return typeof(IPawnPostProcessor);
+
+            throw new InvalidOperationException($"Unknown pawn setting type '{pawnSettingType.Name}'. You may need to patch Utils.GetPawnSettingArchetype.");
         }
 
         public static int Mod(int x, int m)

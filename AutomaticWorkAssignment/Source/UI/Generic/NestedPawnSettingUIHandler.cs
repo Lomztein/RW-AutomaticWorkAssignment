@@ -11,16 +11,13 @@ using Verse;
 
 namespace AutomaticWorkAssignment.UI
 {
-    public class NestedPawnSettingUIHandler<T, D> : IPawnSettingUIHandler where T : IPawnSetting where D : PawnSettingDef
+    public class NestedPawnSettingUIHandler<TSetting, TNestedSetting, TSettingDef> : IPawnSettingUIHandler where TSetting : IPawnSetting where TNestedSetting : IPawnSetting where TSettingDef : PawnSettingDef
     {
-
-        private readonly float _addConditionButtonSize = 32;
-
         public virtual Action? HelpHandler(IPawnSetting setting) => setting.Def.documentationPath == null ?
             null :
             () => AutomaticWorkAssignmentMod.OpenWebDocumentation(setting.Def.documentationPath);
         public bool CanHandle(IPawnSetting pawnSetting)
-            => pawnSetting is T;
+            => pawnSetting is TSetting;
 
         public float Handle(Vector2 position, float width, IPawnSetting pawnSetting)
             => Handle(position, width, (NestedPawnSetting)pawnSetting);
@@ -34,31 +31,31 @@ namespace AutomaticWorkAssignment.UI
             {
                 WorkManagerWindow.DoPawnSetting(
                     ref layout,
-                    pawnSetting.InnerSetting,
+                    (TNestedSetting)pawnSetting.InnerSetting,
                     canMoveUp: false,
                     canMoveDown: false,
                     null,
-                    (x) => Find.Root.StartCoroutine(DelayedRemoveInnerSetting(pawnSetting)));
+                    (x) => Find.Root.StartCoroutine(DelayedRemoveInnerSetting(pawnSetting)),
+                    (x, newSetting) => Find.Root.StartCoroutine(DelayedReplaceInnerSetting(pawnSetting, newSetting)));
             }
             else
             {
-                Rect addConditionButtonRect = layout.NewRow(_addConditionButtonSize);
-                if (Widgets.ButtonText(addConditionButtonRect, "AWA.NestedSettingSelect".Translate()))
-                {
-                    Utils.MakeMenuForSettingDefs(GetDefs(), () => (x) => pawnSetting.InnerSetting = PawnSetting.CreateFrom<IPawnSetting>(x));
-                }
+                WorkManagerWindow.DoAddSettingButton<TNestedSetting, TSettingDef>(ref layout, "AWA.NestedSettingSelect".Translate(), (newSetting) => pawnSetting.InnerSetting = newSetting, true);
             }
 
             return layout.Rect.height;
         }
-
-        private IEnumerable<D> GetDefs()
-            => PawnSettingDef.GetSorted<D>();
-
+        
         private IEnumerator DelayedRemoveInnerSetting(NestedPawnSetting setting)
         {
             yield return new WaitForEndOfFrame();
             setting.InnerSetting = null;
+        }
+
+        private IEnumerator DelayedReplaceInnerSetting(NestedPawnSetting setting, TNestedSetting newSetting)
+        {
+            yield return new WaitForEndOfFrame();
+            setting.InnerSetting = newSetting;
         }
     }
 }

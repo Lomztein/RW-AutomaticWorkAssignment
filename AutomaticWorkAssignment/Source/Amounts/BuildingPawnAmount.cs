@@ -4,14 +4,14 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.Amounts
 {
-    public class BuildingPawnAmount : IPawnAmount
+    public class BuildingPawnAmount : PawnAmount
     {
         public ThingDef BuildingDef;
         public float Multiplier = 1f;
 
-        private Cache<int> _cache = new Cache<int>();
+        private readonly Cache<int> _cache = new();
 
-        public int GetCount(WorkSpecification spec, ResolveWorkRequest req)
+        public override int GetCount(WorkSpecification spec, ResolveWorkRequest req)
         {
             if (BuildingDef != null)
             {
@@ -28,8 +28,9 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
             return 0;
         }
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Defs.Look(ref BuildingDef, "buildingDef");
             Scribe_Values.Look(ref Multiplier, "multiplier");
         }

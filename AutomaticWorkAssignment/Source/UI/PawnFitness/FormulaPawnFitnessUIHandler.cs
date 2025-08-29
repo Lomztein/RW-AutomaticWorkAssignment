@@ -61,17 +61,13 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
                             canMoveUp: false,
                             canMoveDown: false,
                             onMoveSetting: null,
-                            onDeleteSetting: (x) => Find.Root.StartCoroutine(DelayedRemoveInnerSetting(bindingName, pawnSetting)));
-                    }
+                            onDeleteSetting: (x) => Find.Root.StartCoroutine(DelayedRemoveInnerSetting(bindingName, pawnSetting)),
+                            onReplaceSetting: (x, newSetting) => Find.Root.StartCoroutine(DelayedReplaceInnerSetting(bindingName, pawnSetting, newSetting)));
+            }
                     else
                     {
                         Rect addConditionButtonRect = bindingsLayout.NewRow(AutomaticWorkAssignmentSettings.UIButtonSizeBase);
-                        if (Widgets.ButtonText(addConditionButtonRect, "AWA.NestedSettingSelect".Translate()))
-                        {
-                            Utils.MakeMenuForSettingDefs(
-                                GetDefs(),
-                                actionGetter: () => (def) => pawnSetting.bindingSettings.SetOrAdd(bindingName, PawnSetting.CreateFrom<IPawnFitness>(def)));
-                        }
+                        WorkManagerWindow.DoAddSettingButton<IPawnFitness, PawnFitnessDef>(addConditionButtonRect, "AWA.FunctionSelect".Translate(), (x) => pawnSetting.bindingSettings[bindingName] = x, true);
                     }
                 }
                 layout.NewRow(bindingsLayout.Rect.height);
@@ -80,12 +76,16 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
             return layout.Rect.height;
         }
 
-        private IEnumerable<PawnFitnessDef> GetDefs()
-            => PawnFitnessDef.GetSorted();
         private IEnumerator DelayedRemoveInnerSetting(string name, FormulaPawnFitness setting)
         {
             yield return new WaitForEndOfFrame();
             setting.bindingSettings.Remove(name);
+        }
+
+        private IEnumerator DelayedReplaceInnerSetting(string name, FormulaPawnFitness setting, IPawnFitness newSetting)
+        {
+            yield return new WaitForEndOfFrame();
+            setting.bindingSettings[name] = newSetting;
         }
     }
 }

@@ -81,14 +81,17 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             fitnessConfigurationColumn = new ConfigurationColumnData<IPawnFitness>(
                 () => _currentWorkSpecification.Fitness,
                 (fitness) => _currentWorkSpecification.DeleteFitness(fitness),
+                (fitness, newFitness) => _currentWorkSpecification.ReplaceFitness(fitness, newFitness),
                 (fitness, index) => _currentWorkSpecification.MoveFitness(fitness, index));
             conditionsConfigurationColumn = new ConfigurationColumnData<IPawnCondition>(
                 () => _currentWorkSpecification.Conditions,
                 (condition) => _currentWorkSpecification.DeleteCondition(condition),
+                (condition, newCondition) => _currentWorkSpecification.ReplaceCondition(condition, newCondition),
                 (condition, index) => _currentWorkSpecification.MoveCondition(condition, index));
             postProcessorsConfigurationColumn = new ConfigurationColumnData<IPawnPostProcessor>(
                 () => _currentWorkSpecification.PostProcessors,
                 (postProcessor) => _currentWorkSpecification.DeletePostProcessor(postProcessor),
+                (postProcessor, newPostProcessor) => _currentWorkSpecification.ReplacePostProcess(postProcessor, newPostProcessor),
                 (postProcessor, index) => _currentWorkSpecification.MovePostProcessor(postProcessor, index));
         }
         public override void PreOpen()
@@ -607,14 +610,16 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         {
             public readonly Func<List<TSetting>> getEntries;
             public readonly Action<TSetting> handleDelete;
+            public readonly Action<TSetting, TSetting> handleReplace;
             public readonly Action<TSetting, int> handleMove;
             public float listHeight;
             public Vector2 listPosition;
 
-            public ConfigurationColumnData(Func<List<TSetting>> getEntries, Action<TSetting> handleDelete, Action<TSetting, int> handleMove)
+            public ConfigurationColumnData(Func<List<TSetting>> getEntries, Action<TSetting> handleDelete, Action<TSetting, TSetting> handleReplace, Action<TSetting, int> handleMove)
             {
                 this.getEntries = getEntries;
                 this.handleDelete = handleDelete;
+                this.handleReplace = handleReplace;
                 this.handleMove = handleMove;
                 listHeight = 0;
                 listPosition = Vector2.zero;
@@ -633,9 +638,6 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         {
             var layout = new RectDivider(sectionRect, GetHashCode(), Vector2.zero);
             var headerRect = DoHeader(ref layout, headerText.Translate());
-            if (Clipboard.Contains<TSetting>() && Widgets.ButtonImage(headerRect.NewCol(ButtonSize, HorizontalJustification.Right), TexButton.Paste))
-                columnSettings.getEntries().Add(Clipboard.Paste<TSetting>());
-
             DoPawnSettingList<TSetting, TSettingDef>(layout, addText.Translate(), ref columnSettings);
         }
 
@@ -703,15 +705,17 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                     canMoveUp: i > 0,
                     canMoveDown: i < settings.Count,
                     onMoveSetting: (setting, movement) => locSettings.handleMove(setting, movement),
-                    onDeleteSetting: (setting) => locSettings.handleDelete(setting));
+                    onDeleteSetting: (setting) => locSettings.handleDelete(setting),
+                    onReplaceSetting: (setting, newSetting) => locSettings.handleReplace(setting, newSetting));
 
                 if (i % 2 == 1) Widgets.DrawAltRect(pawnSettingBlock.Pad(left: -MarginSize));
             }
-            AddFunctionButton<TSetting, TSettingDef>(
+
+            DoAddSettingButton<TSetting, TSettingDef>(
                 ref scrollLayoutAggregator,
                 newSettingLabel,
                 (newPawnSettings) => locSettings.getEntries().Add(newPawnSettings),
-                settings);
+                settings.Count % 2 == 1);
 
             Text.Anchor = TextAnchor.UpperLeft;
             columnSettings.listHeight = scrollLayoutAggregator.Rect.height;
@@ -719,23 +723,39 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Widgets.EndScrollView();
         }
 
-        public static void AddFunctionButton<TSetting, TSettingDef>(
+        public static void DoAddSettingButton<TSetting, TSettingDef>(
             ref RectAggregator layoutAggregator,
             string newSettingLabel,
             Action<TSetting> onNewSetting,
-            IList<TSetting> settings)
+            bool drawAltRect)
+            where TSetting : IPawnSetting where TSettingDef : PawnSettingDef
+        {
+            var newRect = layoutAggregator.NewRow(NewFunctionButtonSize).Rect.Pad(left: -MarginSize);
+            DoAddSettingButton<TSetting, TSettingDef>(newRect, newSettingLabel, onNewSetting, drawAltRect);
+        }
+
+        public static void DoAddSettingButton<TSetting, TSettingDef>(
+            Rect inRect,
+            string newSettingLabel,
+            Action<TSetting> onNewSetting,
+            bool drawAltRect)
             where TSetting : IPawnSetting where TSettingDef : PawnSettingDef
         {
             // row for new function.
-            var newRect = layoutAggregator.NewRow(NewFunctionButtonSize).Rect.Pad(left: -MarginSize);
-            Widgets.DrawHighlightIfMouseover(newRect);
-            if (settings.Count % 2 == 1) Widgets.DrawAltRect(newRect);
+            Widgets.DrawHighlightIfMouseover(inRect);
+            if (drawAltRect) Widgets.DrawAltRect(inRect);
 
             Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(newRect, new GUIContent(newSettingLabel));
+            Widgets.Label(inRect, new GUIContent(newSettingLabel));
             Text.Anchor = TextAnchor.UpperLeft;
 
-            if (Widgets.ButtonInvisible(newRect))
+            (Rect _, Rect pasteRect) = Utils.SplitRectHorizontalRight(inRect, inRect.height);
+            if (Clipboard.Contains(typeof(TSetting)) && Widgets.ButtonImage(pasteRect, TexButton.Paste))
+            {
+                onNewSetting(Clipboard.Paste<TSetting>());
+            }
+
+            if (Widgets.ButtonInvisible(inRect))
             {
                 var defs = PawnSettingDef.GetSorted<TSettingDef>();
                 Utils.MakeMenuForSettingDefs(defs, () => (x) => onNewSetting(PawnSetting.CreateFrom<TSetting>(x)));
@@ -749,7 +769,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             bool canMoveUp,
             bool canMoveDown,
             Action<TSetting, int> onMoveSetting,
-            Action<TSetting> onDeleteSetting)
+            Action<TSetting> onDeleteSetting,
+            Action<TSetting, TSetting> onReplaceSetting)
             where TSetting : IPawnSetting
         {
             var localLayout = new RectAggregator(layout.Rect.BottomPart(0), Instance.GetHashCode(), new(1, 1));
@@ -772,11 +793,11 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             DoAdvancedSectionMoveDeleteButtons(ref labelRect, canMoveUp, canMoveDown, onMove, onDelete);
 
-            if (Clipboard.Contains(setting.GetType()))
+            if (onReplaceSetting != null && Clipboard.Contains<TSetting>())
             {
                 var pasteRect = labelRect.NewCol(InputSize, HorizontalJustification.Right);
                 if (Widgets.ButtonImage(pasteRect, TexButton.Paste))
-                    Clipboard.PasteInto(setting);
+                    onReplaceSetting(setting, Clipboard.Paste<TSetting>());
             }
 
             var copyRect = labelRect.NewCol(InputSize, HorizontalJustification.Right);
@@ -859,7 +880,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             if (Widgets.ButtonText(toggleRect, current.icon))
             {
-                SearchableFloatMenu.MakeMenu(pawnAmountDefs, x => x.LabelCap, x => () => newPawnAmountType((IPawnAmount)Activator.CreateInstance(x.defClass)));
+                SearchableFloatMenu.MakeMenu(pawnAmountDefs, x => x.LabelCap, x => () => newPawnAmountType(PawnAmount.CreateFrom(x)));
             }
             TooltipHandler.TipRegion(toggleRect, current.description);
 

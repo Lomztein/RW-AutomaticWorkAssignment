@@ -30,25 +30,25 @@ namespace Lomztein.AutomaticWorkAssignments
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<OnEventPawnPostProcessor>(
                 new Picker<OnEventPawnPostProcessor, EventDef>(map => DefDatabase<EventDef>.AllDefs, x => x.LabelCap, x => x.EventDef?.LabelCap ?? "AWA.EventSelect".Translate(), (pp, po) => pp.EventDef = po),
-                new Nested<OnEventPawnPostProcessor, PawnPostProcessorDef>(x => x.NestedPostProcessor, (pp, po) => pp.NestedPostProcessor = po as IPawnPostProcessor)));
+                new Nested<OnEventPawnPostProcessor, IPawnPostProcessor, PawnPostProcessorDef>(x => x.NestedPostProcessor, (pp, po) => pp.NestedPostProcessor = po as IPawnPostProcessor)));
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<DraftPawnPostProcessor>(new Toggle<DraftPawnPostProcessor>(x => x.Value, (x, v) => x.Value = v, (x => x.Value ? "AWA.Draft".Translate() : "AWA.Undraft".Translate()))));
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<MoveToPawnPostProcessor>(
                 new PositionTargeter<MoveToPawnPostProcessor>(x => x.MoveToPosition?.ToVector3(), (pp, pos) => pp.MoveToPosition = pos.ToIntVec3()),
                 new Label<MoveToPawnPostProcessor>(x => "AWA.OnArrival".Translate()),
-                new Nested<MoveToPawnPostProcessor, PawnPostProcessorDef>(x => x.OnArrived, (x, s) => x.OnArrived = (IPawnPostProcessor)s)));
+                new Nested<MoveToPawnPostProcessor, IPawnPostProcessor, PawnPostProcessorDef>(x => x.OnArrived, (x, s) => x.OnArrived = s)));
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<DoAfterDelayPawnPostProcessor>(
                 new Splitter<DoAfterDelayPawnPostProcessor>(
                     new TextFieldNumeric<float, DoAfterDelayPawnPostProcessor>(x => x.DelayHours, (x, v) => x.DelayHours = v),
                     new Label<DoAfterDelayPawnPostProcessor>(x => "AWA.Hours".Translate(), TextAnchor.MiddleLeft)),
-                new Nested<DoAfterDelayPawnPostProcessor, PawnPostProcessorDef>(x => x.Action, (x, p) => x.Action = (IPawnPostProcessor)p)));
+                new Nested<DoAfterDelayPawnPostProcessor, IPawnPostProcessor, PawnPostProcessorDef>(x => x.Action, (x, p) => x.Action = p)));
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<DoRepeatPawnPostProcessor>(
                 new Splitter<DoRepeatPawnPostProcessor>(
                     new TextFieldNumeric<float, DoRepeatPawnPostProcessor>(x => x.DelayHours, (x, v) => x.DelayHours = v),
                     new Label<DoRepeatPawnPostProcessor>(x => "AWA.Hours".Translate(), TextAnchor.MiddleLeft)),
-                new Nested<DoRepeatPawnPostProcessor, PawnPostProcessorDef>(x => x.Action, (x, p) => x.Action = (IPawnPostProcessor)p)));
+                new Nested<DoRepeatPawnPostProcessor, IPawnPostProcessor, PawnPostProcessorDef>(x => x.Action, (x, p) => x.Action = p)));
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<UseAbilityPawnPostProcessor>(new Picker<UseAbilityPawnPostProcessor, AbilityDef>(x => DefDatabase<AbilityDef>.AllDefs, x => x.LabelCap, x => x.AbilityDef?.LabelCap ?? "AWA.AbilitySelect".Translate(), (pp, ad) => pp.AbilityDef = ad)));
 
@@ -64,8 +64,8 @@ namespace Lomztein.AutomaticWorkAssignments
                 new Composite<UseAbilityOnEnemyPawnPostProcessor, IPawnCondition, PawnConditionDef>(x => x.Conditions, "AWA.ConditionAdd".Translate())));
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<DoOnConditionChangedPawnPostProcessor>(
-                new Nested<DoOnConditionChangedPawnPostProcessor, PawnConditionDef>(x => x.Condition, (x, y) => x.Condition = (IPawnCondition)y, "AWA.ConditionSelect".Translate()),
-                new Nested<DoOnConditionChangedPawnPostProcessor, PawnConditionDef>(x => x.Action, (x, y) => x.Action = (IPawnPostProcessor)y, "AWA.TaskSelect".Translate())
+                new Nested<DoOnConditionChangedPawnPostProcessor, IPawnCondition, PawnConditionDef>(x => x.Condition, (x, y) => x.Condition = y, "AWA.ConditionSelect".Translate()),
+                new Nested<DoOnConditionChangedPawnPostProcessor, IPawnPostProcessor, PawnConditionDef>(x => x.Action, (x, y) => x.Action = y, "AWA.TaskSelect".Translate())
                 ));
         }
     }

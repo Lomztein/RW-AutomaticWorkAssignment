@@ -68,6 +68,7 @@ namespace Lomzie.AutomaticWorkAssignment
             listing.CheckboxLabeled("AWA.SettingsIgnoreUnmanagedWork".Translate(), ref IgnoreUnmanagedWorkTypes);
             listing.CheckboxLabeled("AWA.SettingsAdditionalLogging".Translate(), ref LogEnabled, tooltip: "AWA.SettingsAdditionalLoggingTooltip".Translate());
             listing.CheckboxLabeled("AWA.SettingsRedCriticalAlert".Translate(), ref RedCriticalAlert, tooltip: "AWA.SettingsRedCriticalAlertTooltip".Translate());
+
             listing.CheckboxLabeled("AWA.SettingsUseSubMenus".Translate(), ref UseSubMenus, tooltip: "AWA.SettingsUseSubMenusTooltip".Translate());
 
             if (UseSubMenus && listing.ButtonText("AWA.SettingsAlwaysFlattenSubmenus".Translate()))

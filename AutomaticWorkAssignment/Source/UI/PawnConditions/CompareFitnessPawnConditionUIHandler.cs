@@ -67,10 +67,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
         private float DrawAddOperandButton(Vector2 position, float width, string label, int operandIndex, CompareFitnessPawnCondition pawnSetting)
         {
             Rect rect = new Rect(position, new Vector2(width, _buttonSize));
-            if (Widgets.ButtonText(rect, label))
-            {
-                Utils.MakeMenuForSettingDefs(PawnFitnessDef.GetSorted(), () => x => pawnSetting.InnerSettings[operandIndex] = PawnSetting.CreateFrom<IPawnFitness>(x));
-            }
+            WorkManagerWindow.DoAddSettingButton<IPawnFitness, PawnFitnessDef>(rect, label, (newSetting) => pawnSetting.InnerSettings[operandIndex] = newSetting, true);
             return _buttonSize;
         }
 

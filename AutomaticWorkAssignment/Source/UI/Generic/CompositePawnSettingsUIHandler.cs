@@ -45,14 +45,15 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
                         canMoveUp: i > 0,
                         canMoveDown: i < pawnSetting.InnerSettings.Count,
                         onMoveSetting: GetMoveAction(pawnSetting),
-                        onDeleteSetting: (x) => Find.Root.StartCoroutine(DelayedDelete(pawnSetting, x)));
-                }
+                        onDeleteSetting: (x) => Find.Root.StartCoroutine(DelayedDelete(pawnSetting, x)),
+                        onReplaceSetting: (x, newSetting) => Find.Root.StartCoroutine(DelayedReplace(pawnSetting, x, newSetting)));
+            }
 
-                WorkManagerWindow.AddFunctionButton<TSettingCategory, TSettingDef>(
+                WorkManagerWindow.DoAddSettingButton<TSettingCategory, TSettingDef>(
                     ref layout,
                     NewSettingLabel,
                     GetNewSettingAction(pawnSetting),
-                    pawnSetting.InnerSettings);
+                    pawnSetting.InnerSettings.Count % 2 == 1);
             }
 
             return layout.Rect.height;
@@ -88,6 +89,12 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
         {
             yield return new WaitForEndOfFrame();
             composite.InnerSettings.Remove(setting);
+        }
+        private IEnumerator DelayedReplace(CompositePawnSetting<TSettingCategory> composite, TSettingCategory setting, TSettingCategory newSetting)
+        {
+            yield return new WaitForEndOfFrame();
+            int index = composite.InnerSettings.IndexOf(setting);
+            composite.InnerSettings[index] = newSetting;
         }
     }
 }

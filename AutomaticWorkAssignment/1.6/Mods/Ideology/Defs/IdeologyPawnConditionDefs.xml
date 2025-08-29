@@ -47,4 +47,12 @@
     <description>Check if the pawns ideoligion has a given precept.</description>
     <category>Ideology</category>
   </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_TreeConditionCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.TreeConnectionPawnCondition</settingClass>
+    <label>has tree connection</label>
+    <description>Check if the pawn is connected to a tree.</description>
+    <category>Ideology</category>
+  </Def>
 </Defs>

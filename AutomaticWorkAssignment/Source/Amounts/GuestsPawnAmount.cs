@@ -5,13 +5,13 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.Amounts
 {
-    public class GuestsPawnAmount : IPawnAmount
+    public class GuestsPawnAmount : PawnAmount
     {
         public float Multiplier = 0.25f;
 
-        private Cache<int> _cache = new Cache<int>();
+        private readonly Cache<int> _cache = new();
 
-        public int GetCount(WorkSpecification spec, ResolveWorkRequest req)
+        public override int GetCount(WorkSpecification spec, ResolveWorkRequest req)
         {
             if (_cache.TryGet(out int value))
                 return value;
@@ -29,8 +29,9 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
             return false;
         }
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Values.Look(ref Multiplier, "multiplier");
         }
     }

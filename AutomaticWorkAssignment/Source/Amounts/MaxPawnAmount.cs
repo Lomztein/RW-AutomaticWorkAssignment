@@ -5,19 +5,26 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.Amounts
 {
-    public class MaxPawnAmount : IPawnAmount
+    public class MaxPawnAmount : PawnAmount
     {
-        public List<IPawnAmount> InnerAmounts = new List<IPawnAmount>();
+        public List<IPawnAmount> InnerAmounts = new();
 
-        public int GetCount(WorkSpecification spec, ResolveWorkRequest req)
+        public override int GetCount(WorkSpecification spec, ResolveWorkRequest req)
         {
             if (InnerAmounts.Count == 0) return 0;
             return InnerAmounts.Max(x => x.GetCount(spec, req));
         }
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            InnerAmounts.Clear();
             Scribe_Collections.Look(ref InnerAmounts, "innerAmounts", LookMode.Deep);
+
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if (InnerAmounts == null) InnerAmounts = new List<IPawnAmount>();
+                InnerAmounts = InnerAmounts.Where(x => x != null).ToList();
+            }
         }
     }
 }

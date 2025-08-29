@@ -4,17 +4,18 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.Amounts
 {
-    public class PercentagePawnAmount : IPawnAmount
+    public class PercentagePawnAmount : PawnAmount
     {
         public float Percentage;
-        private Cache<int> _cache = new Cache<int>();
+        private readonly Cache<int> _cache = new();
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Values.Look(ref Percentage, "percentage");
         }
 
-        public int GetCount(WorkSpecification workSpecification, ResolveWorkRequest request)
+        public override int GetCount(WorkSpecification workSpecification, ResolveWorkRequest request)
         {
             if (_cache.TryGet(out int value))
                 return value;

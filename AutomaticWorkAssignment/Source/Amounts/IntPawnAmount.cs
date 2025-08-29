@@ -2,16 +2,17 @@
 
 namespace Lomzie.AutomaticWorkAssignment.Amounts
 {
-    public class IntPawnAmount : IPawnAmount
+    public class IntPawnAmount : PawnAmount
     {
         public int Value;
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Values.Look(ref Value, "value");
         }
 
-        public int GetCount(WorkSpecification spec, ResolveWorkRequest req)
+        public override int GetCount(WorkSpecification spec, ResolveWorkRequest req)
         {
             return Value;
         }

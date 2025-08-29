@@ -53,10 +53,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnConditions
                 buttonPosition.y += y;
 
                 Rect menuButtonRect = new Rect(position, new Vector2(width, _menuButtonSize));
-                if (Widgets.ButtonText(menuButtonRect, "AWA.FunctionSelect".Translate()))
-                {
-                    Utils.MakeMenuForSettingDefs(PawnFitnessDef.GetSorted(), () => x => pawnCondition.Fitness = PawnSetting.CreateFrom<IPawnFitness>(x));
-                }
+                WorkManagerWindow.DoAddSettingButton<IPawnFitness, PawnFitnessDef>(menuButtonRect, "AWA.FunctionSelect".Translate(), (newSetting) => pawnCondition.Fitness = newSetting, true);
 
                 y += menuButtonRect.height;
             }

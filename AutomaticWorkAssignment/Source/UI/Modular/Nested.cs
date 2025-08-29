@@ -8,26 +8,24 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.UI.Modular
 {
-    public class Nested<T, D> : IHandlerModule<T> where T : IPawnSetting where D : PawnSettingDef
+    public class Nested<TSetting, TNestedSetting, TSettingDef> : IHandlerModule<TSetting> where TSetting : IPawnSetting where TNestedSetting : IPawnSetting where TSettingDef : PawnSettingDef
     {
-        private float AddButtonSize => AutomaticWorkAssignmentSettings.UIButtonSizeBase;
-
-        private readonly Func<T, IPawnSetting> _getter;
-        private readonly Action<T, IPawnSetting> _setter;
+        private readonly Func<TSetting, TNestedSetting> _getter;
+        private readonly Action<TSetting, TNestedSetting> _setter;
         private string _selectLabel;
 
-        public Nested(Func<T, IPawnSetting> getter, Action<T, IPawnSetting> setter, string selectLabel = null)
+        public Nested(Func<TSetting, TNestedSetting> getter, Action<TSetting, TNestedSetting> setter, string selectLabel = null)
         {
             _getter = getter;
             _setter = setter;
             _selectLabel = selectLabel ?? "AWA.NestedSettingSelect".Translate();
         }
 
-        public float Handle(Vector2 position, float width, T pawnSetting)
+        public float Handle(Vector2 position, float width, TSetting pawnSetting)
         {
             const int inset = 8;
             var layout = new RectAggregator(new Rect(position.x, position.y, width, 0).Pad(left: inset), GetHashCode(), new(0, 1));
-            IPawnSetting current = _getter(pawnSetting);
+            TNestedSetting current = _getter(pawnSetting);
 
             if (current != null)
             {
@@ -37,27 +35,27 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
                     canMoveUp: false,
                     canMoveDown: false,
                     null,
-                    (x) => Find.Root.StartCoroutine(DelayedRemoveInnerSetting(pawnSetting)));
+                    (x) => Find.Root.StartCoroutine(DelayedRemoveInnerSetting(pawnSetting)),
+                    (x, newSetting) => Find.Root.StartCoroutine(DelayedReplaceInnerSetting(pawnSetting, newSetting)));
             }
             else
             {
-                Rect addSettingButtonRect = layout.NewRow(AddButtonSize);
-                if (Widgets.ButtonText(addSettingButtonRect, _selectLabel))
-                {
-                    Utils.MakeMenuForSettingDefs(GetDefs(), () => x => _setter(pawnSetting, PawnSetting.CreateFrom<IPawnSetting>(x)));
-                }
+                WorkManagerWindow.DoAddSettingButton<TNestedSetting, TSettingDef>(ref layout, _selectLabel, (newSetting) => _setter(pawnSetting, newSetting), true);
             }
 
             return layout.Rect.height;
         }
 
-        private IEnumerable<D> GetDefs()
-            => PawnSettingDef.GetSorted<D>();
-
-        private IEnumerator DelayedRemoveInnerSetting(T pawnSetting)
+        private IEnumerator DelayedRemoveInnerSetting(TSetting pawnSetting)
         {
             yield return new WaitForEndOfFrame();
-            _setter(pawnSetting, null);
+            _setter(pawnSetting, default);
+        }
+
+        private IEnumerator DelayedReplaceInnerSetting(TSetting pawnSetting, TNestedSetting newSetting)
+        {
+            yield return new WaitForEndOfFrame();
+            _setter(pawnSetting, newSetting);
         }
     }
 }

@@ -147,6 +147,8 @@
   <AWA.SettingsUseSubMenusTooltip>Group pawn settings (fitness, conditions, on-assignments tasks) in categories during selection.</AWA.SettingsUseSubMenusTooltip>
   <AWA.SettingsAlwaysFlattenSubmenus>Always flatten pawn setting submenus</AWA.SettingsAlwaysFlattenSubmenus>
   <AWA.SettingsAlwaysFlattenSubmenusTooltip>Toggle whether or not a given pawn setting category should always be flattened.</AWA.SettingsAlwaysFlattenSubmenusTooltip>
+  <AWA.SettingsAllowReplaceSameSettingArchetype>Allow replace same setting archetype</AWA.SettingsAllowReplaceSameSettingArchetype>
+  <AWA.SettingsAllowReplaceSameSettingArchetypeTooltip>If on, you can replace settings of same archetype (fitness, condition, on-assignment task) using the paste function. If off, the setting type must be identical</AWA.SettingsAllowReplaceSameSettingArchetypeTooltip>
   
   <AWA.SettingsHeaderUI>UI settings</AWA.SettingsHeaderUI>
   <AWA.SettingsManagerWindowWidth>Manager window width (Default: {0})</AWA.SettingsManagerWindowWidth>

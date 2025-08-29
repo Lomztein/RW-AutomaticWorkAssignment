@@ -37,14 +37,16 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
                         canMoveUp: i > 0,
                         canMoveDown: i < settings.Count,
                         onMoveSetting: GetMoveAction(pawnSetting),
-                        onDeleteSetting: (x) => Find.Root.StartCoroutine(DelayedDelete(pawnSetting, x)));
+                        onDeleteSetting: (x) => Find.Root.StartCoroutine(DelayedDelete(pawnSetting, x)),
+                        onReplaceSetting: (x, newSetting) => Find.Root.StartCoroutine(DelayedReplace(pawnSetting, x, newSetting)));
+
                 }
 
-                WorkManagerWindow.AddFunctionButton<TInnerSetting, D>(
+                WorkManagerWindow.DoAddSettingButton<TInnerSetting, D>(
                     ref layout,
                     _newSettingLabel,
                     GetNewSettingAction(pawnSetting),
-                    settings);
+                    settings.Count % 2 == 1);
             }
 
             return layout.Rect.height;
@@ -76,6 +78,12 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
         {
             yield return new WaitForEndOfFrame();
             _getter(setting).Remove(toDelete);
+        }
+
+        private IEnumerator DelayedReplace(T setting, TInnerSetting original, TInnerSetting newSetting)
+        {
+            yield return new WaitForEndOfFrame();
+            Utils.ReplaceElement(_getter(setting), original, newSetting);
         }
     }
 }

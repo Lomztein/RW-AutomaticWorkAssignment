@@ -7,6 +7,7 @@
     <description>Assign to pawn with the given life stage.</description>
     <category>Biotech</category>
   </Def>
+  
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_GeneCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.GenePawnCondition</settingClass>
@@ -14,6 +15,7 @@
     <description>Assign to pawns with the given gene.</description>
     <category>Biotech</category>
   </Def>
+  
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_IsXenotypeCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.XenotypePawnCondition</settingClass>
@@ -21,6 +23,7 @@
     <description>Assign to pawns with the given xenotype.</description>
     <category>Biotech</category>
   </Def>
+  
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_XenogermCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.XenogermPawnCondition</settingClass>

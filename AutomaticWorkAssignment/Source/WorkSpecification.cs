@@ -126,6 +126,15 @@ namespace Lomzie.AutomaticWorkAssignment
             Fitness.Remove(fitness);
         }
 
+        public void ReplaceFitness(IPawnFitness fitness, IPawnFitness newFitness)
+            => Find.Root.StartCoroutine(DelayedReplaceFitness(fitness, newFitness));
+
+        private IEnumerator DelayedReplaceFitness(IPawnFitness fitness, IPawnFitness newFitness)
+        {
+            yield return new WaitForEndOfFrame();
+            Utils.ReplaceElement(Fitness, fitness, newFitness);
+        }
+
         public void MoveCondition(IPawnCondition condition, int movement)
             => Find.Root.StartCoroutine(DelayedMoveCondition(condition, movement));
 
@@ -144,6 +153,15 @@ namespace Lomzie.AutomaticWorkAssignment
             Conditions.Remove(condition);
         }
 
+        public void ReplaceCondition(IPawnCondition condition, IPawnCondition newCondition)
+            => Find.Root.StartCoroutine(DelayedReplaceCondition(condition, newCondition));
+
+        private IEnumerator DelayedReplaceCondition(IPawnCondition condition, IPawnCondition newCondition)
+        {
+            yield return new WaitForEndOfFrame();
+            Utils.ReplaceElement(Conditions, condition, newCondition);
+        }
+
         public void MovePostProcessor(IPawnPostProcessor postProcess, int movement)
          => Find.Root.StartCoroutine(DelayedMovePostProcess(postProcess, movement));
 
@@ -160,6 +178,15 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             yield return new WaitForEndOfFrame();
             PostProcessors.Remove(postProcess);
+        }
+
+        public void ReplacePostProcess(IPawnPostProcessor postProcess, IPawnPostProcessor newPostProcessor)
+            => Find.Root.StartCoroutine(DelayedReplacePostProcessor(postProcess, newPostProcessor));
+
+        private IEnumerator DelayedReplacePostProcessor(IPawnPostProcessor postProcess, IPawnPostProcessor newPostProcessor)
+        {
+            yield return new WaitForEndOfFrame();
+            Utils.ReplaceElement(PostProcessors, postProcess, newPostProcessor);
         }
 
         public void ExposeData()
