@@ -66,6 +66,9 @@ namespace Lomzie.AutomaticWorkAssignment.Source
 
         private bool IsGuest(Pawn pawn, Map map)
         {
+            if (!pawn.IsColonist)
+                return false;
+
             if (map.ParentFaction != null)
             {
                 return pawn.HomeFaction != map.ParentFaction;
