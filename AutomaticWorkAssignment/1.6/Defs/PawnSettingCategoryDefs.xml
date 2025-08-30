@@ -61,18 +61,6 @@
   </Def>
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
-    <defName>Commands</defName>
-    <label>Commands</label>
-    <order>90000</order>
-  </Def>
-
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
-    <defName>Events</defName>
-    <label>Events</label>
-    <order>80000</order>
-  </Def>
-
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
     <defName>Ideology</defName>
     <label>Ideology</label>
     <order>6000</order>

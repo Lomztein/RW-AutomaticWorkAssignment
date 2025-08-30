@@ -10,11 +10,10 @@ namespace Lomzie.AutomaticWorkAssignment
     public class WorkAssignmentTracker : MapComponent
     {
         private int _checkDelayTicks = 60;
-        private readonly MapWorkManager _workManager;
+        private MapWorkManager _workManager;
 
         public WorkAssignmentTracker(Map map) : base(map)
         {
-            _workManager = MapWorkManager.GetManager(map);
         }
 
         public override void MapComponentTick()
@@ -22,6 +21,7 @@ namespace Lomzie.AutomaticWorkAssignment
             base.MapComponentTick();
             if (GenTicks.TicksGame % _checkDelayTicks == 0)
             {
+                _workManager ??= MapWorkManager.GetManager(map);
                 CheckCriticalAssignments();
             }
         }

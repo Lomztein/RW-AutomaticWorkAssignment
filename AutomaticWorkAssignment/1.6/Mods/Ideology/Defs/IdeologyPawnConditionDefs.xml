@@ -5,6 +5,7 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.SlavePawnCondition</settingClass>
     <label>is slave</label>
     <description>Assign to slave pawns.</description>
+    <requireSlaves>true</requireSlaves>
     <category>Ideology</category>
   </Def>
 

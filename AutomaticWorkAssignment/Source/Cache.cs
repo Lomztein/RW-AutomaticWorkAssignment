@@ -31,7 +31,7 @@ namespace Lomzie.AutomaticWorkAssignment
         public T Set(T value)
         {
             _cachedValue = value;
-            _lastSetTime += Time.time;
+            _lastSetTime = Time.time;
             return _cachedValue;
         }
 

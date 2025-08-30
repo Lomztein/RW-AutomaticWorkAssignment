@@ -21,6 +21,7 @@
   <AWA.StageSelect>Select stage</AWA.StageSelect>
   <AWA.GeneSelect>Select gene</AWA.GeneSelect>
   <AWA.XenotypeSelect>Select xenotype</AWA.XenotypeSelect>
+  <AWA.XenogermSelect>Select xenogerm</AWA.XenogermSelect>
   <AWA.PolicySelect>Select policy</AWA.PolicySelect>
   <AWA.IdeoRoleSelect>Select role</AWA.IdeoRoleSelect>
   <AWA.NeedSelect>Select need</AWA.NeedSelect>
@@ -128,6 +129,11 @@
 
   <AWA.HeaderExcludedPawns>Excluded Pawns</AWA.HeaderExcludedPawns>
   <AWA.ExcludePawn>Exclude pawn</AWA.ExcludePawn>
+  <AWA.IncludeColonists>Include colonists</AWA.IncludeColonists>
+  <AWA.IncludeGuests>Include guests</AWA.IncludeGuests>
+  <AWA.IncludeSlaves>Include slaves</AWA.IncludeSlaves>
+  <AWA.IncludePrisoners>Include prisoners</AWA.IncludePrisoners>
+  <AWA.IncludePrisonersWarning>Including prisoners for work is experimental, and may cause unintended side effects.\n\nIt is recommended that you ensure that prisoners will not accidentally be assigned to work that they cannot do, on account of being prisoners.</AWA.IncludePrisonersWarning>
 
   <AWA.SettingsHeaderCore>Core settings</AWA.SettingsHeaderCore>
   <AWA.SettingsMaxCommitment>Max commitment: {0}</AWA.SettingsMaxCommitment>

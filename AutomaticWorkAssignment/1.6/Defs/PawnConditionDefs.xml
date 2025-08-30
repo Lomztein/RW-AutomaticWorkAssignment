@@ -53,6 +53,15 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.GuestPawnCondition</settingClass>
     <label>is guest</label>
     <description>Assign to guest pawns.</description>
+    <requireGuests>true</requireGuests>
+    <category>Misc</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_IsPrisoner</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PrisonerPawnCondition</settingClass>
+    <label>is prisoner</label>
+    <description>Assign to prisoner pawns.</description>
+    <requirePrisoners>true</requirePrisoners>
     <category>Misc</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">

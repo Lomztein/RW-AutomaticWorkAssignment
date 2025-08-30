@@ -32,14 +32,39 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             if (_thingReservations.TryGetValue(thing, out List<ReservationInfo> list))
             {
-                var expired = list.Where(x => x.IsTimedOut());
-                foreach (var reservation in expired)
-                {
-                    list.Remove(reservation);
-                }
+                list.RemoveAll(x => x.IsTimedOut());
                 return list.Sum(x => x.Count);
             }
             return 0;
+        }
+
+        public bool TryReserve(Thing thing, int count)
+        {
+            Map map = thing.Map;
+            if (map == null)
+                return false;
+
+            int currentReservations = Get(thing);
+            if (thing.stackCount - currentReservations >= count)
+            {
+                Reserve(thing, count);
+                return true;
+            }
+            return false;
+        }
+
+        public Thing FindUnreserved(Map map, System.Predicate<Thing> predicate, int count)
+        {
+            IEnumerable<Thing> matchingThingsOnMap = map.listerThings.AllThings.Where(x => predicate(x));
+            foreach (Thing thing in matchingThingsOnMap)
+            {
+                int reserved = Get(thing);
+                if (thing.stackCount - reserved >= count)
+                {
+                    return thing;
+                }
+            }
+            return null;
         }
 
         public void ExposeData()

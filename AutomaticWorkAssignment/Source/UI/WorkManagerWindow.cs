@@ -329,9 +329,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         private void OpenExcludePawnsWindow()
         {
-            if (!Find.WindowStack.IsOpen<ExcludeColonistsWindow>())
+            if (!Find.WindowStack.IsOpen<EditMapPawnFilterWindow>())
             {
-                Find.WindowStack.Add(new ExcludeColonistsWindow(_workManager));
+                Find.WindowStack.Add(new EditMapPawnFilterWindow(_workManager));
             }
         }
 

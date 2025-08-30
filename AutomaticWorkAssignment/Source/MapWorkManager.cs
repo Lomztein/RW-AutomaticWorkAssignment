@@ -1,4 +1,5 @@
 ﻿using Lomzie.AutomaticWorkAssignment.Defs;
+using Lomzie.AutomaticWorkAssignment.Source;
 using RimWorld;
 using System;
 using System.Collections;
@@ -27,8 +28,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public List<WorkSpecification> WorkList = new List<WorkSpecification>();
 
-        private List<Pawn> _legacyExcludedPawns;
-        public List<PawnRef> ExcludedPawns;
+        private List<PawnRef> ExcludedPawns => MapPawnFilter.ExcludedPawns;
 
         private bool _refreshEachDayLegacy = false;
 
@@ -49,6 +49,7 @@ namespace Lomzie.AutomaticWorkAssignment
         public static bool IgnoreUnmanagedWorkTypes => AutomaticWorkAssignmentSettings.IgnoreUnmanagedWorkTypes;
 
         public Reservations Reservations = new Reservations();
+        public MapPawnsFilter MapPawnFilter = new MapPawnsFilter();
 
         public MapWorkManager(Map map) : base(map)
         {
@@ -71,17 +72,17 @@ namespace Lomzie.AutomaticWorkAssignment
 
         private void EnsureSanity()
         {
-            if (WorkList == null) WorkList = new List<WorkSpecification>();
-            if (ExcludedPawns == null) ExcludedPawns = new List<PawnRef>();
-            if (Reservations == null) Reservations = new Reservations();
-            if (ResolveFrequencyDef == null) ResolveFrequencyDef = AutoResolveFrequencyUtils.None;
-
-            ExcludedPawns = ExcludedPawns.Where(x => x != null && x.Pawn != null).ToList();
+            WorkList ??= new List<WorkSpecification>();
+            Reservations ??= new Reservations();
+            ResolveFrequencyDef ??= AutoResolveFrequencyUtils.None;
+            MapPawnFilter ??= new MapPawnsFilter();
 
             foreach (WorkSpecification spec in WorkList)
             {
                 spec.Map = Map;
             }
+
+            WorkList = WorkList.Where(x => x != null).ToList();
         }
 
         private void TryLoadLegacy()
@@ -90,7 +91,7 @@ namespace Lomzie.AutomaticWorkAssignment
             if (legacyManager != null && legacyManager.WorkList.Count > 0)
             {
                 WorkList = new List<WorkSpecification>(legacyManager.WorkList);
-                ExcludedPawns = new List<PawnRef>(legacyManager.ExcludePawns.Select(x => new PawnRef(x)));
+                MapPawnFilter.ExcludedPawns = new List<PawnRef>(legacyManager.ExcludePawns.Select(x => new PawnRef(x)));
                 _refreshEachDayLegacy = legacyManager.RefreshEachDay;
                 Log.Message("[AWA] Migrated legacy work specs to map components.");
             }
@@ -102,7 +103,7 @@ namespace Lomzie.AutomaticWorkAssignment
             if (loadType == DefaultLoadType.Procedural)
             {
                 WorkList = Defaults.GenerateDefaultWorkSpecifications().ToList();
-                ExcludedPawns = new List<PawnRef>();
+                MapPawnFilter = new MapPawnsFilter();
                 ResolveFrequencyDef = AutoResolveFrequencyUtils.None;
                 Log.Message("[AWA] Generated default work specs.");
             }
@@ -210,9 +211,9 @@ namespace Lomzie.AutomaticWorkAssignment
 
         private IEnumerable<Pawn> CachePawns()
         {
-            return GetAllMaps()
-                .SelectMany(x => x.mapPawns.FreeColonistsAndPrisoners)
-                .Where(x => x != null && (x.IsFreeNonSlaveColonist || x.IsSlaveOfColony));
+            IEnumerable<Pawn> allPawns = GetAllMaps()
+                .SelectMany(x => x.mapPawns.AllHumanlikeSpawned);
+            return MapPawnFilter.FilterPawns(allPawns, map);
         }
 
         public IEnumerable<Pawn> GetAllPawns()
@@ -583,15 +584,23 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             Scribe_Defs.Look(ref ResolveFrequencyDef, "resolveFrequencyDef");
             Scribe_Collections.Look(ref WorkList, "workSpecifications", LookMode.Deep);
-            Scribe_Collections.Look(ref ExcludedPawns, "excludedPawns", LookMode.Deep);
+            Scribe_Deep.Look(ref MapPawnFilter, "pawnFilter");
             Scribe_Deep.Look(ref Reservations, "reservations");
             Scribe_References.Look(ref ParentMap, "parentMap");
 
             if (Scribe.mode != LoadSaveMode.Saving)
             {
-                Scribe_Collections.Look(ref _legacyExcludedPawns, "excludePawns", LookMode.Reference);
-                if (_legacyExcludedPawns != null && _legacyExcludedPawns.Count > 0)
-                    ExcludedPawns = new List<PawnRef>(_legacyExcludedPawns.Where(x => x != null).Select(x => new PawnRef(x)));
+                MapPawnFilter ??= new MapPawnsFilter();
+
+                List<Pawn> legacyExludedPawns = null;
+                Scribe_Collections.Look(ref legacyExludedPawns, "excludePawns", LookMode.Reference);
+                if (legacyExludedPawns != null && legacyExludedPawns.Count > 0)
+                    MapPawnFilter.ExcludedPawns = new List<PawnRef>(legacyExludedPawns.Where(x => x != null).Select(x => new PawnRef(x)));
+
+                List<PawnRef> legacyExcludedPawnsAgain = null;
+                Scribe_Collections.Look(ref legacyExcludedPawnsAgain, "excludedPawns", LookMode.Deep);
+                if (legacyExcludedPawnsAgain != null && legacyExcludedPawnsAgain.Count > 0)
+                    MapPawnFilter.ExcludedPawns = legacyExcludedPawnsAgain;
 
                 Scribe_Values.Look(ref _refreshEachDayLegacy, "refreshEachDay", false);
                 if (_refreshEachDayLegacy)

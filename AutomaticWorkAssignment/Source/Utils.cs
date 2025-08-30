@@ -143,6 +143,14 @@ namespace Lomzie.AutomaticWorkAssignment
             return newRect;
         }
 
+        public static Rect ShrinkHorizontal(Rect inRect, float margin)
+        {
+            Rect newRect = new Rect(inRect);
+            newRect.x += margin;
+            newRect.width -= margin * 2;
+            return newRect;
+        }
+
         public static void MoveElement<T>(IList<T> list, T element, int movement)
         {
             int currentIndex = list.IndexOf(element);
@@ -236,7 +244,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
             foreach (var category in categories)
             {
-                yield return new FloatSubMenu($" > [{category.Key.LabelCap}]", category.Select(x => MakeOptionForSingleDef(x, actionGetter())).ToList());
+                yield return FloatSubMenu.CompatCreate($" > [{category.Key.LabelCap}]", category.Select(x => MakeOptionForSingleDef(x, actionGetter())).ToList());
             }
         }
 

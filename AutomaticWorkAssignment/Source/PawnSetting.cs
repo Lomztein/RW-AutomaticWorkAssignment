@@ -13,7 +13,6 @@ namespace Lomzie.AutomaticWorkAssignment
         private PawnSettingDef _def;
         public PawnSettingDef Def { get => _def; private set => _def = value; }
 
-
         public static T CreateFrom<T>(PawnSettingDef def) where T : IPawnSetting
         {
             T setting = (T)Activator.CreateInstance(def.settingClass);

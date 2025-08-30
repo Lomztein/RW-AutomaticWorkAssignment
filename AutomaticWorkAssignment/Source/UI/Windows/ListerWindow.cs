@@ -19,7 +19,7 @@ namespace Lomzie.AutomaticWorkAssignment.Source.UI.Windows
 
         private const float SCROLL_BAR_WIDTH = 24;
         private const float HEADER_SIZE = 32;
-        public virtual float AddButtonSize => 48;
+        public virtual float AddButtonSize => 32;
         public virtual float RowHeight => 32;
 
         public abstract string Header { get; }
@@ -84,8 +84,9 @@ namespace Lomzie.AutomaticWorkAssignment.Source.UI.Windows
             if (AllowAdd)
             {
                 // row for new pawn.
+                cur.y += 8;
                 var newRect = new Rect(0f, cur.y, body.width, AddButtonSize);
-                newRect = Utils.ShrinkByMargin(newRect, 8f);
+                newRect = Utils.ShrinkHorizontal(newRect, 8);
 
                 Text.Anchor = TextAnchor.MiddleCenter;
                 WorkTypeDef workDef = new WorkTypeDef();

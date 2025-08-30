@@ -40,4 +40,12 @@
     <description>Add medical bill to pawn.</description>
     <category>Health</category>
   </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_ImplantXenogermPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.ImplantXenogermPawnPostProcessor</settingClass>
+    <label>implant xenogerm</label>
+    <description>Implant the given xenogerm into the pawn.</description>
+    <category>Health</category>
+  </Def>
 </Defs>
