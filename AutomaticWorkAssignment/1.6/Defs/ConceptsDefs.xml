@@ -44,7 +44,7 @@ Select one of them to see its details.</helpText>
 			<li>MainTab-Lomzie_WorkManagerWindow-Closed</li>
 		</highlightTags>
 	</ConceptDef>
-	<ConceptDef>
+  <ConceptDef>
 		<defName>AWA_FormulaEditor</defName>
 		<label>﹝AWA﹞ Formula editor</label>
 		<priority>100</priority>

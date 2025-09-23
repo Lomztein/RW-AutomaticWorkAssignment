@@ -16,6 +16,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Dialogs
         {
             SelectedFileName = fileName;
             Find.WindowStack.Add(new Dialog_ImportMapConfigFileList());
+            WorkManagerWindow.ResetCurrentWorkSpecification();
             Close();
         }
 

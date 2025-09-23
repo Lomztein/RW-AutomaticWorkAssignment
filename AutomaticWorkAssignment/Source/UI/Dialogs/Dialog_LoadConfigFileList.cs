@@ -14,6 +14,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Dialogs
         {
             IO.ImportFromFile(MapWorkManager.GetCurrentMapManager(), fileName, IO.GetConfigDirectory());
             Messages.Message("AWA.LoadMessage".Translate(), MessageTypeDefOf.SilentInput, false);
+            WorkManagerWindow.ResetCurrentWorkSpecification();
             Close();
         }
     }

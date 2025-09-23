@@ -25,7 +25,8 @@ namespace Lomzie.AutomaticWorkAssignment.Source.Events.Hooks
         private static void AddHediffHook(Pawn_HealthTracker __instance)
         {
             Pawn pawn = _pawnHealthTracker_pawn.GetValue(__instance) as Pawn;
-            EventManager.InvokePawnEvent(pawn, EventDefOf.HealthConditionAdded);
+            if (pawn.IsColonist)
+                EventManager.InvokePawnEvent(pawn, EventDefOf.HealthConditionAdded);
         }
     }
 }

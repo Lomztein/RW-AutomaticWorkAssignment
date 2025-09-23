@@ -66,6 +66,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Windows
                 DoToggle(ref layout, ref _filter.IncludeSlaves, toggleSize, "AWA.IncludeSlaves".Translate());
             DoToggle(ref layout, ref _filter.IncludePrisoners, toggleSize, "AWA.IncludePrisoners".Translate());
 
+            DoToggle(ref layout, ref _filter.IncludeDowned, toggleSize, "AWA.IncludeDowned".Translate());
+            DoToggle(ref layout, ref _filter.IncludeMentallyBroken, toggleSize, "AWA.IncludeMentallyBroken".Translate());
+            DoToggle(ref layout, ref _filter.IncludeCryptosleepers, toggleSize, "AWA.IncludeCryptosleepers".Translate());
+
             layout.NewRow(Margin);
             Rect remainder = layout.NewRow(inRect.height - layout.Rect.height);
             if (_filter.IncludePrisoners)

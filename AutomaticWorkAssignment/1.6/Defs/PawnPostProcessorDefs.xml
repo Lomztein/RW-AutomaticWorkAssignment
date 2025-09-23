@@ -99,6 +99,13 @@
     <category>Misc</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_DedicatePostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.DedicatePawnPostProcessor</settingClass>
+    <label>dedicate</label>
+    <description>Dedicate the colonists to this particular work specification, meaning they will always be assigned first unless dead.</description>
+    <category>Misc</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_ConditionalPostProcessor</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.ConditionalPawnPostProcessor</settingClass>
     <label>if condition</label>
@@ -110,5 +117,14 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.DoAllPawnPostProcessor</settingClass>
     <label>do all</label>
     <description>Perform every single task in the list.</description>
+  </Def>
+  
+  <!-- Debug -->
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_DebugMessagePostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.DebugMessagePawnPostProcessor</settingClass>
+    <label>debug message</label>
+    <description>Send a message, for debugging purposes.</description>
+    <debug>true</debug>
   </Def>
 </Defs>

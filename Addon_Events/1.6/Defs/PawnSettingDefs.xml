@@ -120,4 +120,12 @@
     <description>Use the given ability on an enemy, selected through fitness and conditions.</description>
     <category>Commands</category>
   </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_EquipItemPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.EquipItemPawnPostProcessor</settingClass>
+    <label>equip item</label>
+    <description>Equip the first item in inventory matching the filter.</description>
+    <category>Commands</category>
+  </Def>
 </Defs>

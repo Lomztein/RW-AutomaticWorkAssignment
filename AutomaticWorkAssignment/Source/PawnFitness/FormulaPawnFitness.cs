@@ -43,6 +43,9 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
         private string _commitedString;
         private Formula? _comittedFormula;
         internal Formula? InnerFormula => _comittedFormula;
+
+        private CacheDict<Pawn, float> _valueCache = new CacheDict<Pawn, float>();
+
         private string _CommitedFormula
         {
             get => _commitedString; set
@@ -89,13 +92,19 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
             }
             try
             {
-                return InnerFormula.Calc(
-                    pawn,
-                    specification,
-                    request,
-                    new(bindingSettings.ToDictionary(
-                        (kvp) => kvp.Key,
-                        kvp => (Func<Pawn, WorkSpecification, ResolveWorkRequest, float>)kvp.Value.CalcFitness)));
+                if (!_valueCache.TryGet(pawn, out var value))
+                {
+                    value = InnerFormula.Calc(
+                        pawn,
+                        specification,
+                        request,
+                        new(bindingSettings.ToDictionary(
+                            (kvp) => kvp.Key,
+                            kvp => (Func<Pawn, WorkSpecification, ResolveWorkRequest, float>)kvp.Value.CalcFitness)));
+
+                    _valueCache.Set(pawn, value);
+                }
+                return value;
             }
             catch (Exception ex) when (ex is InvalidOperationException)
             {

@@ -12,6 +12,9 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         {
             if (pawn != null && pawn.Ideo != null)
             {
+                if (RoleDef == null)
+                    return pawn.Ideo.PreceptsListForReading.Any(x => x is Precept_Role preceptRole && preceptRole.IsAssigned(pawn));
+
                 var precept = pawn.Ideo.PreceptsListForReading.FirstOrDefault(x => x.def == RoleDef);
                 if (precept != null && precept is Precept_Role rolePrecept)
                 {

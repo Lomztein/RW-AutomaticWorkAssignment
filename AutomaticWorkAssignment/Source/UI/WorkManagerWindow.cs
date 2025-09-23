@@ -346,8 +346,14 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             FloatMenuOption load = new FloatMenuOption("AWA.Load".Translate(), () => Find.WindowStack.Add(new Dialog_LoadConfigFileList()));
             FloatMenuOption import = new FloatMenuOption("AWA.Import".Translate(), () => Find.WindowStack.Add(new Dialog_ImportSaveConfigFileList()));
             FloatMenuOption openFolder = new FloatMenuOption("AWA.OpenFolder".Translate(), () => Process.Start(IO.GetConfigDirectory().FullName));
-            FloatMenuOption resetToDefault = new FloatMenuOption("AWA.ResetToDefault".Translate(), () => Find.WindowStack.Add(new Dialog_Confirm("AWA.ResetManagerToDefault".Translate(), () => _workManager.ResetToDefaults())));
+            FloatMenuOption resetToDefault = new FloatMenuOption("AWA.ResetToDefault".Translate(), () => Find.WindowStack.Add(new Dialog_Confirm("AWA.ResetManagerToDefault".Translate(), ResetWorkManagerToDefault)));
             Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>() { save, load, import, openFolder, resetToDefault }));
+        }
+
+        private void ResetWorkManagerToDefault ()
+        {
+            _workManager.ResetToDefaults();
+            ResetCurrentWorkSpecification();
         }
 
         private int DoVerticalRearrangeButtons(Rect inRect)
@@ -374,15 +380,18 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             return 0;
         }
 
-        public void SetCurrentWorkSpecification(WorkSpecification current)
+        public static  void SetCurrentWorkSpecification(WorkSpecification current)
         {
             if (current != null)
             {
                 PlayerKnowledgeDatabase.KnowledgeDemonstrated(AWAConceptDefOf.AWA_WorkManagerWindow, KnowledgeAmount.Total);
                 LessonAutoActivator.TeachOpportunity(AWAConceptDefOf.AWA_WorkManagerWindow_WorkSpecificationDetails, OpportunityType.GoodToKnow);
             }
-            _currentWorkSpecification = current;
+            Instance._currentWorkSpecification = current;
         }
+
+        public static void ResetCurrentWorkSpecification()
+            => SetCurrentWorkSpecification(null);
 
         private void DoMainSectionContents(Rect rect)
         {

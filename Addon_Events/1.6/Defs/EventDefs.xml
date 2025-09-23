@@ -15,4 +15,9 @@
     <label>threat cleared</label>
     <description>Invoked for all pawns when all threats are cleared from the map.</description>
   </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.EventDef">
+    <defName>NewJobStarted</defName>
+    <label>new job started</label>
+    <description>Invoked when the pawn begins a new job.</description>
+  </Def>
 </Defs>

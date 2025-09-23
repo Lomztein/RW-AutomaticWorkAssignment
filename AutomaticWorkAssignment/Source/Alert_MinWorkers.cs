@@ -122,7 +122,7 @@ namespace Lomzie.AutomaticWorkAssignment
                 moveTo = GetSpecsWithIssuesSorted().First();
             }
             Current.Game.CurrentMap = moveTo.Item2;
-            (def.TabWindow as WorkManagerWindow).SetCurrentWorkSpecification(moveTo.Item1);
+            WorkManagerWindow.SetCurrentWorkSpecification(moveTo.Item1);
         }
     }
 }

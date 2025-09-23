@@ -24,10 +24,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
         public string NewSettingLabel = "AWA.NewSettingAddDefault".Translate();
         public bool AllowMoveSettings = true;
 
-        public CompositePawnSettingsUIHandler(string newSettingLabel, bool allowMoveSetting)
+        public CompositePawnSettingsUIHandler(string newSettingLabel)
         {
             NewSettingLabel = newSettingLabel;
-            AllowMoveSettings = allowMoveSetting;
         }
 
         protected virtual float Handle(Vector2 position, float width, CompositePawnSetting<TSettingCategory> pawnSetting)
@@ -68,9 +67,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Generic
 
         private Action<TSettingCategory, int> GetMoveAction(CompositePawnSetting<TSettingCategory> pawnSetting)
         {
-            if (AllowMoveSettings)
-                return (x, movement) => Find.Root.StartCoroutine(DelayedMove(pawnSetting, x, movement));
-            return null;
+            return (x, movement) => Find.Root.StartCoroutine(DelayedMove(pawnSetting, x, movement));
         }
 
         private IEnumerator DelayedAdd(CompositePawnSetting<TSettingCategory> composite, TSettingCategory newSetting)

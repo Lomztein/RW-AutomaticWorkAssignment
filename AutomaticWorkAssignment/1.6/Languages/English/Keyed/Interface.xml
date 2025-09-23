@@ -53,6 +53,14 @@
   <AWA.CompositeAmountEdit>Edit composite amount</AWA.CompositeAmountEdit>
   <AWA.AmountAdd>Add amount</AWA.AmountAdd>
   <AWA.MaxEdit>Edit max ({0})</AWA.MaxEdit>
+  <AWA.CurrentDedicatedPawnsTooltip>Currently dedicated:{0}</AWA.CurrentDedicatedPawnsTooltip>
+  <AWA.ClearDedicatedPawns>Clear dedicated ({0})</AWA.ClearDedicatedPawns>
+
+  <AWA.Hours>Hour</AWA.Hours>
+  <AWA.Days>Day</AWA.Days>
+  <AWA.Weeks>Weeks</AWA.Weeks>
+  <AWA.Months>Months</AWA.Months>
+  <AWA.Years>Years</AWA.Years>
   
   <AWA.NewSettingAddDefault>Add</AWA.NewSettingAddDefault>
   <AWA.NestedSettingNoneSelected>None selected</AWA.NestedSettingNoneSelected>
@@ -134,7 +142,10 @@
   <AWA.IncludeSlaves>Include slaves</AWA.IncludeSlaves>
   <AWA.IncludePrisoners>Include prisoners</AWA.IncludePrisoners>
   <AWA.IncludePrisonersWarning>Including prisoners for work is experimental, and may cause unintended side effects.\n\nIt is recommended that you ensure that prisoners will not accidentally be assigned to work that they cannot do, on account of being prisoners.</AWA.IncludePrisonersWarning>
-
+  <AWA.IncludeDowned>Include downed</AWA.IncludeDowned>
+  <AWA.IncludeMentallyBroken>Include mentally broken</AWA.IncludeMentallyBroken>
+  <AWA.IncludeCryptosleepers>Include cryptosleepers</AWA.IncludeCryptosleepers>
+  
   <AWA.SettingsHeaderCore>Core settings</AWA.SettingsHeaderCore>
   <AWA.SettingsMaxCommitment>Max commitment: {0}</AWA.SettingsMaxCommitment>
   <AWA.SettingsMaxCommitmentTooltip>The maximum commitment that a pawn may have.</AWA.SettingsMaxCommitmentTooltip>
@@ -155,6 +166,7 @@
   <AWA.SettingsAlwaysFlattenSubmenusTooltip>Toggle whether or not a given pawn setting category should always be flattened.</AWA.SettingsAlwaysFlattenSubmenusTooltip>
   <AWA.SettingsAllowReplaceSameSettingArchetype>Allow replace same setting archetype</AWA.SettingsAllowReplaceSameSettingArchetype>
   <AWA.SettingsAllowReplaceSameSettingArchetypeTooltip>If on, you can replace settings of same archetype (fitness, condition, on-assignment task) using the paste function. If off, the setting type must be identical</AWA.SettingsAllowReplaceSameSettingArchetypeTooltip>
+  <AWA.SettingsClearDedications>Clear all dedications</AWA.SettingsClearDedications>
   
   <AWA.SettingsHeaderUI>UI settings</AWA.SettingsHeaderUI>
   <AWA.SettingsManagerWindowWidth>Manager window width (Default: {0})</AWA.SettingsManagerWindowWidth>

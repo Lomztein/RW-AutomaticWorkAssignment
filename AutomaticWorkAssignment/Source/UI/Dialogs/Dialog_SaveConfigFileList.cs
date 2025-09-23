@@ -17,6 +17,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Dialogs
             fileName = GenFile.SanitizedFileName(fileName);
             IO.ExportToFile(MapWorkManager.GetCurrentMapManager(), fileName, IO.GetConfigDirectory());
             Messages.Message("AWA.SaveMessage".Translate(), MessageTypeDefOf.SilentInput, false);
+            WorkManagerWindow.ResetCurrentWorkSpecification();
             Close();
         }
     }

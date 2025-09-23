@@ -119,13 +119,6 @@
     <category>Map</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
-    <defName>Lomzie_MechanoidCountPawnFitness</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.MechanoidCountPawnFitness</settingClass>
-    <label>mechanoid amount</label>
-    <description>Return the amount of a mechanitors mechanoids.</description>
-    <category>Biotech</category>
-  </Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_ConstantPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ConstantPawnFitness</settingClass>
     <label>constant</label>

@@ -44,7 +44,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
             Scribe_Values.Look(ref _tagName, "tagName");
             Scribe_Values.Look(ref _stateName, "stateName");
 
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            if (Scribe.mode != LoadSaveMode.Saving)
             {
                 if (_tagName != null && Tag == null)
                     Tag = LoadoutManager.Tags.FirstOrDefault(x => x.name == _tagName);

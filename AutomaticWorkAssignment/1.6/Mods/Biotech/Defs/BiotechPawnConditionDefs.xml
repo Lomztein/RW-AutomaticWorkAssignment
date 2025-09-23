@@ -31,4 +31,28 @@
     <description>Assign to pawns with the given custom xenotype.</description>
     <category>Biotech</category>
   </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_Mechanitor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.MechanitorPawnCondition</settingClass>
+    <label>is mechanitor</label>
+    <description>Check if the pawn is a mechanitor.</description>
+    <category>Biotech</category>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_Mechanoids</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.MechanoidsPawnCondition</settingClass>
+    <label>has mechanoids</label>
+    <description>Check if the pawn has the given mechanoids.</description>
+    <category>Biotech</category>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_MechanoidCountPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.MechanoidCountPawnFitness</settingClass>
+    <label>mechanoid amount</label>
+    <description>Return the amount of a mechanitors mechanoids.</description>
+    <category>Biotech</category>
+  </Def>
 </Defs>

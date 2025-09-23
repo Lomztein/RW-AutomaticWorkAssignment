@@ -70,7 +70,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
 
             Scribe_Values.Look(ref _stateName, "stateName");
 
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            if (Scribe.mode != LoadSaveMode.Saving)
             {
                 if (_stateName != null & State == null)
                     State = LoadoutManager.States.FirstOrDefault(x => x.name == _stateName);

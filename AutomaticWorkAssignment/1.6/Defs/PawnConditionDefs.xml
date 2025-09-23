@@ -53,7 +53,6 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.GuestPawnCondition</settingClass>
     <label>is guest</label>
     <description>Assign to guest pawns.</description>
-    <requireGuests>true</requireGuests>
     <category>Misc</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
@@ -61,7 +60,13 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PrisonerPawnCondition</settingClass>
     <label>is prisoner</label>
     <description>Assign to prisoner pawns.</description>
-    <requirePrisoners>true</requirePrisoners>
+    <category>Misc</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_HourBetween</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.HourBetweenPawnCondition</settingClass>
+    <label>hour is between</label>
+    <description>Check if time is in between min and max hour, inclusive.</description>
     <category>Misc</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
@@ -69,6 +74,27 @@
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.GenderPawnCondition</settingClass>
     <label>is gender</label>
     <description>Check if pawn is of a given gender.</description>
+    <category>Health</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_IsDowned</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.DownedPawnCondition</settingClass>
+    <label>is downed</label>
+    <description>Check if pawn is downed.</description>
+    <category>Health</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_IsMentallyBroken</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.MentalBreakPawnCondition</settingClass>
+    <label>is mentally broken</label>
+    <description>Check if pawn is mentally broken.</description>
+    <category>Health</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_IsInCryptosleep</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.CryptosleepPawnCondition</settingClass>
+    <label>is in cryptosleep</label>
+    <description>Check if pawn is in cryptosleep.</description>
     <category>Health</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
@@ -81,8 +107,15 @@
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_WorkCapable</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.WorkCapablePawnCondition</settingClass>
-    <label>is capable of work</label>
+    <label>work type capable</label>
     <description>Assign to pawns capable of the given work types.</description>
+    <category>Skills</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_WorkTagkCapable</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.WorkTagCapablePawnCondition</settingClass>
+    <label>work category capable</label>
+    <description>Assign to pawns capable of the given work categories.</description>
     <category>Skills</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
@@ -112,13 +145,6 @@
     <label>on planet layer</label>
     <description>Check if the pawn is on a given planet layer.</description>
     <category>Map</category>
-  </Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
-    <defName>Lomzie_Mechanoids</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.MechanoidsPawnCondition</settingClass>
-    <label>has mechanoids</label>
-    <description>Check if the pawn has the given mechanoids.</description>
-    <category>Biotech</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_CompareFitness</defName>

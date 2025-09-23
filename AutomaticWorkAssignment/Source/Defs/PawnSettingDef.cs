@@ -1,8 +1,11 @@
 ﻿using Lomzie.AutomaticWorkAssignment.Source;
+using RimWorld;
+using RimWorld.BaseGen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
+using Verse.Noise;
 
 namespace Lomzie.AutomaticWorkAssignment.Defs
 {
@@ -14,35 +17,38 @@ namespace Lomzie.AutomaticWorkAssignment.Defs
         public PawnSettingCategoryDef category;
         public int orderInCategory;
 
-        public bool requireColonists;
-        public bool requireGuests;
-        public bool requireSlaves;
-        public bool requirePrisoners;
+        public bool debug;
 
         private int GetOrdering()
             => orderInCategory == 0 ? DefDatabase<PawnSettingDef>.AllDefsListForReading.IndexOf(this) : orderInCategory;
 
         public static List<T> GetSorted<T>() where T : PawnSettingDef
         {
-            var defs = DefDatabase<T>.AllDefs.Where(IsAvailable).ToList();
+            var defs = DefDatabase<T>.AllDefs.Where(x => !ShouldExclude(x)).ToList();
             defs.Sort(Compare);
             return defs;
         }
 
-        // "Temporary" solution for disabling select defs under certain conditions.
-        // Come up with a more extensible solution if needed.
-        private static bool IsAvailable(PawnSettingDef def)
+        public static bool ShouldExclude(PawnSettingDef def)
         {
             MapPawnsFilter filter = MapWorkManager.GetCurrentMapManager().MapPawnFilter;
-            if (def.requireColonists && !filter.IncludeColonists)
-                return false;
-            if (def.requireGuests && !filter.IncludeGuests)
-                return false;
-            if (def.requireSlaves && !filter.IncludeSlaves)
-                return false;
-            if (def.requirePrisoners && !filter.IncludePrisoners)
-                return false;
-            return true;
+            if (def.defName == "Lomzie_IsGuest" && !filter.IncludeGuests)
+                return true;
+            if (def.defName == "Lomzie_IsSlave" && !filter.IncludeSlaves)
+                return true;
+            if (def.defName == "Lomzie_IsPrisoner" && !filter.IncludePrisoners)
+                return true;
+            if (def.defName == "Lomzie_IsDowned" && !filter.IncludeDowned)
+                return true;
+            if (def.defName == "Lomzie_IsMentallyBroken" && !filter.IncludeMentallyBroken)
+                return true;
+            if (def.defName == "Lomzie_IsInCryptosleep" && !filter.IncludeCryptosleepers)
+                return true;
+
+            if (def.debug && !Prefs.DevMode)
+                return true;
+
+            return false;
         }
 
         private static int Compare(PawnSettingDef x, PawnSettingDef y)

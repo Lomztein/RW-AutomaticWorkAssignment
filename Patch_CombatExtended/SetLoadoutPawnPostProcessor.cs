@@ -7,6 +7,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CombatExtended
     public class SetLoadoutPawnPostProcessor : PawnSetting, IPawnPostProcessor
     {
         public Loadout Loadout;
+        private string _loadoutName;
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
@@ -20,6 +21,14 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CombatExtended
         {
             base.ExposeData();
             Scribe_References.Look(ref Loadout, "loadout");
+
+            if (Scribe.mode == LoadSaveMode.Saving)
+                _loadoutName = Loadout?.label;
+
+            Scribe_Values.Look(ref _loadoutName, "loadoutName");
+
+            if (Scribe.mode != LoadSaveMode.Saving && Loadout == null && !string.IsNullOrWhiteSpace(_loadoutName))
+                Loadout = LoadoutManager.Loadouts.FirstOrDefault(x => x.label == _loadoutName);
         }
     }
 }

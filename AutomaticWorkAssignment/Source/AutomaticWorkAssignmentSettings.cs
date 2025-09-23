@@ -75,6 +75,13 @@ namespace Lomzie.AutomaticWorkAssignment
             {
                 Find.WindowStack.Add(new FloatMenu(PawnSettingCategoryDef.GetSorted().Select(x => new FloatMenuToggleOption(x.LabelCap, () => ToggleFlattenSubmenu(x), () => _alwaysFlattenPawnSettingCategoryDefNames.Any(y => x.defName == y), () => false)).Cast<FloatMenuOption>().ToList()));
             }
+            if (Find.Maps != null && Find.Maps.Any() && listing.ButtonText("AWA.SettingsClearDedications".Translate()))
+            {
+                foreach (var map in Find.Maps)
+                {
+                    MapWorkManager.GetManager(map).Dedications.ClearDedications();
+                }
+            }
 
             if (ModsConfig.OdysseyActive)
                 listing.CheckboxLabeled("AWA.SettingsAutoMigrateOnGravshipJump".Translate(), ref AutoMigrateOnGravshipJump, tooltip: "AWA.SettingsAutoMigrateOnGravshipJumpTooltip".Translate());

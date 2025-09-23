@@ -5,7 +5,9 @@ using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using Lomzie.AutomaticWorkAssignment.Source.UI.Modular;
 using Lomzie.AutomaticWorkAssignment.UI;
+using Lomzie.AutomaticWorkAssignment.UI.Generic;
 using Lomzie.AutomaticWorkAssignment.UI.Modular;
+using Lomzie.AutomaticWorkAssignment.UI.Windows;
 using RimWorld;
 using System;
 using System.Linq;
@@ -67,6 +69,8 @@ namespace Lomztein.AutomaticWorkAssignments
                 new Nested<DoOnConditionChangedPawnPostProcessor, IPawnCondition, PawnConditionDef>(x => x.Condition, (x, y) => x.Condition = y, "AWA.ConditionSelect".Translate()),
                 new Nested<DoOnConditionChangedPawnPostProcessor, IPawnPostProcessor, PawnConditionDef>(x => x.Action, (x, y) => x.Action = y, "AWA.TaskSelect".Translate())
                 ));
+
+            PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<EquipItemPawnPostProcessor>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));
         }
     }
 }

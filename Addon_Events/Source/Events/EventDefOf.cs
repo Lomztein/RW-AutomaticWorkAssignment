@@ -14,5 +14,6 @@ namespace Lomzie.AutomaticWorkAssignment.Events
         public static EventDef ThreatAppeared;
         public static EventDef ThreatCleared;
         public static EventDef HealthConditionAdded;
+        public static EventDef NewJobStarted;
     }
 }

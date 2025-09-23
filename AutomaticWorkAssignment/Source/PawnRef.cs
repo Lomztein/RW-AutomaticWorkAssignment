@@ -27,7 +27,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
             Scribe_Values.Look(ref _uniqueId, "uniqueId");
 
-            if (Scribe.mode == LoadSaveMode.PostLoadInit && Pawn == null && _uniqueId != null)
+            if (Scribe.mode != LoadSaveMode.PostLoadInit && Pawn == null && _uniqueId != null)
             {
                 Pawn = Find.World.PlayerPawnsForStoryteller.FirstOrDefault(x => x.GetUniqueLoadID() == _uniqueId);
             }

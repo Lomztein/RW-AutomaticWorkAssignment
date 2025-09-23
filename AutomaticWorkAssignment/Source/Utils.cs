@@ -1,5 +1,6 @@
 ﻿using FloatSubMenus;
 using Lomzie.AutomaticWorkAssignment.Defs;
+using Lomzie.AutomaticWorkAssignment.GenericPawnSettings;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
@@ -222,6 +223,23 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public static void MakeMenuForSettingDefs<T>(IEnumerable<T> defs, Func<Action<T>> actionGetter) where T: PawnSettingDef
             => Find.WindowStack.Add(new FloatMenu(MakeOptionsForSettingsDefs(defs, actionGetter).ToList()));
+
+        public static IEnumerable<IPawnSetting> FindRecursive(IEnumerable<IPawnSetting> settings, Predicate<IPawnSetting> predicate)
+        {
+            foreach (var setting in settings)
+            {
+                if (predicate(setting))
+                {
+                    yield return setting;
+                }
+                if (setting is ICompositePawnSetting composite)
+                {
+                    IEnumerable<IPawnSetting> innerSettings = FindRecursive(composite.GetSettings(), predicate);
+                    foreach (var inner in innerSettings)
+                        yield return inner;
+                }
+            }
+        }
 
         private static IEnumerable<FloatMenuOption> MakeOptionsForSettingsDefs<T> (IEnumerable<T> defs, Func<Action<T>> actionGetter) where T : PawnSettingDef
         {

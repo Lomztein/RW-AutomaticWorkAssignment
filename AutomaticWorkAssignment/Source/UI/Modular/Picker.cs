@@ -14,22 +14,23 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
         private readonly Action<T, E> _onSelected;
         private readonly Func<E, Texture2D> _iconGetter;
 
-        private const float BUTTON_SIZE = 32;
+        private float _buttonSize = 32;
 
-        public Picker(Func<Map, IEnumerable<E>> optionGetter, Func<E, string> optionLabelGetter, Func<T, string> labelGetter, Action<T, E> onSelected, Func<E, Texture2D> iconGetter = null)
+        public Picker(Func<Map, IEnumerable<E>> optionGetter, Func<E, string> optionLabelGetter, Func<T, string> labelGetter, Action<T, E> onSelected, Func<E, Texture2D> iconGetter = null, float buttonSize = AutomaticWorkAssignmentSettings.UIButtonSizeBase)
         {
             _optionGetter = optionGetter;
             _optionLabelGetter = optionLabelGetter;
             _labelGetter = labelGetter;
             _onSelected = onSelected;
             _iconGetter = iconGetter;
+            _buttonSize = buttonSize;
         }
 
         public float Handle(Vector2 position, float width, T pawnSetting)
         {
             float y = 0;
 
-            Rect buttonRect = new Rect(position, new Vector2(width, BUTTON_SIZE));
+            Rect buttonRect = new Rect(position, new Vector2(width, _buttonSize));
             buttonRect.y += y;
 
             if (Widgets.ButtonText(buttonRect, _labelGetter(pawnSetting)))

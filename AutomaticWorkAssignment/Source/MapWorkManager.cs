@@ -45,10 +45,10 @@ namespace Lomzie.AutomaticWorkAssignment
         private List<WorkTypeDef> _unmanagedWorkTypes;
 
         public static int MaxCommitment => AutomaticWorkAssignmentSettings.MaxCommitment;
-        public static float MaxMentalBreakHours => AutomaticWorkAssignmentSettings.MentalBreakHourThreshold;
         public static bool IgnoreUnmanagedWorkTypes => AutomaticWorkAssignmentSettings.IgnoreUnmanagedWorkTypes;
 
-        public Reservations Reservations = new Reservations();
+        public Reservations Reservations = new Reservations(); // Reserved items.
+        public Dedications Dedications = new Dedications(); // Pawns dedicated to certain tasks.
         public MapPawnsFilter MapPawnFilter = new MapPawnsFilter();
 
         public MapWorkManager(Map map) : base(map)
@@ -74,6 +74,7 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             WorkList ??= new List<WorkSpecification>();
             Reservations ??= new Reservations();
+            Dedications ??= new Dedications();
             ResolveFrequencyDef ??= AutoResolveFrequencyUtils.None;
             MapPawnFilter ??= new MapPawnsFilter();
 
@@ -213,7 +214,7 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             IEnumerable<Pawn> allPawns = GetAllMaps()
                 .SelectMany(x => x.mapPawns.AllHumanlikeSpawned);
-            return MapPawnFilter.FilterPawns(allPawns, map);
+            return MapPawnFilter.GetEverAvailablePawns(allPawns, map);
         }
 
         public IEnumerable<Pawn> GetAllPawns()
@@ -276,20 +277,9 @@ namespace Lomzie.AutomaticWorkAssignment
             }
         }
 
-        public static bool IsTemporarilyUnavailable(Pawn pawn)
+        public bool IsTemporarilyUnavailable(Pawn pawn)
         {
-            return pawn != null && (IsMentalStateBlocking(pawn) || pawn.Downed || pawn.InCryptosleep);
-        }
-
-        private static bool IsMentalStateBlocking(Pawn pawn)
-        {
-            if (pawn != null && pawn.MentalStateDef != null)
-            {
-                if (pawn.MentalStateDef.maxTicksBeforeRecovery > GenDate.TicksPerHour * MaxMentalBreakHours) return true;
-                if (pawn.MentalStateDef.IsExtreme) return true;
-                if (pawn.MentalStateDef.IsAggro) return true;
-            }
-            return false;
+            return !MapPawnFilter.RemoveTemporarilyUnavailablePawns(new Pawn[] { pawn }).Any();
         }
 
         public bool CanBeAssignedTo(Pawn pawn, WorkSpecification workSpecification)
@@ -327,6 +317,11 @@ namespace Lomzie.AutomaticWorkAssignment
 
             foreach (WorkSpecification current in assignmentList)
             {
+                // Assign dedicated pawns
+                IEnumerable<Pawn> dedications = Dedications.GetDedicatedPawns(current);
+                foreach (Pawn pawn in dedications)
+                    AssignWorkToPawn(current, pawn);
+
                 // Go over each work specification, find best fits, and assign work accordingly.
                 var availablePawns = req.Pawns.Where(x => (current.IncludeSpecialists || !specialists.Contains(x)) && CanBeAssignedTo(x, current));
                 IEnumerable<Pawn>matchesSorted = current.GetApplicableOrMinimalPawnsSorted(availablePawns, req);
@@ -586,6 +581,7 @@ namespace Lomzie.AutomaticWorkAssignment
             Scribe_Collections.Look(ref WorkList, "workSpecifications", LookMode.Deep);
             Scribe_Deep.Look(ref MapPawnFilter, "pawnFilter");
             Scribe_Deep.Look(ref Reservations, "reservations");
+            Scribe_Deep.Look(ref Dedications, "dedications");
             Scribe_References.Look(ref ParentMap, "parentMap");
 
             if (Scribe.mode != LoadSaveMode.Saving)

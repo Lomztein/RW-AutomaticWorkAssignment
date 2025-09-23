@@ -45,7 +45,7 @@ namespace AutomaticWorkAssignment.UI
 
             return layout.Rect.height;
         }
-        
+
         private IEnumerator DelayedRemoveInnerSetting(NestedPawnSetting setting)
         {
             yield return new WaitForEndOfFrame();
