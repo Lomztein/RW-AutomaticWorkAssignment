@@ -10,7 +10,7 @@
 		<SteamAppId>294100</SteamAppId>
 	</PropertyGroup>
 
-	<Target Name="CheckSteamApps">
+	<Target Name="CheckSteamApps" AfterTargets="Build">
 		<Error
 			Text="&quot;$(SteamAppsPath)&quot; does not exist. You can override it in &quot;Directory.build.props.user&quot; (create the file if it does not exists)"
 			Condition="!Exists('$(SteamAppsPath)')" />
@@ -31,8 +31,8 @@
 			Text="&quot;$(SteamAppsPath)&quot; contains an unexpected version of RimWorld ($(RimWorldActualVersion)). Expected $(RimWorldVersion)."
 			Condition="'$(RimWorldActualVersion)' != '$(RimWorldVersion)'" />
 	</Target>
-
-	<Target Name="CopyMod" Condition="'$(AutomaticWorkAssignmentPatchOf)' == '' AND '$(IsPackable)' != 'false'">
+	
+	<Target Name="CopyMod" AfterTargets="CheckRimWorldVersion" Condition="'$(AutomaticWorkAssignmentPatchOf)' == '' AND '$(IsPackable)' != 'false'">
 		<Exec
 			WorkingDirectory="$(SolutionDir)"
 			Command="
@@ -42,7 +42,7 @@
 			LogStandardErrorAsError="true"
 			ContinueOnError="true" />
 	</Target>
-	<Target Name="CopyModPatch" Condition="'$(AutomaticWorkAssignmentPatchOf)' != '' AND '$(IsPackable)' != 'false'">
+	<Target Name="CopyModPatch" AfterTargets="CheckRimWorldVersion" Condition="'$(AutomaticWorkAssignmentPatchOf)' != '' AND '$(IsPackable)' != 'false'">
 		<Exec
 			WorkingDirectory="$(SolutionDir)"
 			Command="
