@@ -324,7 +324,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
                 // Go over each work specification, find best fits, and assign work accordingly.
                 var availablePawns = req.Pawns.Where(x => (current.IncludeSpecialists || !specialists.Contains(x)) && CanBeAssignedTo(x, current));
-                IEnumerable<Pawn>matchesSorted = current.GetApplicableOrMinimalPawnsSorted(availablePawns, req);
+                IEnumerable<Pawn> matchesSorted = current.GetApplicableOrMinimalPawnsSorted(availablePawns, req);
 
                 int currentAssigned = GetCountAssignedTo(current);
                 int targetAssigned = current.GetTargetWorkers(req);
@@ -341,7 +341,11 @@ namespace Lomzie.AutomaticWorkAssignment
                     // Max commitment level increases if no pawns with enough available commitment was found.
                     for (int c = 0; c < maxCommitment; c++)
                     {
-                        Queue<Pawn> commitable = new Queue<Pawn>(availableToAssign.Where(x => GetPawnCommitment(x) < maxTargetCommitment + c));
+                        Queue<Pawn> commitable = new Queue<Pawn>(
+                            current.IsIgnoreCommitment ? 
+                            availableToAssign : 
+                            availableToAssign.Where(x => GetPawnCommitment(x) < maxTargetCommitment + c)
+                        );
 
                         int i = 0;
                         int assigned = 0;
@@ -364,6 +368,11 @@ namespace Lomzie.AutomaticWorkAssignment
                         if (toAssign == 0)
                         {
                             // Completed the for-loop, all assignents have been made, so we can move on.
+                            break;
+                        }
+                        if (current.IsIgnoreCommitment)
+                        {
+                            // We don't use commitment mechanism. We need one iteration to assign pawns.
                             break;
                         }
                     }
