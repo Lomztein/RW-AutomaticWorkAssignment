@@ -149,6 +149,8 @@ namespace Lomzie.AutomaticWorkAssignment
                 (m) => DefDatabase<SkillDef>.AllDefs, x => x.LabelCap, x => x?.SkillDef?.LabelCap ?? "AWA.SkillSelect".Translate(), (c, s) => c.SkillDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<SpecificPawnCondition, Pawn>(
                 (m) => MapWorkManager.GetManager(m).GetAllPawns(), x => x.Name.ToString(), x => x?.Pawn?.Name.ToString() ?? "AWA.PawnSelect".Translate(), (c, s) => c.Pawn = s));
+            PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<TimeAssignmentCondition, TimeAssignmentDef>(
+                (m) => DefDatabase<TimeAssignmentDef>.AllDefs, x => x.LabelCap, x => x.TimeAssignmentDef?.LabelCap ?? "AWA.TimeAssignmentSelect".Translate(), (c, s) => c.TimeAssignmentDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<TraitPawnCondition, TraitDef>(
                 (m) => DefDatabase<TraitDef>.AllDefs, x => x.degreeDatas?.FirstOrDefault()?.label ?? x.label, x => x?.TraitDef?.label ?? x.TraitDef?.degreeDatas?.FirstOrDefault()?.label ?? "AWA.TraitSelect".Translate(), (c, s) => c.TraitDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<WeaponClassPawnCondition, WeaponClassDef>(
