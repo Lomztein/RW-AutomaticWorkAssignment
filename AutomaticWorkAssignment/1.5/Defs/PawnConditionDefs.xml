@@ -7,12 +7,6 @@
     <description>Check if pawns skill level is within a given range.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
-    <defName>Lomzie_CompareTimeAssignmentCondition</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.TimeAssignmentCondition</settingClass>
-    <label>compare time assignment</label>
-    <description>Compare the type of activity from pawn's schedule with the specified type of activity.</description>
-  </Def>
-  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_HasPassionCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.PassionPawnCondition</settingClass>
     <label>has passion</label>
