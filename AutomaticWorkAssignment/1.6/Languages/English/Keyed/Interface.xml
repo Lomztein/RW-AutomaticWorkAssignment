@@ -120,7 +120,7 @@
   <AWA.LabelIncludeSpecialists>Include specialists</AWA.LabelIncludeSpecialists>
   <AWA.LabelIncludeSpecialistsTip>Consider pawns marked as specialists?</AWA.LabelIncludeSpecialistsTip>
   <AWA.LabelIgnoreCommitment>Ignore commitment</AWA.LabelIgnoreCommitment>
-  <AWA.LabelIgnoreCommitmentTip>Set the value to true if you want to ignore the commitment mechanism.</AWA.LabelIgnoreCommitmentTip>
+  <AWA.LabelIgnoreCommitmentTip>Ignore pawns existing commitment when assigning?</AWA.LabelIgnoreCommitmentTip>
   <AWA.LabelCountAssigneesFrom>Count assigness from</AWA.LabelCountAssigneesFrom>
   <AWA.LabelCountAssigneesFromTip>Count assignees from other specifications, as being assigned to this.</AWA.LabelCountAssigneesFromTip>
   <AWA.LabelAddWorkSpecification>Add work specification</AWA.LabelAddWorkSpecification>
