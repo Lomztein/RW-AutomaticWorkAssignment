@@ -14,5 +14,12 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             float currentHour = GenLocalDate.HourFloat(request.Map);
             return currentHour >= MinHour && currentHour <= MaxHour;
         }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref MinHour, "MinHour", 0);
+            Scribe_Values.Look(ref MaxHour, "MaxHour", 0);
+        }
     }
 }
