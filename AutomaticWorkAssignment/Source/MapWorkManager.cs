@@ -62,8 +62,6 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             yield return new WaitForEndOfFrame();
 
-            TryLoadLegacy();
-
             if (WorkList.Count == 0)
                 ResetToDefaults();
 
@@ -84,18 +82,6 @@ namespace Lomzie.AutomaticWorkAssignment
             }
 
             WorkList = WorkList.Where(x => x != null).ToList();
-        }
-
-        private void TryLoadLegacy()
-        {
-            WorkManager legacyManager = WorkManager.GetLegacyManager();
-            if (legacyManager != null && legacyManager.WorkList.Count > 0)
-            {
-                WorkList = new List<WorkSpecification>(legacyManager.WorkList);
-                MapPawnFilter.ExcludedPawns = new List<PawnRef>(legacyManager.ExcludePawns.Select(x => new PawnRef(x)));
-                _refreshEachDayLegacy = legacyManager.RefreshEachDay;
-                Log.Message("[AWA] Migrated legacy work specs to map components.");
-            }
         }
 
         public void ResetToDefaults()
@@ -319,8 +305,6 @@ namespace Lomzie.AutomaticWorkAssignment
             {
                 // Assign dedicated pawns
                 IEnumerable<Pawn> dedications = Dedications.GetDedicatedPawns(current);
-                foreach (Pawn pawn in dedications)
-                    AssignWorkToPawn(current, pawn);
 
                 // Go over each work specification, find best fits, and assign work accordingly.
                 var availablePawns = req.Pawns.Where(x => (current.IncludeSpecialists || !specialists.Contains(x)) && CanBeAssignedTo(x, current));
@@ -341,7 +325,7 @@ namespace Lomzie.AutomaticWorkAssignment
                     // Max commitment level increases if no pawns with enough available commitment was found.
                     for (int c = 0; c < maxCommitment; c++)
                     {
-                        Queue<Pawn> commitable = new Queue<Pawn>(availableToAssign.Where(x => GetPawnCommitment(x) < maxTargetCommitment + c));
+                        Queue<Pawn> commitable = new(dedications.Concat(availableToAssign.Where(x => GetPawnCommitment(x) < maxTargetCommitment + c)));
 
                         int i = 0;
                         int assigned = 0;

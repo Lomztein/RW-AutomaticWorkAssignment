@@ -17,12 +17,12 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
 
         public override void ExposeData()
         {
-            InnerAmounts.Clear();
+            base.ExposeData();
             Scribe_Collections.Look(ref InnerAmounts, "innerAmounts", LookMode.Deep);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                if (InnerAmounts == null) InnerAmounts = new List<IPawnAmount>();
+                InnerAmounts ??= new List<IPawnAmount>();
                 InnerAmounts = InnerAmounts.Where(x => x != null).ToList();
             }
         }

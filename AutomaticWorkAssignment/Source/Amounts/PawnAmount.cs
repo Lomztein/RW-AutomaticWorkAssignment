@@ -22,8 +22,7 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                if (Def == null)
-                    Def = DefDatabase<PawnAmountDef>.AllDefs.FirstOrDefault(x => x.defClass == GetType());
+                Def ??= DefDatabase<PawnAmountDef>.AllDefs.FirstOrDefault(x => x.defClass == GetType());
             }
         }
 
