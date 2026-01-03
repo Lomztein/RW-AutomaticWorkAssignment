@@ -7,6 +7,13 @@
     <description>Assign to pawns with the given trait.</description>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_TimeAssignmentCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.TimeAssignmentCondition</settingClass>
+    <label>current schedule</label>
+    <description>Compare the type of activity from pawn's schedule with the specified type of activity.</description>
+    <category>Misc</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_SkillLevelCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.SkillLevelPawnCondition</settingClass>
     <label>skill level</label>

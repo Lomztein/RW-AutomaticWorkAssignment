@@ -308,7 +308,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
                 // Go over each work specification, find best fits, and assign work accordingly.
                 var availablePawns = req.Pawns.Where(x => (current.IncludeSpecialists || !specialists.Contains(x)) && CanBeAssignedTo(x, current));
-                IEnumerable<Pawn>matchesSorted = current.GetApplicableOrMinimalPawnsSorted(availablePawns, req);
+                IEnumerable<Pawn> matchesSorted = current.GetApplicableOrMinimalPawnsSorted(availablePawns, req);
 
                 int currentAssigned = GetCountAssignedTo(current);
                 int targetAssigned = current.GetTargetWorkers(req);
@@ -348,6 +348,11 @@ namespace Lomzie.AutomaticWorkAssignment
                         if (toAssign == 0)
                         {
                             // Completed the for-loop, all assignents have been made, so we can move on.
+                            break;
+                        }
+                        if (current.IsIgnoreCommitment)
+                        {
+                            // We don't use commitment mechanism. We need one iteration to assign pawns.
                             break;
                         }
                     }
