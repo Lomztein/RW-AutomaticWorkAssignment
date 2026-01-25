@@ -49,6 +49,13 @@
     <category>Misc</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_HasChildren</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.HasChildrenPawnCondition</settingClass>
+    <label>has children</label>
+    <description>Check if pawn has any children.</description>
+    <category>Misc</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_WeaponClassPawnCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.WeaponClassPawnCondition</settingClass>
     <label>weapon class</label>

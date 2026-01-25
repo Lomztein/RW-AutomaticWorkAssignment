@@ -49,6 +49,10 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
             {
                 yield return addTagPP.Tag;
             }
+            if (setting is InsertTagPawnPostProcessor insertTagPP && insertTagPP.Tag != null)
+            {
+                yield return insertTagPP.Tag;
+            }
             if (setting is ICompositePawnSetting composite)
             {
                 foreach (var inner in composite.GetSettings())
@@ -70,7 +74,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
 
             Scribe_Values.Look(ref _stateName, "stateName");
 
-            if (Scribe.mode != LoadSaveMode.Saving)
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (_stateName != null & State == null)
                     State = LoadoutManager.States.FirstOrDefault(x => x.name == _stateName);

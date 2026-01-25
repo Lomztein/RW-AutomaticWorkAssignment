@@ -57,10 +57,24 @@
     <category>Manage</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_ShiftSchedulePostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.ShiftSchedulePawnPostProcessor</settingClass>
+    <label>shift schedule</label>
+    <description>Shift pawn schedule.</description>
+    <category>Manage</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_SetCarriedMedicinePostProcessor</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetCarriedMedicinePawnPostProcessor</settingClass>
     <label>set carríed meds</label>
     <description>Set the amount of medicine the pawn should carry.</description>
+    <category>Manage</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_ForcePriorityPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.ForcePriorityPawnPostProcessor</settingClass>
+    <label>force priority</label>
+    <description>Force work priority to something specific.</description>
     <category>Manage</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">

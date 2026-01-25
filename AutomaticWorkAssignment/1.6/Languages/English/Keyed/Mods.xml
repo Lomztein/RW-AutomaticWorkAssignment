@@ -6,6 +6,10 @@
   <AWA.CombatExtended.SelectLoadout>Select loadout</AWA.CombatExtended.SelectLoadout>
   <AWA.VSE.SelectExpertise>Select expertise</AWA.VSE.SelectExpertise>
   <AWA.CL.SelectTag>Select tag</AWA.CL.SelectTag>
+  <AWA.CL.RelativeTo>Relative to</AWA.CL.RelativeTo>
+  <AWA.CL.InsertBefore>Before</AWA.CL.InsertBefore>
+  <AWA.CL.InsertAfter>After</AWA.CL.InsertAfter>
+  <AWA.CL.Position>Position</AWA.CL.Position>
   <AWA.BPC.SettingsHeader>Better Pawn Control compatibility</AWA.BPC.SettingsHeader>
   <AWA.BPC.SettingsAutoWorkPolicy>Automatic work policy label</AWA.BPC.SettingsAutoWorkPolicy>
   <AWA.BPC.SettingsAutoSchedulePolicy>Automatic schedule policy label</AWA.BPC.SettingsAutoSchedulePolicy>

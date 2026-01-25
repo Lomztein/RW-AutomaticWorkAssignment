@@ -28,6 +28,13 @@
     <category>Skills</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_WorkCapablePawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.WorkCapablePawnFitness</settingClass>
+    <label>work capability</label>
+    <description>Total number of work types the pawn can do.</description>
+    <category>Skills</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_CommitmentPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.CommitmentPawnFitness</settingClass>
     <label>commitment</label>

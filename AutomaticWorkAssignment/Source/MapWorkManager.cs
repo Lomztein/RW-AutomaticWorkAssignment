@@ -43,6 +43,7 @@ namespace Lomzie.AutomaticWorkAssignment
         private Cache<IEnumerable<Map>> _allMaps = new Cache<IEnumerable<Map>>();
 
         private List<WorkTypeDef> _unmanagedWorkTypes;
+        private List<Tuple<WorkSpecification, Pawn>> _toPostProcess = new List<Tuple<WorkSpecification, Pawn>>();
 
         public static int MaxCommitment => AutomaticWorkAssignmentSettings.MaxCommitment;
         public static bool IgnoreUnmanagedWorkTypes => AutomaticWorkAssignmentSettings.IgnoreUnmanagedWorkTypes;
@@ -251,16 +252,13 @@ namespace Lomzie.AutomaticWorkAssignment
 
         private void PostProcessAssignments(ResolveWorkRequest req)
         {
-            foreach (var assignment in PawnAssignments)
+            foreach (var tuple in _toPostProcess)
             {
-                Pawn pawn = assignment.Key;
-                List<WorkAssignment> assignments = assignment.Value;
-
-                foreach (var workAssignment in assignments)
-                {
-                    workAssignment.Specification.ApplyPostProcessing(pawn, req);
-                }
+                var spec = tuple.Item1;
+                var pawn = tuple.Item2;
+                spec.ApplyPostProcessing(pawn, req);
             }
+            _toPostProcess.Clear();
         }
 
         public bool IsTemporarilyUnavailable(Pawn pawn)
@@ -325,7 +323,7 @@ namespace Lomzie.AutomaticWorkAssignment
                     // Max commitment level increases if no pawns with enough available commitment was found.
                     for (int c = 0; c < maxCommitment; c++)
                     {
-                        Queue<Pawn> commitable = new(dedications.Concat(availableToAssign.Where(x => GetPawnCommitment(x) < maxTargetCommitment + c)));
+                        Queue<Pawn> commitable = new(dedications.Concat(availableToAssign.Where(x => current.IgnoreCommitment || GetPawnCommitment(x) < maxTargetCommitment + c)));
 
                         int i = 0;
                         int assigned = 0;
@@ -350,7 +348,7 @@ namespace Lomzie.AutomaticWorkAssignment
                             // Completed the for-loop, all assignents have been made, so we can move on.
                             break;
                         }
-                        if (current.IsIgnoreCommitment)
+                        if (current.IgnoreCommitment)
                         {
                             // We don't use commitment mechanism. We need one iteration to assign pawns.
                             break;
@@ -478,15 +476,6 @@ namespace Lomzie.AutomaticWorkAssignment
                 if (kvp.Value.Any(x => x.Specification == spec))
                     yield return kvp.Key;
             }
-            foreach (var countAdditional in spec.CountAssigneesFrom)
-            {
-                if (AllowCountAssigneesFrom(spec, countAdditional))
-                {
-                    IEnumerable<Pawn> additional = GetPawnsAssignedTo(countAdditional);
-                    foreach (Pawn pawn in additional)
-                        yield return pawn;
-                }
-            }
         }
 
         public bool AllowCountAssigneesFrom(WorkSpecification spec, WorkSpecification from)
@@ -561,6 +550,8 @@ namespace Lomzie.AutomaticWorkAssignment
 
             WorkAssignment assignment = new WorkAssignment(spec, pawn, index, spec.IsCritical);
             PawnAssignments[pawn].Insert(index, assignment);
+            _toPostProcess.Add(new Tuple<WorkSpecification, Pawn>(spec, pawn));
+
             return assignment;
         }
 

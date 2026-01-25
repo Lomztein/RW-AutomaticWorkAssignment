@@ -40,5 +40,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             }
             return false;
         }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_References.Look(ref Tree, "tree");
+        }
     }
 }

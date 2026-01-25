@@ -16,6 +16,7 @@
   <AWA.PawnAdd>Add pawn</AWA.PawnAdd>
   <AWA.TraitSelect>Select trait</AWA.TraitSelect>
   <AWA.TraitAdd>Add trait</AWA.TraitAdd>
+  <AWA.OffsetSelect>Select offset</AWA.OffsetSelect>
   <AWA.TimeAssignmentSelect>Add time assignment</AWA.TimeAssignmentSelect>
   <AWA.ClassSelect>Select class</AWA.ClassSelect>
   <AWA.ClassAdd>Add class</AWA.ClassAdd>
@@ -34,10 +35,12 @@
   <AWA.Everywhere>Everywhere</AWA.Everywhere>
   <AWA.Any>Any</AWA.Any>
   <AWA.All>All</AWA.All>
+  <AWA.None>None</AWA.None>
   <AWA.Auto>Auto</AWA.Auto>
   <AWA.IdeoSelect>Select ideoligion</AWA.IdeoSelect>
   <AWA.IdeoPreceptSelect>Select precept</AWA.IdeoPreceptSelect>
   <AWA.WorkSpecSelect>Select spec</AWA.WorkSpecSelect>
+  <AWA.WorkTypeSelect>Select type</AWA.WorkTypeSelect>
   <AWA.SelectTitle>Select title</AWA.SelectTitle>
   <AWA.SelectSave>Select save</AWA.SelectSave>
   <AWA.WorstCase>Worst case</AWA.WorstCase>
@@ -56,6 +59,12 @@
   <AWA.MaxEdit>Edit max ({0})</AWA.MaxEdit>
   <AWA.CurrentDedicatedPawnsTooltip>Currently dedicated:{0}</AWA.CurrentDedicatedPawnsTooltip>
   <AWA.ClearDedicatedPawns>Clear dedicated ({0})</AWA.ClearDedicatedPawns>
+  <AWA.AllowOverwrite>Allow overwrite</AWA.AllowOverwrite>
+  <AWA.Overwrite>Overwrite</AWA.Overwrite>
+  <AWA.Add>Add</AWA.Add>
+  <AWA.SetScheduleOverwriteTooltip>Completely overwrite existing schedule</AWA.SetScheduleOverwriteTooltip>
+  <AWA.SetScheduleAddTooltip>Add non-anything schedule to existing schedule</AWA.SetScheduleAddTooltip>
+  <AWA.Mode>Mode</AWA.Mode>
 
   <AWA.Hours>Hour</AWA.Hours>
   <AWA.Days>Day</AWA.Days>

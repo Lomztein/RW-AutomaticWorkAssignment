@@ -27,7 +27,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CombatExtended
 
             Scribe_Values.Look(ref _loadoutName, "loadoutName");
 
-            if (Scribe.mode != LoadSaveMode.Saving && Loadout == null && !string.IsNullOrWhiteSpace(_loadoutName))
+            if (Scribe.mode == LoadSaveMode.PostLoadInit && Loadout == null && !string.IsNullOrWhiteSpace(_loadoutName))
                 Loadout = LoadoutManager.Loadouts.FirstOrDefault(x => x.label == _loadoutName);
         }
     }

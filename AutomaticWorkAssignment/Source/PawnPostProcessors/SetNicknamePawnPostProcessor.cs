@@ -7,7 +7,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
     public class SetNicknamePawnPostProcessor : PawnSetting, IPawnPostProcessor
     {
         public string Format = string.Empty;
-        
+        public bool AllowOverwrite = true;
+
         private Dictionary<string, Func<Pawn, string>> _getters = new Dictionary<string, Func<Pawn, string>>()
         {
             { "first", x => (x.Name is NameTriple triple ? triple.First : (x.Name as NameSingle).Name) },
@@ -18,8 +19,15 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
-            string newNickname = ResolveNickname(Format, pawn);
-            pawn.Name = BuildName(pawn, newNickname);
+            bool setNickname = !request.GetVariable<bool>(pawn.GetUniqueLoadID() + "_NicknameSet");
+            if (setNickname)
+            {
+                string newNickname = ResolveNickname(Format, pawn);
+                pawn.Name = BuildName(pawn, newNickname);
+
+                if (!AllowOverwrite)
+                    request.SetVariable(pawn.GetUniqueLoadID() + "_NicknameSet", true);
+            }
         }
 
         private string ResolveNickname(string format, Pawn pawn)

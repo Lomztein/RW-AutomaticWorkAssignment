@@ -1,5 +1,4 @@
-﻿using Lomzie.AutomaticWorkAssignment.PawnConditions;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions

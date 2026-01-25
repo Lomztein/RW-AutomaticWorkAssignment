@@ -567,7 +567,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             Rect ignoreCommitmentRect = new Rect(interweaveRect);
             ignoreCommitmentRect.y += InputSize;
-            DrawPrioritySettingsToggle(ignoreCommitmentRect, ref _currentWorkSpecification.IsIgnoreCommitment, "AWA.LabelIgnoreCommitment".Translate(), "AWA.LabelIgnoreCommitmentTip".Translate());
+            DrawPrioritySettingsToggle(ignoreCommitmentRect, ref _currentWorkSpecification.IgnoreCommitment, "AWA.LabelIgnoreCommitment".Translate(), "AWA.LabelIgnoreCommitmentTip".Translate());
         }
 
         private void DrawPrioritySettingsToggle(Rect rect, ref bool value, string label, string description)

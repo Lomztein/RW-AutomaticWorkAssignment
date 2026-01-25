@@ -109,24 +109,7 @@ namespace Lomzie.AutomaticWorkAssignment
                     }
                 }
                 if (!found)
-                {
-                    // Try legacy
-                    Scribe.EnterNode("components");
-                    curNode = Scribe.loader.curXmlParent;
-                    foreach (XmlNode child in curNode.ChildNodes)
-                    {
-                        XmlNode classNode = child.Attributes.GetNamedItem("Class");
-                        if (classNode.InnerText == typeof(WorkManager).FullName)
-                        {
-                            Scribe.loader.curXmlParent = child;
-                            toManager.ExposeData();
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found)
-                        Messages.Message("No work manager configuration found in save game", MessageTypeDefOf.NegativeEvent);
-                }
+                    Messages.Message("No work manager configuration found in save game", MessageTypeDefOf.NegativeEvent);
 
                 Scribe.loader.FinalizeLoading();
             }

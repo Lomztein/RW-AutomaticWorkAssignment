@@ -24,13 +24,12 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public int Compare(Pawn x, Pawn y)
         {
-            int funcIndex = 0;
             float diff = 0f;
 
             for (int i = 0; i < _fitnessFunctions.Count; i++)
             {
-                float xFitnessd = _fitnessFunctions[funcIndex].CalcFitness(x, _workSpec, _workReq);
-                float yFitnessd = _fitnessFunctions[funcIndex].CalcFitness(y, _workSpec, _workReq);
+                float xFitnessd = _fitnessFunctions[i].CalcFitness(x, _workSpec, _workReq);
+                float yFitnessd = _fitnessFunctions[i].CalcFitness(y, _workSpec, _workReq);
                 diff = yFitnessd - xFitnessd;
 
                 if (Math.Abs(diff) > Mathf.Epsilon)
