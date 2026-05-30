@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,18 +10,25 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
     public class DraggableContainer<TItem> where TItem : class
     {
         public delegate Rect RenderItem(TItem item, Rect container, bool selected, int index);
-        public delegate void OnMove(int from, int to);
+        public delegate void MoveItem(int from, int to);
+
         private readonly RenderItem _renderItem;
+        private readonly MoveItem _moveItem;
+
         private readonly Vector2 _direction;
         private Vector2 _scroll;
         private Vector2 _prevSize;
         private TItem? _dragging;
+
         private int _reorderableGroupID;
 
-        public DraggableContainer(RenderItem renderItem, Vector2 direction)
+        public DraggableContainer(RenderItem renderItem, MoveItem moveItem, Vector2 direction)
         {
-            direction = direction * -1;
+            if (direction.y != 0) // Invert vertical direction because of how GUILayout handles vertical layout (top to bottom instead of bottom to top)
+                direction *= -1;
+
             _renderItem = renderItem;
+            _moveItem = moveItem;
             if (direction != Vector2.down && direction != Vector2.up && direction != Vector2.left && direction != Vector2.right)
             {
                 throw new ArgumentException("Should be a unit vector", nameof(direction));
@@ -28,8 +36,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
             _direction = direction;
         }
 
-        public Rect Render(Rect container, List<TItem> items) => Render(container, items, (from, to) => items.Swap(from, to > from ? to - 1 : to));
-        public Rect Render(Rect container, IEnumerable<TItem> items, OnMove onMove)
+        public Rect Render(Rect container, List<TItem> items)
         {
             // Calculate sizes of containers/scroll area
             var scrollbarSizes = new Vector2(
@@ -46,7 +53,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
 
             if (Event.current.type == EventType.Repaint)
             {
-                _reorderableGroupID = ReorderableWidget.NewGroup(onMove.Invoke, _direction switch
+                _reorderableGroupID = ReorderableWidget.NewGroup(_moveItem.Invoke, _direction switch
                 {
                     { x: var x } when x != 0 => ReorderableDirection.Horizontal,
                     { y: var y } when y != 0 => ReorderableDirection.Vertical,
@@ -69,7 +76,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
                 {
                     _dragging = item;
                 }
-                if (ReorderableWidget.Reorderable(_reorderableGroupID, renderedRect))
+
+                // Null elements are not draggable, so that they can be used to represent invalid/empty slots.
+                if (item != null && ReorderableWidget.Reorderable(_reorderableGroupID, renderedRect))
                 {
                     Widgets.DrawRectFast(renderedRect, Widgets.WindowBGFillColor * new Color(1f, 1f, 1f, 0.5f));
                 }
@@ -84,6 +93,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
                 { y: var y } when y != 0 => new Vector2(container.width, currentPosition.y),
                 _ => throw new ArgumentException("Should be a unit vector", nameof(_direction))
             };
+
             return container;
         }
     }
