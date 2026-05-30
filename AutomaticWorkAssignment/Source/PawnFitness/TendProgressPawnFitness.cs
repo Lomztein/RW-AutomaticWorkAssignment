@@ -25,7 +25,6 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 else
                 {
                     Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(Hediff);
-                    Log.Message(hediff?.def.defName ?? "null");
                     HediffComp_TendDuration tendDuration = hediff.TryGetComp<HediffComp_TendDuration>();
                     if (hediff != null)
                         return GetTotalTendQuality(tendDuration) / tendDuration.TProps.disappearsAtTotalTendQuality;

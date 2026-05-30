@@ -169,6 +169,20 @@ namespace Lomzie.AutomaticWorkAssignment
             return true;
         }
 
+        public static void MoveElement<T>(IList<T> list, int from, int to)
+        {
+            T item = list[from];
+            list.Insert(to, item);
+            if (to < from)
+            {
+                list.RemoveAt(from + 1);
+            }
+            else
+            {
+                list.RemoveAt(from);
+            }
+        }
+
         // I would very much like an explanation as to why these utility functions are internal.
         private static MethodInfo _unclip = typeof(GUIContent).Assembly.GetType("UnityEngine.GUIClip").GetMethod("Unclip", new[] { typeof(Vector2) });
         public static void RotateAroundPivot(float angle, Vector2 pivotPoint)

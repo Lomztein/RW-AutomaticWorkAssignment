@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using UnityEngine;
 using Verse;
 
@@ -44,9 +45,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         // List section layout.
         private static float ListScrollbarWidth => GUI.skin.verticalScrollbar.fixedWidth + 1;
         private const float ListElementHeight = 48;
-        private float _listHeight;
+        private readonly float _listHeight;
 
-        private Vector2 _listScrollPosition;
         private string _search;
 
         // Main section layout
@@ -94,7 +94,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 (postProcessor) => _currentWorkSpecification.DeletePostProcessor(postProcessor),
                 (postProcessor, newPostProcessor) => _currentWorkSpecification.ReplacePostProcess(postProcessor, newPostProcessor),
                 (postProcessor, index) => _currentWorkSpecification.MovePostProcessor(postProcessor, index));
-            workSpecificationContainer = new(_RenderWorkSpecification, Vector2.down);
+            workSpecificationContainer = new(_RenderWorkSpecification, MoveWorkSpec, Vector2.down);
+            _priorityContainer = new(DrawPriority, MovePriority, Vector2.right);
         }
         public override void PreOpen()
         {
@@ -175,16 +176,15 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Find.WindowStack.Add(selectMap);
         }
 
-        private Rect _RenderWorkSpecification(WorkSpecification? work, Rect container, bool selected, int i)
+        private Rect _RenderWorkSpecification(WorkSpecification work, Rect container, bool selected, int i)
         {
-            var row = new Rect(container.x, container.y, container.width, ListElementHeight);
-            //Widgets.DrawHighlightIfMouseover(row);
-            if (selected)
-            {
-                Widgets.DrawOptionBackground(row, selected);
-            }
+            if (!ShouldDisplay(work))
+                return new Rect(container.x, container.y, container.width, 0);
 
-            //if (i++ % 2 == 1) Widgets.DrawAltRect(row);
+            var row = new Rect(container.x, container.y, container.width, ListElementHeight);
+            Widgets.DrawHighlightIfMouseover(row);
+
+            if (i++ % 2 == 1) Widgets.DrawAltRect(row);
             var jobRect = Utils.ShrinkByMargin(row, ListElementHeight * 0.1f);
 
             if (work == null) // row for new job.
@@ -199,15 +199,20 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
                 TooltipHandler.TipRegion(row, "AWA.NewWorkSpecificationTip".Translate());
 
-                //if (Widgets.ButtonInvisible(row))
-                //{
-                //    SetCurrentWorkSpecification(_workManager.CreateNewWorkSpecification());
-                //}
+                if (Widgets.ButtonInvisible(row))
+                {
+                    SetCurrentWorkSpecification(_workManager.CreateNewWorkSpecification());
+                }
                 return row;
             }
 
             if (Mouse.IsOver(row))
                 HighlightAssignees(work);
+
+            if (selected)
+            {
+                Widgets.DrawOptionBackground(row, selected);
+            }
 
             Text.Anchor = TextAnchor.MiddleLeft;
             Rect labelRect = Utils.GetSubRectFraction(jobRect, Vector2.zero, new Vector2(1f, 0.5f));
@@ -216,14 +221,11 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Widgets.Label(labelRect, new GUIContent($"{ColorizeIf(work.Name, "grey", work.IsSuspended)}"));
             Widgets.Label(assignedRect, new GUIContent(ColorizeIf("AWA.PawnsAssigned".Translate(_workManager.GetCountAssignedTo(work), work.GetTargetWorkers(_workManager.MakeDefaultRequest())), "grey", work.IsSuspended)));
 
-            if (_currentWorkSpecification == work)
-                Widgets.DrawHighlight(row);
-
             Text.Anchor = TextAnchor.UpperLeft;
 
             TooltipHandler.TipRegion(row, () => "AWA.PawnsAssignedTip".Translate("    " + string.Join("\n    ", _workManager.GetPawnsAssignedTo(work))), 10371037);
 
-                (Rect left, Rect right) = Utils.SplitRectHorizontalRight(jobRect, Settings.UIButtonSizeBase * 2);
+                (Rect left, Rect right) = Utils.SplitRectHorizontalRight(jobRect, Settings.UIButtonSizeBase * 1.5f);
                 (Rect _, Rect copyPasteRect) = Utils.SplitRectHorizontalRight(left, ButtonSize * 2);
                 (Rect pasteRect, Rect copyRect) = Utils.SplitRectHorizontalLeft(copyPasteRect, ButtonSize);
 
@@ -237,7 +239,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             // Suspend / alarm
             Text.Anchor = TextAnchor.MiddleCenter;
 
-            Rect suspendAlarm = Utils.GetSubRectFraction(right, Vector2.zero, new Vector2(0.33f, 1f));
+            Rect suspendAlarm = Utils.GetSubRectFraction(right, Vector2.zero, new Vector2(0.5f, 1f));
             Rect suspend = Utils.GetSubRectFraction(suspendAlarm, Vector2.zero, new Vector2(1f, 0.5f));
             string suspendIcon = "AWA.SuspendCharacter".Translate();
             if (Widgets.ButtonText(suspend, work.IsSuspended ? suspendIcon : $"<color=grey>{suspendIcon}</color>"))
@@ -252,40 +254,24 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
             Text.Anchor = TextAnchor.UpperLeft;
 
-            // Rearrange
-            Rect rearrangeRect = Utils.GetSubRectFraction(right, new Vector2(0.33f, 0f), new Vector2(0.66f, 1f));
-            int movement = DoVerticalRearrangeButtons(rearrangeRect);
-            if (movement != 0)
-            {
-                _workManager.MoveWorkSpecification(work, GetMovementAmount(movement));
-            }
-
             // Delete
-            Rect deleteRect = Utils.GetSubRectFraction(right, new Vector2(0.66f, 0f), new Vector2(1f, 1f));
+            Rect deleteRect = Utils.GetSubRectFraction(right, new Vector2(0.5f, 0f), new Vector2(1f, 1f));
             if (Widgets.ButtonText(deleteRect, "X"))
                 _workManager.DeleteWorkSpecification(work);
 
-            //if (Widgets.ButtonInvisible(jobRect))
-            //{
-            //    SetCurrentWorkSpecification(work);
-            //}
+            if (Mouse.IsOver(row) && Event.current.type == EventType.MouseDown)
+            {
+                SetCurrentWorkSpecification(work);
+            }
 
             return row;
         }
+
         private readonly DraggableContainer<WorkSpecification?> workSpecificationContainer;
         private void DoWorkSpecificationsListContents(Rect rect)
         {
             Widgets.DrawWindowBackground(rect);
-            List<WorkSpecification> workSpecifications = _workManager.WorkList;
-
-            if (!string.IsNullOrEmpty(_search))
-            {
-                // Quick and simple search function. Might do a proper one later.
-                string[] parts = _search.Split('|');
-                workSpecifications = workSpecifications.
-                    Where(x => parts.Any(y => x.Name.ToLower().Contains(y.ToLower())))
-                    .ToList();
-            }
+            List<WorkSpecification> workSpecifications = new(_workManager.WorkList);
 
             (Rect listRect, Rect buttomsRect) = Utils.SplitRectVerticalLower(rect, ButtonSize);
 
@@ -294,6 +280,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             if (height > listRect.height)
                 scrollView.width -= ListScrollbarWidth;
 
+            workSpecifications.Add(null); // For the "new work specification" button.
             workSpecificationContainer.Render(listRect, workSpecifications);
 
             Rect resolveNowButtonRect = Utils.GetSubRectFraction(buttomsRect, Vector2.zero, new Vector2(0.25f, 1f));
@@ -318,6 +305,11 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             // Set highlight for learning helpers
             UIHighlighter.HighlightOpportunity(listRect, "MainTab-Lomzie_WorkManagerWindow-WorkAssignments");
         }
+
+        private void MoveWorkSpec(int from, int to)
+            => Utils.MoveElement(_workManager.WorkList, from, to);
+        private void MovePriority(int from, int to)
+            => Utils.MoveElement(_currentWorkSpecification.Priorities.OrderedPriorities, from, to);
 
         private void OpenAutoResolveFrequencyOptions()
         {
@@ -351,30 +343,6 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         {
             _workManager.ResetToDefaults();
             ResetCurrentWorkSpecification();
-        }
-
-        private int DoVerticalRearrangeButtons(Rect inRect)
-        {
-            Rect upper = Utils.GetSubRectFraction(inRect, Vector2.zero, new Vector2(1f, 0.5f));
-            Rect lower = Utils.GetSubRectFraction(inRect, new Vector2(0f, 0.5f), new Vector2(1f, 1f));
-
-            if (Widgets.ButtonText(upper, "/\\"))
-                return -1;
-            if (Widgets.ButtonText(lower, "\\/"))
-                return 1;
-            return 0;
-        }
-
-        private int DoHorizontalRearrangeButtons(Rect inRect)
-        {
-            Rect left = Utils.GetSubRectFraction(inRect, Vector2.zero, new Vector2(0.5f, 1));
-            Rect right = Utils.GetSubRectFraction(inRect, new Vector2(0.5f, 0), new Vector2(1f, 1f));
-
-            if (Widgets.ButtonText(left, "<"))
-                return -1;
-            if (Widgets.ButtonText(right, ">"))
-                return 1;
-            return 0;
         }
 
         public static  void SetCurrentWorkSpecification(WorkSpecification current)
@@ -495,9 +463,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             DoConfigurationColumnContents<IPawnPostProcessor, PawnPostProcessorDef>(cols[2].Rect.PadXY(1), "AWA.HeaderPostProcessors", "AWA.PostProcessorAdd", ref postProcessorsConfigurationColumn);
         }
 
-
-        float _priorityListWidth = 0f;
-        Vector2 _priorityListPosition = Vector2.zero;
+        private readonly DraggableContainer<WorkTypeDef?> _priorityContainer;
         private void DoPriorityContents(Rect sectionRect)
         {
             var layout = new RectDivider(sectionRect, GetHashCode(), Vector2.zero);
@@ -505,58 +471,18 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Commons.DoHeader(headerRect, $"<-------- {"AWA.PriorityHigher".Translate()} | {"AWA.PriorityLower".Translate()} -------->");
             sectionRect = layout.Rect;
 
-            var priorities = _currentWorkSpecification.Priorities.OrderedPriorities;
-
-            var width = _priorityListWidth;
-            var scrollView = new Rect(0f, 0f, sectionRect.width, sectionRect.height);
-            if (width > sectionRect.width)
-                scrollView.height -= ListScrollbarWidth;
-
-            Widgets.BeginScrollView(sectionRect, ref _priorityListPosition, scrollView);
-            var scrollContent = scrollView;
-
-            Widgets.BeginGroup(scrollContent);
-            var cur = Vector2.zero;
-            var i = 0;
-
-            foreach (WorkTypeDef def in priorities)
+            var priorities = new List<WorkTypeDef>(_currentWorkSpecification.Priorities.OrderedPriorities)
             {
-                var row = new Rect(cur.x, 0f, PriotityListElementWidth, sectionRect.height);
+                null // For the "new priority" button.
+            };
 
-                if (i++ % 2 == 1) Widgets.DrawAltRect(row);
-                DrawPriority(row, _currentWorkSpecification.Priorities, def);
-
-                cur.x += PriotityListElementWidth;
-            }
-
-            // row for new job.
-            var newRect = new Rect(cur.x, 0f, PriotityListElementWidth, sectionRect.height);
-            Widgets.DrawHighlightIfMouseover(newRect);
-            if (i % 2 == 1) Widgets.DrawAltRect(newRect);
-
-            Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(newRect, new GUIContent("+"));
+            _priorityContainer.Render(layout, priorities);
             Text.Anchor = TextAnchor.UpperLeft;
-            TooltipHandler.TipRegion(newRect, "AWA.LabelNewPriorityTip".Translate());
 
-            WorkTypeDef workDef = new WorkTypeDef();
+            Rect prioritySettingsRect = Utils.GetSubRectFraction(layout, new Vector2(0.5f, 0f), new Vector2(1f, 1f));
 
-            if (Widgets.ButtonInvisible(newRect))
-            {
-                FloatMenuUtility.MakeMenu(_workTypeDefsSorted, x => x.labelShort.CapitalizeFirst() + (_currentWorkSpecification.Priorities.OrderedPriorities.Contains(x) ? " *" : ""), x => () => _currentWorkSpecification.Priorities.AddPriority(x));
-            }
-
-            cur.x += ListScrollbarWidth;
-            _priorityListWidth = cur.x;
-
-            Text.Anchor = TextAnchor.UpperLeft;
-            GUI.EndGroup();
-            Widgets.EndScrollView();
-
-            Rect prioritySettingsRect = Utils.GetSubRectFraction(sectionRect, new Vector2(0.5f, 0f), new Vector2(1f, 1f));
             Rect requireCapabilityRect = new Rect(prioritySettingsRect);
             requireCapabilityRect.height = InputSize;
-
             DrawPrioritySettingsToggle(requireCapabilityRect, ref _currentWorkSpecification.RequireFullPawnCapability, "AWA.LabelRequireFullCapability".Translate(), "AWA.LabelRequireFullCapabilityTip".Translate());
 
             Rect interweaveRect = new Rect(requireCapabilityRect);
@@ -580,11 +506,31 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             TooltipHandler.TipRegion(rect, description);
         }
 
-        private void DrawPriority(Rect inRect, PawnWorkPriorities priorities, WorkTypeDef workDef)
+        private Rect DrawPriority(WorkTypeDef? workDef, Rect container, bool selected, int i)
         {
-            inRect = Utils.ShrinkByMargin(inRect, MarginSize / 2);
+            var priorityRect = new Rect(container.x, container.y, PriotityListElementWidth, container.height);
+            if (i++ % 2 == 1) Widgets.DrawAltRect(priorityRect);
+            Rect inRect = Utils.ShrinkByMargin(priorityRect, MarginSize / 2);
+            PawnWorkPriorities priorities = _currentWorkSpecification.Priorities;
 
-            (Rect labelRect, Rect buttonsRect) = Utils.SplitRectVerticalLower(inRect, ButtonSize * 2);
+            if (workDef == null)
+            {
+                // row for new job.
+                Widgets.DrawHighlightIfMouseover(priorityRect);
+
+                Text.Anchor = TextAnchor.MiddleCenter;
+                Widgets.Label(inRect, new GUIContent("+"));
+                Text.Anchor = TextAnchor.UpperLeft;
+                TooltipHandler.TipRegion(inRect, "AWA.LabelNewPriorityTip".Translate());
+
+                if (Widgets.ButtonInvisible(inRect))
+                {
+                    FloatMenuUtility.MakeMenu(_workTypeDefsSorted, x => x.labelShort.CapitalizeFirst() + (priorities.OrderedPriorities.Contains(x) ? " *" : ""), x => () => priorities.AddPriority(x));
+                }
+                return new Rect(priorityRect.x, priorityRect.y, 128, priorityRect.height);
+            }
+
+            (Rect labelRect, Rect buttonsRect) = Utils.SplitRectVerticalLower(inRect, ButtonSize);
 
             Matrix4x4 old = GUI.matrix;
 
@@ -603,18 +549,11 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Widgets.Label(hackRect, workDef.labelShort.CapitalizeFirst());
             GUI.matrix = old;
 
-            (Rect rearrangeRect, Rect deleteRect) = Utils.SplitRectVerticalUpper(buttonsRect, ButtonSize);
-
-            int movement = DoHorizontalRearrangeButtons(rearrangeRect);
-            if (movement != 0)
-            {
-                priorities.MovePriority(workDef, GetMovementAmount(movement));
-            }
-
-            if (Widgets.ButtonText(deleteRect, "✕"))
+            if (Widgets.ButtonText(buttonsRect, "✕"))
             {
                 priorities.RemovePriority(workDef);
             }
+            return priorityRect;
         }
 
         struct ConfigurationColumnData<TSetting> where TSetting : IPawnSetting
@@ -840,6 +779,17 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             var selfRect = layout.NewRow(localLayout.Rect.height);
             Widgets.DrawHighlightIfMouseover(selfRect.Rect.Pad(left: -MarginSize));
             return selfRect;
+        }
+
+        private bool ShouldDisplay(WorkSpecification workSpec)
+        {
+            if (!string.IsNullOrEmpty(_search))
+            {
+                // Quick and simple search function. Might do a proper one later.
+                string[] parts = _search.Split('|');
+                return parts.Any(y => workSpec.Name.ToLower().Contains(y.ToLower()));
+            }
+            return true;
         }
 
         public static string GetSettingLabel(IPawnSetting setting)
