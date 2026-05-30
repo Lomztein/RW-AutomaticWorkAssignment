@@ -13,7 +13,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
         private Texture2D _toggleOnIcon = ContentFinder<Texture2D>.Get("UI/Widgets/CheckOn");
         private Texture2D _toggleOffIcon = ContentFinder<Texture2D>.Get("UI/Widgets/CheckOff");
 
-        private float Size => AutomaticWorkAssignmentSettings.UIInputSizeBase;
+        private float Size => Settings.UIInputSizeBase;
 
         public Toggle(Func<T, bool> valueGetter, Action<T, bool> valueSetter, Func<T, string> labelGetter)
         {

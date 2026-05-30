@@ -16,6 +16,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         public override void ExposeData()
         {
             base.ExposeData();
+            Scribe_Values.Look(ref RequireAll, "requireAll", true);
             Scribe_Collections.Look(ref RequiredCapabilities, "requiredCapabilities");
             RequiredCapabilities ??= new List<WorkTags>();
         }
@@ -25,11 +26,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             if (pawn == null) return false;
             if (RequireAll)
             {
-                return !RequiredCapabilities.Any(x => pawn.WorkTagIsDisabled(x));
+                return !RequiredCapabilities.Any(x => Utils.WorkTagIsDisabled(pawn, x));
             }
             else
             {
-                return RequiredCapabilities.Any(x => !pawn.WorkTagIsDisabled(x));
+                return RequiredCapabilities.Any(x => !Utils.WorkTagIsDisabled(pawn, x));
             }
             // Work tags is a byte flag, and this check could be done using bit operations for a much more performant check.
             // And I did try to do this, but honestly couldn't figure it out and gave up.

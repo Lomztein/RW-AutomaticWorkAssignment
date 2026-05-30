@@ -17,6 +17,7 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.PerformanceOptimizer
 
         private static void Settings_Initialize_PostFix()
         {
+            // TODO: Move patch to Compat.cs in main project.
             var learnRateOptimization = PerformanceOptimizerSettings.optimizations.Find(x => x is Optimization_SkillRecord_LearnRateFactor);
             FieldInfo enabledField = typeof(Optimization_SkillRecord_LearnRateFactor).GetField("enabled", BindingFlags.NonPublic | BindingFlags.Instance);
             enabledField.SetValue(learnRateOptimization, false);

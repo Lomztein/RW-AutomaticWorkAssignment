@@ -13,6 +13,6 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             Scribe_Defs.Look(ref TimeAssignmentDef, "timeAssignmentDef");
         }
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
-            => pawn.timetable.CurrentAssignment == TimeAssignmentDef;
+            => pawn?.timetable?.CurrentAssignment == TimeAssignmentDef;
     }
 }

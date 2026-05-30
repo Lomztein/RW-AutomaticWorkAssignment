@@ -32,8 +32,8 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts
                             if (InsertAfter)
                                 index++;
                             loadoutComp.InsertElement(new LoadoutElement(Tag, State), index);
-                            return;
                         }
+                        return;
                     }
                     if (InsertAfter)
                     {

@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using Lomzie.AutomaticWorkAssignment.PartApplicability;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +26,18 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                 return;
             }
 
-            // Get the correct body part for this pawn
-            BodyPartRecord bodyPart = BillUtils.GetRecordOnPawn(pawn, BodyPartRecord);
+            // If no body part is specified, try to find one automatically
+            BodyPartRecord bodyPart = BodyPartRecord;
+            if (BillRecipeDef.targetsBodyPart)
+            {
+                if (BodyPartRecord == null)
+                {
+                    IEnumerable<BodyPartRecord> validParts = GetValidBodyPartsFor(pawn);
+                    bodyPart = validParts.FirstOrDefault(x => !BillUtils.HasBillForPart(pawn, BillRecipeDef, x));
+                }
+                // Get the correct body part for this pawn
+                bodyPart = BillUtils.GetRecordOnPawn(pawn, bodyPart);
+            }
 
             // Create the medical bill
             Bill_Medical bill = new Bill_Medical(BillRecipeDef, new List<Thing>()) { Part = bodyPart };
@@ -61,7 +72,39 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
         public static IEnumerable<RecipeDef> GetValidRecipies()
             => DefDatabase<RecipeDef>.AllDefs.Where(x => x.IsSurgery);
 
-        public static IEnumerable<BodyPartRecord> GetValidBodyPartsFor(RecipeDef recipeDef)
-            => BodyDefOf.Human.AllParts.Where(x => recipeDef.appliedOnFixedBodyParts.Any(y => x.def == y));
+        Cache<List<BodyPartRecord>> _availableOnCache = new Cache<List<BodyPartRecord>>();
+        public IEnumerable<BodyPartRecord> GetValidBodyPartsForOnMap(Map map)
+        {
+            if (!_availableOnCache.TryGet(out List<BodyPartRecord> availableOn))
+            {
+                IEnumerable<Pawn> mapPawns = map.mapPawns.FreeColonistsAndPrisoners;
+                List<BodyPartRecord> validParts = new List<BodyPartRecord>();
+                foreach (Pawn pawn in mapPawns)
+                {
+                    IEnumerable<BodyPartRecord> parts = GetValidBodyPartsFor(pawn);
+                    foreach (BodyPartRecord part in parts)
+                    {
+                        if (!validParts.Contains(part))
+                        {
+                            validParts.Add(part);
+                        }
+                    }
+
+                }
+
+                availableOn = validParts;
+                _availableOnCache.Set(availableOn);
+            }
+            return BillUtils.GetFixedPartsToEverApplyOn(BillRecipeDef).Concat(availableOn).Distinct();
+        }
+
+        private IEnumerable<BodyPartRecord> GetValidBodyPartsFor(Pawn pawn)
+        {
+            IEnumerable<BodyPartRecord> availableOn = BillRecipeDef.Worker.GetPartsToApplyOn(pawn, BillRecipeDef);
+            return MedicalRecipesUtility.GetFixedPartsToApplyOn(BillRecipeDef, pawn).Concat(availableOn).Distinct();
+        }
+
+        public IEnumerable<BodyPartRecord> GetTheoreticallyValidBodyPartsFor()
+            => BillUtils.GetFixedPartsToEverApplyOn(BillRecipeDef).Concat(ApplicablePartsGetter.GetFor(BillRecipeDef));
     }
 }

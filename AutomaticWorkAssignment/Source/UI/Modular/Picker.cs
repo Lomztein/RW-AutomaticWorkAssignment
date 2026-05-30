@@ -16,7 +16,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
 
         private float _buttonSize = 32;
 
-        public Picker(Func<Map, IEnumerable<E>> optionGetter, Func<E, string> optionLabelGetter, Func<T, string> labelGetter, Action<T, E> onSelected, Func<E, Texture2D> iconGetter = null, float buttonSize = AutomaticWorkAssignmentSettings.UIButtonSizeBase)
+        public Picker(Func<Map, IEnumerable<E>> optionGetter, Func<E, string> optionLabelGetter, Func<T, string> labelGetter, Action<T, E> onSelected, Func<E, Texture2D> iconGetter = null, float buttonSize = Settings.UIButtonSizeBase)
         {
             _optionGetter = optionGetter;
             _optionLabelGetter = optionLabelGetter;

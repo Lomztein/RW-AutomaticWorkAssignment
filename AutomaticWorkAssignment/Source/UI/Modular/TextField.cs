@@ -9,7 +9,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
         private readonly Func<T, string> _getter;
         private readonly Action<T, string> _setter;
 
-        private float InputSize => AutomaticWorkAssignmentSettings.UIInputSizeBase;
+        private float InputSize => Settings.UIInputSizeBase;
 
         public TextField(Func<T, string> getter, Action<T, string> setter)
         {

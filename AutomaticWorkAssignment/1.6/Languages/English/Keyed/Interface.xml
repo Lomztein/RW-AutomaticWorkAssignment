@@ -57,6 +57,7 @@
   <AWA.CompositeAmountEdit>Edit composite amount</AWA.CompositeAmountEdit>
   <AWA.AmountAdd>Add amount</AWA.AmountAdd>
   <AWA.MaxEdit>Edit max ({0})</AWA.MaxEdit>
+  <AWA.ConditionsEdit>Edit ({0})</AWA.ConditionsEdit>
   <AWA.CurrentDedicatedPawnsTooltip>Currently dedicated:{0}</AWA.CurrentDedicatedPawnsTooltip>
   <AWA.ClearDedicatedPawns>Clear dedicated ({0})</AWA.ClearDedicatedPawns>
   <AWA.AllowOverwrite>Allow overwrite</AWA.AllowOverwrite>
@@ -65,6 +66,8 @@
   <AWA.SetScheduleOverwriteTooltip>Completely overwrite existing schedule</AWA.SetScheduleOverwriteTooltip>
   <AWA.SetScheduleAddTooltip>Add non-anything schedule to existing schedule</AWA.SetScheduleAddTooltip>
   <AWA.Mode>Mode</AWA.Mode>
+  <AWA.Before>Before</AWA.Before>
+  <AWA.After>After</AWA.After>
 
   <AWA.Hours>Hour</AWA.Hours>
   <AWA.Days>Day</AWA.Days>

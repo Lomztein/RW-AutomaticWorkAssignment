@@ -23,7 +23,7 @@
     <defName>Lomzie_InsertTagPawnPostProcessor</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.Patches.CompositableLoadouts.InsertTagPawnPostProcessor</settingClass>
     <label>insert loadout tag</label>
-    <description>Inserts the given Compositable Loadout tag to the pawn, before or after a selected tag.</description>
+    <description>Inserts the given Compositable Loadout tag to the pawn, before or after a selected tag. If no "relative to" tag is selected, then the new tag will be added to the top or buttom of the tag list.</description>
     <category>CompositeLoadouts</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">

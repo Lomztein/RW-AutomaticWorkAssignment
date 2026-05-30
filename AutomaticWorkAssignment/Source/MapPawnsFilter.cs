@@ -20,7 +20,7 @@ namespace Lomzie.AutomaticWorkAssignment.Source
 
         public List<PawnRef> ExcludedPawns = new List<PawnRef>();
 
-        public static float MaxMentalBreakHours => AutomaticWorkAssignmentSettings.MentalBreakHourThreshold;
+        public static float MaxMentalBreakHours => Settings.MentalBreakHourThreshold;
 
         public void ExposeData()
         {
@@ -43,6 +43,9 @@ namespace Lomzie.AutomaticWorkAssignment.Source
 
         public IEnumerable<Pawn> GetEverAvailablePawns(IEnumerable<Pawn> allPawns, Map map)
         {
+            // Purge any null pawns that might have appeared somehow.
+            ExcludedPawns = ExcludedPawns.Where(x => x.Pawn != null).ToList();
+
             foreach (Pawn pawn in allPawns)
             {
                 if (ExcludedPawns.Any(x => x.Is(pawn)))

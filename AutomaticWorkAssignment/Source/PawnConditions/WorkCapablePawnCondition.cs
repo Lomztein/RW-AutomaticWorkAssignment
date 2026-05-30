@@ -9,9 +9,10 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         public bool RequireAll;
         public List<WorkTypeDef> RequiredCapabilities = new List<WorkTypeDef>();
 
-        public override void ExposeData()
+        public override void ExposeData()   
         {
             base.ExposeData();
+            Scribe_Values.Look(ref RequireAll, "requireAll", true);
             Scribe_Collections.Look(ref RequiredCapabilities, "requiredCapabilities");
         }
 
@@ -20,11 +21,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             if (pawn == null) return false;
             if (RequireAll)
             {
-                return !pawn.OneOfWorkTypesIsDisabled(RequiredCapabilities);
+                return RequiredCapabilities.All(x => !Utils.WorkTypeIsDisabled(pawn, x));
             }
             else
             {
-                return RequiredCapabilities.Any(x => !pawn.WorkTypeIsDisabled(x));
+                return RequiredCapabilities.Any(x => !Utils.WorkTypeIsDisabled(pawn, x));
             }
         }
     }

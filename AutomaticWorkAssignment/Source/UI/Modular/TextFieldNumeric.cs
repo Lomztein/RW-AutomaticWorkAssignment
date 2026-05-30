@@ -15,7 +15,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
         private readonly float _min;
         private readonly float _max = float.MaxValue;
 
-        private float InputSize => AutomaticWorkAssignmentSettings.UIInputSizeBase;
+        private float InputSize => Settings.UIInputSizeBase;
 
         public TextFieldNumeric(Func<T, D> getter, Action<T, D> setter, float min = 0, float max = float.MaxValue)
         {

@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using Lomzie.AutomaticWorkAssignment.PartApplicability;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,8 +90,9 @@ namespace Lomzie.AutomaticWorkAssignment
                 return LogError("Pawn is null");
 
             // Check if selected body part is compatable. Commented out because it may have caused issues.
-            //if (bill.Part != null && !BillRecipeDef.Worker.GetPartsToApplyOn(pawn, BillRecipeDef).Any(x => x.LabelCap == bill.Part.LabelCap))
-            //    return LogError($"Target body part mismatch: {bill.Part?.LabelCap ?? "null"}");
+            IEnumerable<BodyPartRecord> applicableParts = recipeDef.Worker.GetPartsToApplyOn(pawn, recipeDef);
+            if (bill.Part != null && applicableParts.Any() && !applicableParts.Any(x => x.LabelCap == bill.Part.LabelCap))
+                return LogError($"Target body part mismatch: {bill.Part?.LabelCap ?? "null"}");
 
             // Check if recipe is available on the pawn
             if (!recipeDef.Worker.AvailableOnNow(pawn, bill.Part))
@@ -105,11 +107,17 @@ namespace Lomzie.AutomaticWorkAssignment
                 return LogError($"Recipe applied on fixed body parts, but body part record = null.");
 
             // Check if identical bill already exists
-            if (pawn.BillStack.Bills.Where(x => x is Bill_Medical).Cast<Bill_Medical>()
-                .Any(x => x.recipe == bill.recipe && x.Part == bill.Part))
+            if (HasBillForPart(pawn, recipeDef, bill.Part))
                 return LogError($"Identical bill already present on pawn '{pawn}'.");
 
             return true;
+        }
+
+
+        public static bool HasBillForPart(Pawn pawn, RecipeDef recipeDef, BodyPartRecord bodyPartRecord)
+        {
+            return pawn.BillStack.Bills.Where(x => x is Bill_Medical).Cast<Bill_Medical>()
+                .Any(x => x.recipe == recipeDef && x.Part == bodyPartRecord);
         }
 
         public static bool HasHediff(Pawn pawn, HediffDef hediff, BodyPartRecord bodyPartRecord)
@@ -127,6 +135,17 @@ namespace Lomzie.AutomaticWorkAssignment
             Logger.Message("[AWA:AS] AddBillPostProcessor failed: " + message);
             return false;
         }
-    }
 
+        public static IEnumerable<BodyPartRecord> GetAllParts()
+            => PawnKindDefOf.Colonist.RaceProps.body.AllParts;
+
+        public static IEnumerable<BodyPartRecord> GetFixedPartsToEverApplyOn(RecipeDef recipeDef)
+        {
+            return GetAllParts()
+                .Where(x =>
+                    recipeDef.appliedOnFixedBodyParts.Contains(x.def) ||
+                    recipeDef.appliedOnFixedBodyPartGroups.Any(y => x.groups.Contains(y)))
+                .Distinct();
+        }
+    }
 }

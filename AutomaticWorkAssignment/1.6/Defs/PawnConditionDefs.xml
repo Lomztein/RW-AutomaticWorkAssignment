@@ -35,6 +35,20 @@
     <category>Skills</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>LomzieInspiredCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.InspiredPawnCondition</settingClass>
+    <label>is inspired</label>
+    <description>Check if the pawn is inspired.</description>
+    <category>Skills</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_NeedsTendPawnCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.NeedsTendPawnCondition</settingClass>
+    <label>needs tending</label>
+    <description>Assign to pawns that need tending.</description>
+    <category>Health</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_HasHediffCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.HediffPawnCondition</settingClass>
     <label>health condition</label>

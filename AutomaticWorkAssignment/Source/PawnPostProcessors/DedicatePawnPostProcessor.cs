@@ -91,8 +91,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref Time, "time", defaultValue: Time);
-            Scribe_Values.Look(ref Unit, "unit", defaultValue: Unit);
+            Scribe_Values.Look(ref Time, "time", defaultValue: 1);
+            Scribe_Values.Look(ref Unit, "unit", defaultValue: TimeUnit.Month);
         }
     }
 }

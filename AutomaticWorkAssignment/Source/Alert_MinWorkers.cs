@@ -12,7 +12,7 @@ namespace Lomzie.AutomaticWorkAssignment
     public class Alert_MinWorkers : Alert
     {
         private List<Tuple<WorkSpecification, Map>> _specsWithIssue = new List<Tuple<WorkSpecification, Map>>();
-        private bool RedCriticalAlert => AutomaticWorkAssignmentSettings.RedCriticalAlert;
+        private bool RedCriticalAlert => Settings.RedCriticalAlert;
 
         private bool AnyIssues => _specsWithIssue.Any();
         private bool AnyCritical => _specsWithIssue.Any(x => x.Item1.IsCritical);

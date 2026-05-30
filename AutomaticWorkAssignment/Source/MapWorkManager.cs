@@ -45,8 +45,8 @@ namespace Lomzie.AutomaticWorkAssignment
         private List<WorkTypeDef> _unmanagedWorkTypes;
         private List<Tuple<WorkSpecification, Pawn>> _toPostProcess = new List<Tuple<WorkSpecification, Pawn>>();
 
-        public static int MaxCommitment => AutomaticWorkAssignmentSettings.MaxCommitment;
-        public static bool IgnoreUnmanagedWorkTypes => AutomaticWorkAssignmentSettings.IgnoreUnmanagedWorkTypes;
+        public static int MaxCommitment => Settings.MaxCommitment;
+        public static bool IgnoreUnmanagedWorkTypes => Settings.IgnoreUnmanagedWorkTypes;
 
         public Reservations Reservations = new Reservations(); // Reserved items.
         public Dedications Dedications = new Dedications(); // Pawns dedicated to certain tasks.
@@ -97,7 +97,7 @@ namespace Lomzie.AutomaticWorkAssignment
             }
             if (loadType == DefaultLoadType.File)
             {
-                FileInfo defaultConfig = AutomaticWorkAssignmentSettings.DefaultConfigurationFile;
+                FileInfo defaultConfig = Settings.DefaultConfigurationFile;
                 IO.ImportFromFile(this, defaultConfig.Name, IO.GetConfigDirectory());
                 Log.Message($"[AWA] Imported from '{defaultConfig.Name}'.");
             }
@@ -114,10 +114,10 @@ namespace Lomzie.AutomaticWorkAssignment
 
         private DefaultLoadType DetermineDefaultLoadType()
         {
-            if (AutomaticWorkAssignmentSettings.AutoMigrateOnGravshipJump && Map.wasSpawnedViaGravShipLanding && GravshipUtils.GravshipConfigMigrationFileExists())
+            if (Settings.AutoMigrateOnGravshipJump && Map.wasSpawnedViaGravShipLanding && GravshipUtils.GravshipConfigMigrationFileExists())
                 return DefaultLoadType.Gravship;
 
-            FileInfo defaultConfig = AutomaticWorkAssignmentSettings.DefaultConfigurationFile;
+            FileInfo defaultConfig = Settings.DefaultConfigurationFile;
             if (defaultConfig != null)
                 return DefaultLoadType.File;
 
@@ -418,13 +418,14 @@ namespace Lomzie.AutomaticWorkAssignment
 
             if (PawnAssignments.TryGetValue(pawn, out List<WorkAssignment> assignments))
             {
-                var specs = assignments.Select(x => x.Specification);
-
                 int lastNatural = int.MaxValue;
                 int prioritization = 1;
 
-                foreach (var spec in specs)
+                foreach (var assignment in assignments)
                 {
+                    assignment.ClearPriorities();
+
+                    var spec = assignment.Specification;
                     int shift = spec.InterweavePriorities ? GetPawnsAssignedTo(spec).FirstIndexOf(x => x == pawn) : 0;
                     var priorities = spec.Priorities.GetShifted(shift);
 
@@ -438,9 +439,10 @@ namespace Lomzie.AutomaticWorkAssignment
                                 prioritization++;
                             lastNatural = priority.naturalPriority;
 
-                            if (!pawn.WorkTypeIsDisabled(priority))
+                            if (!Utils.WorkTypeIsDisabled(pawn, priority))
                             {
                                 newPriorities[priority] = prioritization;
+                                assignment.SetPriority(priority, prioritization);
                             }
                         }
                     }

@@ -46,10 +46,10 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.BetterPawnControl
             MethodInfo resolveMethod = AccessTools.Method(typeof(MapWorkManager), "ResolveWorkCoroutine", new[] { typeof(ResolveWorkRequest) });
             harm.Patch(resolveMethod, postfix: new HarmonyMethod(new Action<ResolveWorkRequest>(WorkManager_ResolvePriorities_PostFix)));
 
-            MethodInfo settings_doListing = AccessTools.Method(typeof(AutomaticWorkAssignmentSettings), "DoListing", new[] { typeof(Listing_Standard) });
+            MethodInfo settings_doListing = AccessTools.Method(typeof(Settings), "DoListing", new[] { typeof(Listing_Standard) });
             harm.Patch(settings_doListing, postfix: new Action<Listing_Standard>(Settings_DoListing_PostFix));
 
-            MethodInfo settings_exposeData = AccessTools.Method(typeof(AutomaticWorkAssignmentSettings), "ExposeData");
+            MethodInfo settings_exposeData = AccessTools.Method(typeof(Settings), "ExposeData");
             harm.Patch(settings_doListing, postfix: new Action<Listing_Standard>(Settings_ExposeData_PostFix));
 
             Log.Message("[AWA] Applied BetterPawnControl patch.");

@@ -13,7 +13,7 @@ namespace Lomzie.AutomaticWorkAssignment.Source.UI.Modular
 {
     public class PositionTargeter<T> : IHandlerModule<T> where T : IPawnSetting
     {
-        private static float ButtonSize => AutomaticWorkAssignmentSettings.UIButtonSizeBase;
+        private static float ButtonSize => Settings.UIButtonSizeBase;
 
         private readonly Func<T, Vector3?> _getter;
         private readonly Action<T, Vector3> _setter;

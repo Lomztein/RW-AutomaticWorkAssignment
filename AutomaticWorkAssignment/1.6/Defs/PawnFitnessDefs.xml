@@ -70,6 +70,13 @@
     <category>Health</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_PainPawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.PainPawnFitness</settingClass>
+    <label>pain</label>
+    <description>Prioritize pawns by the amount of pain they're in.</description>
+    <category>Health</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
     <defName>Lomzie_ConditionPawnFitness</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.ConditionPawnFitness</settingClass>
     <label>condition</label>

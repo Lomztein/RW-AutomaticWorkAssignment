@@ -6,7 +6,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
 {
     public class ConstantPawnFitnessUIHandler : PawnSettingUIHandler<ConstantPawnFitness>
     {
-        private float Size => AutomaticWorkAssignmentSettings.UILabelSizeBase;
+        private float Size => Settings.UILabelSizeBase;
         private readonly Buffer<string> _buffer = new Buffer<string>();
 
         protected override float Handle(Vector2 position, float width, ConstantPawnFitness pawnSetting)

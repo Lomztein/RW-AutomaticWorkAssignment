@@ -21,7 +21,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
             y += _buttonSize;
             position.y += _buttonSize;
             Rect bodyPartRect = new Rect(position, new Vector2(width, _buttonSize));
-            var validBodyParts = BodyDefOf.Human.AllParts;
+            var validBodyParts = BillUtils.GetAllParts();
             if (validBodyParts.Count() == 1)
             {
                 pawnPostProcessor.HediffPart = validBodyParts.FirstOrDefault();

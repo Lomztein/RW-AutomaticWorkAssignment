@@ -25,12 +25,12 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         public static WorkManagerWindow Instance;
 
         // Overall layout
-        private float ListSectionWidth => AutomaticWorkAssignmentSettings.ManagerListSectionWidth;
-        private float MainSectionWidth => AutomaticWorkAssignmentSettings.ManagerMainSectionWidth;
-        private float AdvancedSectionWidth => AutomaticWorkAssignmentSettings.ManagerSettingsSectionWidth;
+        private float ListSectionWidth => Settings.ManagerListSectionWidth;
+        private float MainSectionWidth => Settings.ManagerMainSectionWidth;
+        private float AdvancedSectionWidth => Settings.ManagerSettingsSectionWidth;
 
         private float WindowWidth => ListSectionWidth + MainSectionWidth + AdvancedSectionWidth;
-        private float WindowHeight => AutomaticWorkAssignmentSettings.ManagerWindowHeight;
+        private float WindowHeight => Settings.ManagerWindowHeight;
 
 
         private const int MarginSize = 4;
@@ -50,8 +50,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         // Main section layout
         private const float PriotityListElementWidth = 32;
-        private static float InputSize => AutomaticWorkAssignmentSettings.UIInputSizeBase;
-        private static float ButtonSize => AutomaticWorkAssignmentSettings.UIButtonSizeBase;
+        private static float InputSize => Settings.UIInputSizeBase;
+        private static float ButtonSize => Settings.UIButtonSizeBase;
 
         // Advanced section layout
         private const float NewFunctionButtonSize = 32;
@@ -226,7 +226,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
                 TooltipHandler.TipRegion(row, () => "AWA.PawnsAssignedTip".Translate("    " + string.Join("\n    ", _workManager.GetPawnsAssignedTo(work))), 10371037);
 
-                (Rect left, Rect right) = Utils.SplitRectHorizontalRight(jobRect, AutomaticWorkAssignmentSettings.UIButtonSizeBase * 2);
+                (Rect left, Rect right) = Utils.SplitRectHorizontalRight(jobRect, Settings.UIButtonSizeBase * 2);
                 (Rect _, Rect copyPasteRect) = Utils.SplitRectHorizontalRight(left, ButtonSize * 2);
                 (Rect pasteRect, Rect copyRect) = Utils.SplitRectHorizontalLeft(copyPasteRect, ButtonSize);
 
@@ -504,7 +504,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private void DoPriorityContents(Rect sectionRect)
         {
             var layout = new RectDivider(sectionRect, GetHashCode(), Vector2.zero);
-            var headerRect = DoHeader(ref layout, $"<-------- {"AWA.PriorityHigher".Translate()} | {"AWA.PriorityLower".Translate()} -------->");
+            var headerRect = layout.NewRow(ButtonSize);
+            Commons.DoHeader(headerRect, $"<-------- {"AWA.PriorityHigher".Translate()} | {"AWA.PriorityLower".Translate()} -------->");
             sectionRect = layout.Rect;
 
             var priorities = _currentWorkSpecification.Priorities.OrderedPriorities;
@@ -650,7 +651,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             where TSetting : IPawnSetting where TSettingDef : PawnSettingDef
         {
             var layout = new RectDivider(sectionRect, GetHashCode(), Vector2.zero);
-            var headerRect = DoHeader(ref layout, headerText.Translate());
+            Rect inRect = layout.NewRow(ButtonSize);
+            Commons.DoHeader(inRect, headerText.Translate());
             DoPawnSettingList<TSetting, TSettingDef>(layout, addText.Translate(), ref columnSettings);
         }
 
@@ -895,16 +897,6 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             TooltipHandler.TipRegion(toggleRect, pawnAmount.Description);
 
             Text.Anchor = TextAnchor.UpperLeft;
-        }
-
-        private RectDivider DoHeader(ref RectDivider inRect, string header)
-        {
-            var headerRect = inRect.NewRow(ButtonSize);
-            Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.DrawMenuSection(headerRect);
-            Widgets.Label(headerRect, header);
-            Text.Anchor = TextAnchor.UpperLeft;
-            return headerRect;
         }
 
         private void HighlightAssignees(WorkSpecification workSpec)

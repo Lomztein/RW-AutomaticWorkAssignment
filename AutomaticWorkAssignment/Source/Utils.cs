@@ -6,7 +6,6 @@ using Lomzie.AutomaticWorkAssignment.PawnFitness;
 using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
 using RimWorld;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -215,7 +214,7 @@ namespace Lomzie.AutomaticWorkAssignment
                 var skill = pawn.skills.GetSkill(skillDef);
                 bool passion = skill.passion != Passion.None;
                 float learnRate = skill.LearnRateFactor(true);
-                float threshold = AutomaticWorkAssignmentSettings.PassionLearnRateThreshold;
+                float threshold = Settings.PassionLearnRateThreshold;
                 return passion && learnRate >= threshold;
             }
             return false;
@@ -272,7 +271,7 @@ namespace Lomzie.AutomaticWorkAssignment
         }
 
         private static bool ShouldFlattenPawnSettingCategory(PawnSettingCategoryDef pawnSettingCategoryDef)
-            => !AutomaticWorkAssignmentSettings.UseSubMenus || AutomaticWorkAssignmentSettings.AlwaysFlattenPawnSettingCategorySubmenu(pawnSettingCategoryDef);
+            => !Settings.UseSubMenus || Settings.AlwaysFlattenPawnSettingCategorySubmenu(pawnSettingCategoryDef);
 
         public static string GetPreceptLabel(PreceptDef def)
         {
@@ -288,5 +287,11 @@ namespace Lomzie.AutomaticWorkAssignment
 
             return label.ToString();
         }
+
+        // Wrappers around Pawn.WorkType/TagIsDisabled to allow for easier patching.
+        public static bool WorkTypeIsDisabled(Pawn pawn, WorkTypeDef workType)
+            => pawn.WorkTypeIsDisabled(workType);
+        public static bool WorkTagIsDisabled(Pawn pawn, WorkTags workTag)
+            => pawn.WorkTagIsDisabled(workTag);
     }
 }

@@ -19,8 +19,8 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
         private readonly Func<T, IList<E>> _listGetter;
         private readonly Func<T, O, E> _onOptionSelected;
 
-        private float ButtonSize => AutomaticWorkAssignmentSettings.UIButtonSizeBase;
-        private float RemoveButtonSize = AutomaticWorkAssignmentSettings.UIInputSizeBase;
+        private float ButtonSize => Settings.UIButtonSizeBase;
+        private float RemoveButtonSize = Settings.UIInputSizeBase;
 
         public Lister(Action<Rect, E> innerDrawer, float elementHeight, Func<Map, IEnumerable<O>> optionGetter, Func<O, string> optionLabelGetter, Func<T, List<E>> listGetter, Func<T, O, E> onOptionSelected, Func<O, Texture2D> iconGetter = null)
         {

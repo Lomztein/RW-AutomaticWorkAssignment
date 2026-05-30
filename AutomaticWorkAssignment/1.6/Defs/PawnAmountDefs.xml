@@ -15,6 +15,14 @@
     <description>Assign to a percentage all pawns.</description>
     <icon>%</icon>
   </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnAmountDef">
+    <defName>Lomzie_CountPawnAmount</defName>
+    <label>count</label>
+    <defClass>Lomzie.AutomaticWorkAssignment.Amounts.CountPawnAmount</defClass>
+    <description>Assign to the count of pawns meeting specified conditions.</description>
+    <icon>C</icon>
+  </Def>
   
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnAmountDef">
     <defName>Lomzie_BuildingPawnAmount</defName>

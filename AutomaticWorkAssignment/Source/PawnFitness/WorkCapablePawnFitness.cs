@@ -10,7 +10,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
 
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
-            return _workTypes.Count(x => !pawn.WorkTypeIsDisabled(x));
+            return _workTypes.Count(x => !Utils.WorkTypeIsDisabled(pawn, x));
         }
     }
 }

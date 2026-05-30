@@ -23,15 +23,22 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnPostProcessor
             {
                 position.y += _buttonSize;
                 Rect bodyPartRect = new Rect(position, new Vector2(width, _buttonSize));
-                var validBodyParts = AddBillPawnPostProcessor.GetValidBodyPartsFor(pawnPostProcessor.BillRecipeDef);
-                if (validBodyParts.Count() == 1)
-                {
-                    pawnPostProcessor.BodyPartRecord = validBodyParts.FirstOrDefault();
-                }
 
-                if (Widgets.ButtonText(bodyPartRect, pawnPostProcessor.BodyPartRecord?.LabelCap ?? "AWA.BodyPartSelect".Translate()))
+                // First search for therotically valid body parts for recipe.
+                var validBodyParts = pawnPostProcessor.GetTheoreticallyValidBodyPartsFor();
+
+                // Concatonate with any we might have missed on current map.
+                validBodyParts = validBodyParts.Concat(pawnPostProcessor.GetValidBodyPartsForOnMap(Find.CurrentMap));
+
+                // Filter out potential duplicates
+                validBodyParts = validBodyParts.Distinct();
+
+                if (pawnPostProcessor.BodyPartRecord != null)
+                    pawnPostProcessor.BodyPartRecord = validBodyParts.FirstOrDefault(x => x.LabelCap == pawnPostProcessor.BodyPartRecord?.LabelCap);
+
+                if (Widgets.ButtonText(bodyPartRect, pawnPostProcessor.BodyPartRecord?.LabelCap ?? "AWA.Auto".Translate()))
                 {
-                    SearchableFloatMenu.MakeMenu(validBodyParts, x => x.LabelCap, x => () => pawnPostProcessor.BodyPartRecord = x);
+                    SearchableFloatMenu.MakeMenu(new BodyPartRecord[] { null }.Concat(validBodyParts), x => x?.LabelCap ?? "AWA.Auto".Translate(), x => () => pawnPostProcessor.BodyPartRecord = x);
                 }
                 y += _buttonSize;
             }

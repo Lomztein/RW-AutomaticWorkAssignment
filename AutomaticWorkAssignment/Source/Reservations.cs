@@ -19,7 +19,7 @@ namespace Lomzie.AutomaticWorkAssignment
                 _thingReservations.Add(thing, new List<ReservationInfo>());
             }
 
-            int timeout = (int)(GenDate.TicksPerDay * AutomaticWorkAssignmentSettings.ReservationTimeoutDays);
+            int timeout = (int)(GenDate.TicksPerDay * Settings.ReservationTimeoutDays);
             ReservationInfo info = new ReservationInfo(count, timeout);
 
             if (_thingReservations[thing] == null)

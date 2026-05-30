@@ -1,14 +1,10 @@
-﻿using RimWorld;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
-namespace Lomzie.AutomaticWorkAssignment.Source.UI.Windows
+namespace Lomzie.AutomaticWorkAssignment.UI.Windows
 {
     public abstract class ListerWindow<T> : Window
     {
@@ -34,15 +30,13 @@ namespace Lomzie.AutomaticWorkAssignment.Source.UI.Windows
 
         public override void DoWindowContents(Rect inRect)
         {
-            (Rect header, Rect body) = Utils.SplitRectVerticalUpper(inRect, HEADER_SIZE * 1.5f);
+            (Rect header, Rect body) = Utils.SplitRectVerticalUpper(inRect, HEADER_SIZE);
+            Commons.DoHeader(header, Header);
+
             if (Widgets.CloseButtonFor(inRect))
             {
                 Close();
             }
-
-            Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(header, Header);
-            Text.Anchor = TextAnchor.UpperLeft;
 
             var height = _listHeight;
             var scrollView = new Rect(0f, 0f, body.width, height);

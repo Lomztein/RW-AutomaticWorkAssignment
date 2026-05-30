@@ -88,12 +88,12 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             if (RequireFullPawnCapability)
             {
-                if (!pawn.OneOfWorkTypesIsDisabled(Priorities.OrderedPriorities))
+                if (Priorities.OrderedPriorities.All(x => !Utils.WorkTypeIsDisabled(pawn, x)))
                     return true;
             }
             else
             {
-                if (Priorities.OrderedPriorities.Any(x => !pawn.WorkTypeIsDisabled(x)) || Priorities.OrderedPriorities.Empty())
+                if (Priorities.OrderedPriorities.Any(x => !Utils.WorkTypeIsDisabled(pawn, x)) || Priorities.OrderedPriorities.Empty())
                     return true;
             }
             return false;

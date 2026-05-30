@@ -18,11 +18,11 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
             const int inset = 8;
             var layout = new RectAggregator(new Rect(position.x, position.y, width, 0), GetHashCode(), new(8, 1));
 
-            Rect rect = layout.NewRow(AutomaticWorkAssignmentSettings.UIInputSizeBase);
+            Rect rect = layout.NewRow(Settings.UIInputSizeBase);
             var newFormula = Widgets.TextField(rect, pawnSetting.SourceString);
             pawnSetting.SourceString = newFormula;
 
-            Rect buttonRect = layout.NewRow(AutomaticWorkAssignmentSettings.UILabelSizeBase);
+            Rect buttonRect = layout.NewRow(Settings.UILabelSizeBase);
             if (Widgets.ButtonText(buttonRect, "AWA.FormulaEditor.Commit".Translate(), active: pawnSetting.LastException == null))
             {
                 PlayerKnowledgeDatabase.KnowledgeDemonstrated(AWAConceptDefOf.AWA_FormulaEditor, KnowledgeAmount.SpecificInteraction);
@@ -50,7 +50,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
 
                     var bindingName = pawnSetting.InnerFormula.BindingNames[i];
 
-                    var labelRect = bindingsLayout.NewRow(AutomaticWorkAssignmentSettings.UILabelSizeBase);
+                    var labelRect = bindingsLayout.NewRow(Settings.UILabelSizeBase);
                     Widgets.Label(labelRect, "AWA.BindingName".Translate(bindingName));
 
                     if (pawnSetting.bindingSettings.TryGetValue(bindingName, out var setting))
@@ -66,7 +66,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.PawnFitness
             }
                     else
                     {
-                        Rect addConditionButtonRect = bindingsLayout.NewRow(AutomaticWorkAssignmentSettings.UIButtonSizeBase);
+                        Rect addConditionButtonRect = bindingsLayout.NewRow(Settings.UIButtonSizeBase);
                         WorkManagerWindow.DoAddSettingButton<IPawnFitness, PawnFitnessDef>(addConditionButtonRect, "AWA.FunctionSelect".Translate(), (x) => pawnSetting.bindingSettings[bindingName] = x, true);
                     }
                 }

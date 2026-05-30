@@ -78,6 +78,13 @@
     <category>Manage</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_ForceRelativePriorityPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.ForceRelativePriorityPawnPostProcessor</settingClass>
+    <label>force priority before/after</label>
+    <description>Force work priority before or after a work specification. Note that it does not re-arrange any other priorities around this.</description>
+    <category>Manage</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_SetMedicalCarePostProcessor</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.SetMedicalCarePawnPostProcessor</settingClass>
     <label>set medical care</label>

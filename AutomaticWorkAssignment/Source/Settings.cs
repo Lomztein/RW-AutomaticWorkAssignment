@@ -9,7 +9,7 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment
 {
-    public class AutomaticWorkAssignmentSettings : ModSettings
+    public class Settings : ModSettings
     {
         public static int MaxCommitment = 10;
         public static float MentalBreakHourThreshold = 0.5f;

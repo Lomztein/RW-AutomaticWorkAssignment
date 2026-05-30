@@ -1,6 +1,5 @@
 ﻿using Lomzie.AutomaticWorkAssignment.Amounts;
 using Lomzie.AutomaticWorkAssignment.Defs;
-using Lomzie.AutomaticWorkAssignment.Source.UI.Windows;
 using Lomzie.AutomaticWorkAssignment.UI.Amounts;
 using System;
 using System.Collections.Generic;

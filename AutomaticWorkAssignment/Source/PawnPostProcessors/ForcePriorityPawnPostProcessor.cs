@@ -12,7 +12,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
-            if (WorkType != null)
+            if (WorkType != null && !Utils.WorkTypeIsDisabled(pawn, WorkType))
             {
                 pawn.workSettings.SetPriority(WorkType, Priority);
             }

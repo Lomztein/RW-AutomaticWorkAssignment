@@ -10,7 +10,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Modular
         private readonly TextAnchor _anchor;
         private readonly float _size;
 
-        public Label(Func<T, string> labelGetter, TextAnchor textAnchor = TextAnchor.MiddleCenter, float size = AutomaticWorkAssignmentSettings.UIInputSizeBase)
+        public Label(Func<T, string> labelGetter, TextAnchor textAnchor = TextAnchor.MiddleCenter, float size = Settings.UIInputSizeBase)
         {
             _labelGetter = labelGetter;
             _size = size;

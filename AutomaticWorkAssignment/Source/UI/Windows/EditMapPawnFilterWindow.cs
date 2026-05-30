@@ -1,5 +1,4 @@
 ﻿using Lomzie.AutomaticWorkAssignment.Source;
-using Lomzie.AutomaticWorkAssignment.Source.UI.Windows;
 using RimWorld;
 using System;
 using System.Collections;
@@ -59,7 +58,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI.Windows
             Rect rect = new Rect(inRect.x, inRect.y, inRect.width, 0);
             RectAggregator layout = new RectAggregator(rect, GetHashCode(), new Vector2(0, 0));
 
-            float toggleSize = AutomaticWorkAssignmentSettings.UIButtonSizeBase;
+            float toggleSize = Settings.UIButtonSizeBase;
             DoToggle(ref layout, ref _filter.IncludeColonists, toggleSize, "AWA.IncludeColonists".Translate());
             DoToggle(ref layout, ref _filter.IncludeGuests, toggleSize, "AWA.IncludeGuests".Translate());
             if (ModsConfig.IdeologyActive)
