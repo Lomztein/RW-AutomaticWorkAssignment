@@ -175,12 +175,16 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             Find.WindowStack.Add(selectMap);
         }
 
-        private Rect _RenderWorkSpecification(WorkSpecification? work, Rect container, int i)
+        private Rect _RenderWorkSpecification(WorkSpecification? work, Rect container, bool selected, int i)
         {
             var row = new Rect(container.x, container.y, container.width, ListElementHeight);
-            Widgets.DrawHighlightIfMouseover(row);
+            //Widgets.DrawHighlightIfMouseover(row);
+            if (selected)
+            {
+                Widgets.DrawOptionBackground(row, selected);
+            }
 
-            if (i++ % 2 == 1) Widgets.DrawAltRect(row);
+            //if (i++ % 2 == 1) Widgets.DrawAltRect(row);
             var jobRect = Utils.ShrinkByMargin(row, ListElementHeight * 0.1f);
 
             if (work == null) // row for new job.
@@ -195,10 +199,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
                 TooltipHandler.TipRegion(row, "AWA.NewWorkSpecificationTip".Translate());
 
-                if (Widgets.ButtonInvisible(row))
-                {
-                    SetCurrentWorkSpecification(_workManager.CreateNewWorkSpecification());
-                }
+                //if (Widgets.ButtonInvisible(row))
+                //{
+                //    SetCurrentWorkSpecification(_workManager.CreateNewWorkSpecification());
+                //}
                 return row;
             }
 
@@ -261,10 +265,10 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             if (Widgets.ButtonText(deleteRect, "X"))
                 _workManager.DeleteWorkSpecification(work);
 
-            if (Widgets.ButtonInvisible(jobRect))
-            {
-                SetCurrentWorkSpecification(work);
-            }
+            //if (Widgets.ButtonInvisible(jobRect))
+            //{
+            //    SetCurrentWorkSpecification(work);
+            //}
 
             return row;
         }
