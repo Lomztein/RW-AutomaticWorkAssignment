@@ -234,6 +234,13 @@ namespace Lomzie.AutomaticWorkAssignment
             return false;
         }
 
+        public static bool IsGuest(Pawn pawn, Map map)
+        {
+            if (pawn == null || map?.ParentFaction == null || !pawn.IsColonist)
+                return false;
+            return pawn.HomeFaction != map.ParentFaction;
+        }
+
         public static void MakeMenuForSettingDefs<T>(IEnumerable<T> defs, Func<Action<T>> actionGetter) where T: PawnSettingDef
             => Find.WindowStack.Add(new FloatMenu(MakeOptionsForSettingsDefs(defs, actionGetter).ToList()));
 

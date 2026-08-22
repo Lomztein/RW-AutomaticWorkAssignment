@@ -16,17 +16,8 @@ namespace Lomzie.AutomaticWorkAssignment.Amounts
             if (_cache.TryGet(out int value))
                 return value;
 
-            value = Mathf.CeilToInt(req.WorkManager.GetAllMaps().SelectMany(x => x.mapPawns.PrisonersOfColony).Count(x => IsGuest(x, req)));
+            value = Mathf.CeilToInt(req.WorkManager.GetAllMaps().Sum(map => map.mapPawns.AllHumanlikeSpawned.Count(pawn => Utils.IsGuest(pawn, map))));
             return _cache.Set(value);
-        }
-
-        private bool IsGuest(Pawn pawn, ResolveWorkRequest request)
-        {
-            if (request.Map.ParentFaction != null)
-            {
-                return pawn.HomeFaction != request.Map.ParentFaction;
-            }
-            return false;
         }
 
         public override void ExposeData()

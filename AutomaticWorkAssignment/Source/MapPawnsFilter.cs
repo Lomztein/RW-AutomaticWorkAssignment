@@ -65,7 +65,7 @@ namespace Lomzie.AutomaticWorkAssignment.Source
                     continue;
                 }
 
-                if (IsGuest(pawn, map))
+                if (Utils.IsGuest(pawn, map))
                 {
                     if (IncludeGuests)
                         yield return pawn;
@@ -106,18 +106,6 @@ namespace Lomzie.AutomaticWorkAssignment.Source
                 if (pawn.MentalStateDef.maxTicksBeforeRecovery > GenDate.TicksPerHour * MaxMentalBreakHours) return true;
                 if (pawn.MentalStateDef.IsExtreme) return true;
                 if (pawn.MentalStateDef.IsAggro) return true;
-            }
-            return false;
-        }
-
-        private bool IsGuest(Pawn pawn, Map map)
-        {
-            if (!pawn.IsColonist)
-                return false;
-
-            if (map.ParentFaction != null)
-            {
-                return pawn.HomeFaction != map.ParentFaction;
             }
             return false;
         }

@@ -6,11 +6,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
     {
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
-            if (request.Map.ParentFaction != null)
-            {
-                return pawn.HomeFaction != request.Map.ParentFaction;
-            }
-            return false;
+            return Utils.IsGuest(pawn, request.Map);
         }
     }
 }
