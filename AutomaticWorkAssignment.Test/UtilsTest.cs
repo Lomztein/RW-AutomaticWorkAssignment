@@ -31,5 +31,11 @@ namespace Lomzie.AutomaticWorkAssignment.Test
             Assert.Equal(
                 [new Rect(10, 10, 5, 5), new Rect(16, 10, 5, 5), new Rect(10, 16, 5, 5), new Rect(16, 16, 5, 5)], split.Select(rect => rect.Rect).ToArray());
         }
+
+        [Fact, Trait("Function", nameof(Utils.IsGuest))]
+        public void IsGuest_NullPawnAndMap_ReturnsFalse()
+        {
+            Assert.False(Utils.IsGuest(null, null));
+        }
     }
 }
