@@ -238,7 +238,7 @@ namespace Lomzie.AutomaticWorkAssignment
         {
             if (pawn == null || map?.ParentFaction == null || !pawn.IsColonist)
                 return false;
-            return pawn.HomeFaction != map.ParentFaction;
+            return pawn.HomeFaction != null && pawn.HomeFaction != map.ParentFaction;
         }
 
         public static void MakeMenuForSettingDefs<T>(IEnumerable<T> defs, Func<Action<T>> actionGetter) where T: PawnSettingDef
