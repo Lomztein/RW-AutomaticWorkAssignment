@@ -67,7 +67,7 @@ namespace Lomztein.AutomaticWorkAssignments
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<DoOnConditionChangedPawnPostProcessor>(
                 new Nested<DoOnConditionChangedPawnPostProcessor, IPawnCondition, PawnConditionDef>(x => x.Condition, (x, y) => x.Condition = y, "AWA.ConditionSelect".Translate()),
-                new Nested<DoOnConditionChangedPawnPostProcessor, IPawnPostProcessor, PawnConditionDef>(x => x.Action, (x, y) => x.Action = y, "AWA.TaskSelect".Translate())
+                new Nested<DoOnConditionChangedPawnPostProcessor, IPawnPostProcessor, PawnPostProcessorDef>(x => x.Action, (x, y) => x.Action = y, "AWA.TaskSelect".Translate())
                 ));
 
             PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<EquipItemPawnPostProcessor>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));
