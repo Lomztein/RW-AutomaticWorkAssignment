@@ -33,6 +33,7 @@
   <AWA.ScheduleEdit>Edit schedule</AWA.ScheduleEdit>
   <AWA.FilterEdit>Edit filter</AWA.FilterEdit>
   <AWA.Everywhere>Everywhere</AWA.Everywhere>
+  <AWA.UnknownMap>Unknown map</AWA.UnknownMap>
   <AWA.Any>Any</AWA.Any>
   <AWA.All>All</AWA.All>
   <AWA.None>None</AWA.None>
@@ -149,6 +150,7 @@
   <AWA.AlertCharacter>A</AWA.AlertCharacter>
   <AWA.SuspendWorkTooltip>Suspend work specification: {0}</AWA.SuspendWorkTooltip>
   <AWA.AlertWorkTooltip>Alert if insufficient assignments: {0}</AWA.AlertWorkTooltip>
+  <AWA.Threshold>Threshold</AWA.Threshold>
 
   <AWA.HeaderExcludedPawns>Excluded Pawns</AWA.HeaderExcludedPawns>
   <AWA.ExcludePawn>Exclude pawn</AWA.ExcludePawn>

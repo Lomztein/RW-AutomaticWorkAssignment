@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment
@@ -164,7 +165,7 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<WeaponClassPawnCondition, WeaponClassDef>(
                 (m) => DefDatabase<WeaponClassDef>.AllDefs, x => x.LabelCap, x => x.WeaponClassDef?.LabelCap ?? "AWA.ClassSelect".Translate(), (c, s) => c.WeaponClassDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<AssignmentPawnCondition, WorkSpecification>(
-                (m) => MapWorkManager.GetManager(m).WorkList.Where(x => MapWorkManager.GetManager(m).WorkList.IndexOf(x) < MapWorkManager.GetManager(m).WorkList.IndexOf(WorkManagerWindow.CurrentRenderSpec)), x => x.Name, x => x.WorkSpec?.Name ?? "AWA.WorkSpecSelect".Translate(), (c, s) => c.WorkSpec = s));
+                (m) => MapWorkManager.GetManager(m).WorkList.Where(x => MapWorkManager.GetManager(m).WorkList.IndexOf(x) < MapWorkManager.GetManager(m).WorkList.IndexOf(WorkManagerWindow.CurrentRenderSpec)), x => x.Name, x => MapWorkManager.GetCurrentMapManager().GetSpecById(x.WorkSpecId)?.Name ?? "AWA.WorkSpecSelect".Translate(), (c, s) => c.WorkSpecId = s.Id));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<PlanetLayerPawnCondition, PlanetLayerDef>(
                 (m) => DefDatabase<PlanetLayerDef>.AllDefs, x => x.LabelCap, x => x.LayerDef?.LabelCap ?? "AWA.PlanetLayerSelect".Translate(), (c, s) => c.LayerDef = s));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<GenderPawnCondition, Gender>(
@@ -232,7 +233,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<ForceRelativePriorityPawnPostProcessor>(new Toggle<ForceRelativePriorityPawnPostProcessor>(x => x.Before, (x, v) => x.Before = v, x => x.Before ? "AWA.Before".Translate() : "AWA.After".Translate()),
                 new Picker<ForceRelativePriorityPawnPostProcessor, WorkTypeDef>(m => DefDatabase<WorkTypeDef>.AllDefs, x => x.labelShort, x => x.WorkType?.labelShort ?? "AWA.WorkTypeSelect".Translate(), (pp, wt) => pp.WorkType = wt),
-                new Picker<ForceRelativePriorityPawnPostProcessor, WorkSpecification>(x => MapWorkManager.GetManager(x).WorkList, x => x.Name, x => x.Specification?.Name ?? "AWA.WorkSpecSelect".Translate(), (pp, ws) => pp.Specification = ws)));
+                new Picker<ForceRelativePriorityPawnPostProcessor, WorkSpecification>(x => MapWorkManager.GetManager(x).WorkList, x => x.Name, x => MapWorkManager.GetCurrentMapManager().GetSpecById(x.WorkSpecId)?.Name ?? "AWA.WorkSpecSelect".Translate(), (pp, ws) => pp.WorkSpecId = ws.Id)));
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<DedicatePawnPostProcessor>(new Splitter<DedicatePawnPostProcessor>(
                 new TextFieldNumeric<float, DedicatePawnPostProcessor>(x => x.Time, (x, f) => x.Time = f),

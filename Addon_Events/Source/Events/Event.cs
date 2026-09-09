@@ -31,7 +31,7 @@ namespace Lomzie.AutomaticWorkAssignment.Events
         {
             foreach (var toInvoke in _invokeOnEvent)
             {
-                var spec = toInvoke.WorkSpec;
+                var spec = request.WorkManager.GetSpecById(toInvoke.WorkSpecId);
                 var postProcessor = toInvoke.PostProcessor;
                 postProcessor.PostProcess(forPawn, spec, request);
             }
@@ -53,20 +53,20 @@ namespace Lomzie.AutomaticWorkAssignment.Events
 
         private class PostProcessorRef : IExposable
         {
-            public WorkSpecification WorkSpec;
+            public int WorkSpecId;
             public IPawnPostProcessor PostProcessor;
 
             public PostProcessorRef() { }
 
             public PostProcessorRef(WorkSpecification workSpec, IPawnPostProcessor postProcessor)
             {
-                WorkSpec = workSpec;
+                WorkSpecId = workSpec.Id;
                 PostProcessor = postProcessor;
             }
 
             public void ExposeData()
             {
-                Scribe_References.Look(ref WorkSpec, "workSpec");
+                Scribe_Values.Look(ref WorkSpecId, "workSpecId");
                 Scribe_Deep.Look(ref PostProcessor, "postProcessor");
             }
         }

@@ -8,5 +8,7 @@ namespace Lomzie.AutomaticWorkAssignment
         PawnSettingDef Def { get; }
         string Label { get; }
         string Description { get; }
+
+        bool IsConfigured();
     }
 }

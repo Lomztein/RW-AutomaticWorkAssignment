@@ -7,4 +7,6 @@
   <AWA.OnArrival>On arrival</AWA.OnArrival>
   <AWA.AbilitySelect>Select ability</AWA.AbilitySelect>
   <AWA.WorkTypeSelect>Select work</AWA.WorkTypeSelect>
+  <AWA.MessageTemplate>Message template</AWA.MessageTemplate>
+  <AWA.PawnSettingAdd>Add pawn setting</AWA.PawnSettingAdd>
 </LanguageData>

@@ -4,14 +4,20 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
     public class AssignmentPawnCondition : PawnSetting, IPawnCondition
     {
-        public WorkSpecification WorkSpec;
-        private string _workSpecName;
+        public int WorkSpecId = -1;
 
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
-            if (pawn != null)
+            if (pawn != null && WorkSpecId != -1)
             {
-                return request.WorkManager.GetAssignmentTo(pawn, WorkSpec) != null;
+                if (request.WorkManager.TryGetSpecById(WorkSpecId, out var workSpec))
+                {
+                    return request.WorkManager.GetAssignmentTo(pawn, workSpec) != null;
+                }
+                else
+                {
+                    WorkSpecId = -1; // Reference lost somehow.
+                }
             }
             return false;
         }
@@ -19,24 +25,12 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_References.Look(ref WorkSpec, "workSpec");
+            Scribe_Values.Look(ref WorkSpecId, "workSpecId");
+        }
 
-            if (Scribe.mode == LoadSaveMode.Saving)
-                _workSpecName = WorkSpec?.Name;
-
-            Scribe_Values.Look(ref _workSpecName, "workSpecName");
-
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
-            {
-                if (!MapWorkManager.LastInitialized.WorkList.Contains(WorkSpec))
-                {
-                    // We loaded the wrong maps work spec, nullify it.
-                    WorkSpec = null;
-                }
-
-                if (WorkSpec == null && _workSpecName != null)
-                    WorkSpec = MapWorkManager.LastInitialized.WorkList.Find(x => x.Name == _workSpecName);
-            }
+        public override bool IsConfigured()
+        {
+            return WorkSpecId != -1;
         }
     }
 }

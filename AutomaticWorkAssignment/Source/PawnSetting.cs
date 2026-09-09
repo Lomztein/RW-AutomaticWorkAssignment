@@ -34,5 +34,10 @@ namespace Lomzie.AutomaticWorkAssignment
                 }
             }
         }
+
+        public virtual bool IsConfigured()
+        {
+            return true;
+        }
     }
 }

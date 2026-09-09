@@ -198,7 +198,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
                 if (Widgets.ButtonInvisible(row))
                 {
-                    SetCurrentWorkSpecification(_workManager.CreateNewWorkSpecification());
+                    WorkSpecification newWorkSpec = _workManager.CreateNewWorkSpecification();
+                    _workManager.AddWorkSpecification(newWorkSpec);
+                    SetCurrentWorkSpecification(newWorkSpec);
                 }
                 if (_currentSpecRenderIndex++ % 2 == 1) Widgets.DrawAltRect(row);
                 return row;

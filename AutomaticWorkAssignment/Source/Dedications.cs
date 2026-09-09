@@ -13,7 +13,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public void Dedicate(Pawn pawn, WorkSpecification toWork, int expirationTick)
         {
-            Dedication current = _dedications.FirstOrDefault(x => x.WorkSpec == toWork && x.Pawn == pawn);
+            Dedication current = _dedications.FirstOrDefault(x => x.WorkSpecId == toWork.Id && x.Pawn == pawn);
             if (current == null)
             {
                 Dedication newDedication = new Dedication(toWork, pawn, expirationTick);
@@ -24,7 +24,7 @@ namespace Lomzie.AutomaticWorkAssignment
         public IEnumerable<Pawn> GetDedicatedPawns(WorkSpecification workSpec)
         {
             _dedications.RemoveAll(x => x.Pawn == null || x.Pawn.Dead || x.IsExpired());
-            IEnumerable<Dedication> dedications = _dedications.Where(x => x.WorkSpec == workSpec);
+            IEnumerable<Dedication> dedications = _dedications.Where(x => x.WorkSpecId == workSpec.Id);
 
             if (dedications.Any())
             {
@@ -39,7 +39,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public void ClearDedications(WorkSpecification workSpecification)
         {
-            _dedications.RemoveAll(x => x.WorkSpec == workSpecification);
+            _dedications.RemoveAll(x => x.WorkSpecId == workSpecification.Id);
         }
 
         public void ExposeData()
@@ -50,20 +50,20 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public class Dedication : IExposable
         {
-            public WorkSpecification WorkSpec;
+            public int WorkSpecId;
             public PawnRef PawnRef;
             private int _expirationTick;
 
             public void ExposeData()
             {
-                Scribe_References.Look(ref WorkSpec, "workSpec");
+                Scribe_Values.Look(ref WorkSpecId, "workSpecId");
                 Scribe_Deep.Look(ref PawnRef, "pawn");
-                Scribe_Values.Look(ref _expirationTick, "experiationTick");
+                Scribe_Values.Look(ref _expirationTick, "expirationTick");
             }
 
             public Dedication(WorkSpecification workSpec, Pawn pawn, int expirationTick)
             {
-                WorkSpec = workSpec;
+                WorkSpecId = workSpec.Id;
                 PawnRef = new PawnRef(pawn);
                 _expirationTick = expirationTick;
             }

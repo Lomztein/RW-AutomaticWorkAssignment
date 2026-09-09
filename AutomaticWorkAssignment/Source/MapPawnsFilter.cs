@@ -48,7 +48,7 @@ namespace Lomzie.AutomaticWorkAssignment.Source
 
             foreach (Pawn pawn in allPawns)
             {
-                if (ExcludedPawns.Any(x => x.Is(pawn)))
+                if (ExcludedPawns.Any(x => x != null && x.Is(pawn)))
                     continue;
 
                 if (pawn.IsPrisonerOfColony)

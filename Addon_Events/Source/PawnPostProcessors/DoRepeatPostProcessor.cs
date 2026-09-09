@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                     Find.Root.StopCoroutine(current);
 
                 Coroutine coroutine = Find.Root.StartCoroutine(DoRepeat(() => Action.PostProcess(pawn, workSpecification, request)));
-                _buffer.Set(pawn, current);
+                _buffer.Set(pawn, coroutine);
             }
         }
 

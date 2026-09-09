@@ -12,10 +12,11 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment
 {
-    public class WorkSpecification : IExposable, ILoadReferenceable
+    public class WorkSpecification : IExposable
     {
         public string Name = "New Work"; // Label for UI.
 
+        public int Id;
         public bool IsCritical; // Job will temporarily be reassigned to another pawn if the prior assignee is unable to work.
         public bool RequireFullPawnCapability = true; // Job will not be assigned if a pawn is unable to do some of the work. If off, pawn must only be able to do at least one thing.
         public bool InterweavePriorities; // Subsequent assignments to pawns will be shifted right.
@@ -25,8 +26,6 @@ namespace Lomzie.AutomaticWorkAssignment
         public bool IsSuspended;
         public bool EnableAlert = true;
         public float Commitment; // 0 = Occasional, 0.5 = part-time work, 1.0 = full-time work.
-
-        public Map Map;
 
         public List<IPawnCondition> Conditions = new List<IPawnCondition>(); // Conditions required for a pawn to be valid. All conditions must be met.
         public List<IPawnFitness> Fitness = new List<IPawnFitness>(); // Used to sort pawns, later elements are used to break earlier ties.
@@ -38,6 +37,25 @@ namespace Lomzie.AutomaticWorkAssignment
         public PawnWorkPriorities Priorities = PawnWorkPriorities.CreateEmpty(); // The actual work priorities to be assigned.
 
         public List<WorkSpecification> CountAssigneesFrom = new List<WorkSpecification>();
+
+        public WorkSpecification(int id)
+        {
+            Id = id;
+        }
+
+        public WorkSpecification()
+        {
+            if (Scribe.mode == LoadSaveMode.Inactive)
+            {
+                Log.Warning($"[AWA] WorkSpecification created outside of constructor with ID. This should never happen outside of serialization.");
+            }
+        }
+
+        public void SetNewId(int id)
+        {
+            Log.Warning($"[AWA] Set ID of work spec outside constructor or ExposeData. This should never happen during normal operation.");
+            Id = id;
+        }
 
         public Pawn[] GetApplicableOrMinimalPawnsSorted(IEnumerable<Pawn> allPawns, ResolveWorkRequest request)
         {
@@ -193,6 +211,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public void ExposeData()
         {
+            Scribe_Values.Look(ref Id, "id");
             Scribe_Values.Look(ref Name, "name");
             Scribe_Values.Look(ref IsCritical, "isCritical");
             Scribe_Values.Look(ref IsSpecialist, "isSpecialist");
@@ -226,20 +245,6 @@ namespace Lomzie.AutomaticWorkAssignment
                 PostProcessors = PostProcessors.ToList().Where(x => x.IsValidAfterLoad()).ToList();
                 CountAssigneesFrom = CountAssigneesFrom.Where(x => x != null).ToList();
             }
-        }
-
-        public string GetUniqueLoadID()
-        {
-            int uniqueId = Name.GetHashCode() *
-                (Priorities.OrderedPriorities.Count + 6516) *
-                (Fitness.Count + 4754) *
-                (Conditions.Count + 7988) *
-                (PostProcessors.Count + 6874);
-
-            if (Map != null)
-                uniqueId += Map.uniqueID;
-
-            return $"WorkSpec_{uniqueId}";
         }
     }
 }

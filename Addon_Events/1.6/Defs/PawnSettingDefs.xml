@@ -136,4 +136,12 @@
     <description>Equip the first item in inventory matching the filter.</description>
     <category>Commands</category>
   </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_PrintFormattedMessagePostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.PrintFormattedMessagePawnPostProcessor</settingClass>
+    <label>print formatted message</label>
+    <description>Print a message where each {} placeholder is replaced by values from configured pawn settings.</description>
+    <category>Commands</category>
+  </Def>
 </Defs>

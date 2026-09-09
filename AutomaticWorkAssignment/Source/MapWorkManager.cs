@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using UnityEngine;
 using Verse;
 
@@ -52,6 +53,8 @@ namespace Lomzie.AutomaticWorkAssignment
         public Dedications Dedications = new Dedications(); // Pawns dedicated to certain tasks.
         public MapPawnsFilter MapPawnFilter = new MapPawnsFilter();
 
+        private int _nextId;
+
         public MapWorkManager(Map map) : base(map)
         {
             Map = map;
@@ -76,13 +79,16 @@ namespace Lomzie.AutomaticWorkAssignment
             Dedications ??= new Dedications();
             ResolveFrequencyDef ??= AutoResolveFrequencyUtils.None;
             MapPawnFilter ??= new MapPawnsFilter();
-
-            foreach (WorkSpecification spec in WorkList)
-            {
-                spec.Map = Map;
-            }
-
             WorkList = WorkList.Where(x => x != null).ToList();
+            
+            foreach (var work in WorkList)
+            {
+                if (work.Id == 0)
+                {
+                    Log.Warning("[AWA] Work specification with ID -1 detected. Assigning new ID.");
+                    work.SetNewId(++_nextId);
+                }
+            }
         }
 
         public void ResetToDefaults()
@@ -90,7 +96,7 @@ namespace Lomzie.AutomaticWorkAssignment
             DefaultLoadType loadType = DetermineDefaultLoadType();
             if (loadType == DefaultLoadType.Procedural)
             {
-                WorkList = Defaults.GenerateDefaultWorkSpecifications().ToList();
+                WorkList = Defaults.GenerateDefaultWorkSpecifications(this).ToList();
                 MapPawnFilter = new MapPawnsFilter();
                 ResolveFrequencyDef = AutoResolveFrequencyUtils.None;
                 Log.Message("[AWA] Generated default work specs.");
@@ -565,6 +571,7 @@ namespace Lomzie.AutomaticWorkAssignment
             Scribe_Deep.Look(ref Reservations, "reservations");
             Scribe_Deep.Look(ref Dedications, "dedications");
             Scribe_References.Look(ref ParentMap, "parentMap");
+            Scribe_Values.Look(ref _nextId, "nextId", 0);
 
             if (Scribe.mode != LoadSaveMode.Saving)
             {
@@ -598,20 +605,37 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public WorkSpecification CreateNewWorkSpecification()
         {
-            WorkSpecification spec = new WorkSpecification();
-            spec.Map = Map;
-            WorkList.Add(spec);
+            WorkSpecification spec = new WorkSpecification(++_nextId);
             return spec;
         }
 
         public void AddWorkSpecification(WorkSpecification spec)
         {
-            spec.Map = Map;
             WorkList.Add(spec);
+        }
+
+        public WorkSpecification CreateAndAddNewWorkSpecification()
+        {
+            WorkSpecification spec = CreateNewWorkSpecification();
+            AddWorkSpecification(spec);
+            return spec;
         }
 
         public void RemoveWorkSpecification(WorkSpecification spec)
             => WorkList.Remove(spec);
+
+        public bool TryGetSpecById(int id, out WorkSpecification spec)
+        {
+            spec = WorkList.FirstOrDefault(x => x.Id == id);
+            return spec != null;
+        }
+
+        public WorkSpecification GetSpecById(int id)
+        {
+            if (TryGetSpecById(id, out var spec))
+                return spec;
+            return null;
+        }
 
         public void MoveWorkSpecification(WorkSpecification spec, int movement)
         {

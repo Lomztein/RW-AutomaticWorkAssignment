@@ -11,12 +11,12 @@ namespace Lomzie.AutomaticWorkAssignment
 {
     public static class Defaults
     {
-        public static IEnumerable<WorkSpecification> GenerateDefaultWorkSpecifications()
+        public static IEnumerable<WorkSpecification> GenerateDefaultWorkSpecifications(MapWorkManager forMapWorkManager)
         {
             WorkSpecification spec;
 
             // Firefight
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Firefight";
             spec.IsCritical = true;
             spec.TargetWorkers = PercentagePawnAmount.Create(0.5f);
@@ -31,7 +31,7 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return spec;
 
             // Medic
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Medic";
             spec.TargetWorkers = PercentagePawnAmount.Create(1f);
             spec.MinWorkers = IntPawnAmount.Create(1);
@@ -56,7 +56,7 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return spec;
 
             // Basics
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Basics";
             spec.TargetWorkers = PercentagePawnAmount.Create(1f);
             spec.RequireFullPawnCapability = false;
@@ -69,7 +69,7 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return spec;
 
             // Social
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Social";
             spec.TargetWorkers = IntPawnAmount.Create(2);
             spec.MinWorkers = IntPawnAmount.Create(1);
@@ -88,7 +88,7 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return spec;
 
             // Research
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Researcher";
             spec.TargetWorkers = IntPawnAmount.Create(1);
             spec.IsSpecialist = true;
@@ -107,7 +107,7 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return spec;
 
             // Labourer
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Labourer";
             spec.TargetWorkers = IntPawnAmount.Create(1);
             spec.RequireFullPawnCapability = false;
@@ -126,7 +126,7 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return spec;
 
             // Construction
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Construction";
             spec.TargetWorkers = PercentagePawnAmount.Create(1f);
             spec.MinWorkers = IntPawnAmount.Create(1);
@@ -145,7 +145,7 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return spec;
 
             // Animals
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Handler";
             spec.TargetWorkers = IntPawnAmount.Create(2);
             spec.MinWorkers = IntPawnAmount.Create(1);
@@ -164,7 +164,7 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return spec;
 
             // Cooking
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Cook";
             spec.TargetWorkers = IntPawnAmount.Create(2);
             spec.MinWorkers = IntPawnAmount.Create(1);
@@ -183,7 +183,7 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return spec;
 
             // Plants
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Plants";
             spec.TargetWorkers = IntPawnAmount.Create(2);
             spec.MinWorkers = IntPawnAmount.Create(1);
@@ -202,7 +202,7 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return spec;
 
             // Mining
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Miner";
             spec.TargetWorkers = IntPawnAmount.Create(2);
             spec.MinWorkers = IntPawnAmount.Create(1);
@@ -221,7 +221,7 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return spec;
 
             // Skilled Crafting
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Crafting";
             spec.TargetWorkers = PercentagePawnAmount.Create(0.2f);
             spec.MinWorkers = IntPawnAmount.Create(1);
@@ -240,7 +240,7 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return spec;
 
             // Art
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Artist";
             spec.TargetWorkers = IntPawnAmount.Create(1);
             spec.Commitment = 0.5f;
@@ -258,7 +258,7 @@ namespace Lomzie.AutomaticWorkAssignment
             yield return spec;
 
             // Fallbacks
-            spec = new WorkSpecification();
+            spec = forMapWorkManager.CreateAndAddNewWorkSpecification();
             spec.Name = "Fallbacks";
             spec.TargetWorkers = PercentagePawnAmount.Create(1f);
             spec.RequireFullPawnCapability = false;

@@ -368,7 +368,7 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
                 var context = new Context();
                 var bindings = GetTestBindings(description);
                 var result = context.ParseTokens(ToAst(TokensFromSynthetic(tokens)));
-                Assert.Equal(expected, result.Calc(new(), new(), new(), bindings));
+                Assert.Equal(expected, result.Calc(new(), new(0), new(), bindings));
             }
 
             [
@@ -406,7 +406,7 @@ namespace Lomzie.AutomaticWorkAssignment.Test.PawnFitness
             {
                 var formulaExpression = new Parser().ParseFormula(formula);
                 var bindings = GetTestBindings(description);
-                var result = formulaExpression.Calc(new(), new(), new(), bindings);
+                var result = formulaExpression.Calc(new(), new(0), new(), bindings);
                 Assert.Equal(expected, result);
             }
 

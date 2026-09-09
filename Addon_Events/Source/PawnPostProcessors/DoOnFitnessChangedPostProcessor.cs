@@ -12,8 +12,6 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
         public float Threshold;
         public IPawnPostProcessor Action;
 
-        private float _value;
-
         private readonly Buffer<Coroutine> _buffer = new Buffer<Coroutine>();
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
@@ -31,13 +29,13 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 
         private IEnumerator Check(Pawn pawn, WorkSpecification workSpec, ResolveWorkRequest request)
         {
-            _value = Fitness.CalcFitness(pawn, workSpec, request);
+            float value = Fitness.CalcFitness(pawn, workSpec, request);
             while (true)
             {
                 float newValue = Fitness.CalcFitness(pawn, workSpec, request);
-                if (Mathf.Abs(_value - newValue) >= Threshold)
+                if (Mathf.Abs(value - newValue) >= Threshold)
                 {
-                    _value = newValue;
+                    value = newValue;
                     Action.PostProcess(pawn, workSpec, request);
                 }
                 yield return new WaitForSeconds(1);

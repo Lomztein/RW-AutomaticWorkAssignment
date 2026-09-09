@@ -1,4 +1,5 @@
 ﻿using AutomaticWorkAssignment.UI.Generic;
+using Lomzie.AutomaticWorkAssignment;
 using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using Lomzie.AutomaticWorkAssignment.PawnFitness;
@@ -19,7 +20,7 @@ namespace Lomztein.AutomaticWorkAssignments
         public Addon_Events(ModContentPack content) : base(content)
         {
             LongEventHandler.ExecuteWhenFinished(InitializePawnSettingUIHandlers);
-        }
+        }   
 
         private void InitializePawnSettingUIHandlers()
         {
@@ -75,6 +76,11 @@ namespace Lomztein.AutomaticWorkAssignments
                     new TextFieldNumeric<float, DoOnFitnessChangedPawnPostProcessor>(x => x.Threshold, (x, y) => x.Threshold = y),
                 new Nested<DoOnFitnessChangedPawnPostProcessor, IPawnPostProcessor, PawnPostProcessorDef>(x => x.Action, (x, y) => x.Action = y, "AWA.TaskSelect".Translate())
                 ));
+
+            PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<PrintFormattedMessagePawnPostProcessor>(
+                new TextField<PrintFormattedMessagePawnPostProcessor>(x => x.MessageTemplate, (x, y) => x.MessageTemplate = y),
+                new Composite<PrintFormattedMessagePawnPostProcessor, IPawnSetting, PawnSettingDef>(x => x.PawnSettings, "AWA.PawnSettingAdd".Translate())));
+
 
             PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<EquipItemPawnPostProcessor>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));
         }
