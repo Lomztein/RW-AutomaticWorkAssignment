@@ -1,4 +1,4 @@
-﻿using Lomzie.AutomaticWorkAssignment.PawnConditions;
+using Lomzie.AutomaticWorkAssignment.PawnConditions;
 using RimWorld;
 using System;
 using System.Collections;
@@ -16,32 +16,30 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
         public IPawnCondition Condition;
         public IPawnPostProcessor Action;
 
-        private bool _value;
-
         private readonly Buffer<Coroutine> _buffer = new Buffer<Coroutine>();
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
-            if (pawn != null && Action != null)
+            if (pawn != null && Condition != null && Action != null)
             {
                 Coroutine current = _buffer.Get(pawn);
                 if (current != null)
                     Find.Root.StopCoroutine(current);
 
                 Coroutine coroutine = Find.Root.StartCoroutine(Check(pawn, workSpecification, request));
-                _buffer.Set(pawn, current);
+                _buffer.Set(pawn, coroutine);
             }
         }
 
         private IEnumerator Check(Pawn pawn, WorkSpecification workSpec, ResolveWorkRequest request)
         {
-            _value = Condition.IsValid(pawn, workSpec, request);
+            bool value = Condition.IsValid(pawn, workSpec, request);
             while (true)
             {
                 bool newValue = Condition.IsValid(pawn, workSpec, request);
-                if (newValue != _value)
+                if (newValue != value)
                 {
-                    _value = newValue;
+                    value = newValue;
                     Action.PostProcess(pawn, workSpec, request);
                 }
                 yield return new WaitForSeconds(1);
