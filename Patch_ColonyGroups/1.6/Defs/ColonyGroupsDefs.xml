@@ -1,0 +1,20 @@
+<Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>ColonyGroups</defName>
+    <label>Colony Groups</label>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_AddToGroupPawnPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.Patches.ColonyGroups.AddToGroupPawnPostProcessor</settingClass>
+    <label>add to group</label>
+    <description>Adds the pawn to a manually created Colony Groups group without duplicates. The group's enabled policies are applied normally.</description>
+    <category>ColonyGroups</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_DeleteFromGroupsPawnPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.Patches.ColonyGroups.DeleteFromGroupsPawnPostProcessor</settingClass>
+    <label>delete from groups</label>
+    <description>Removes only this pawn from all manually created pawn groups, including remembered membership. Keeps the groups, their other members, and automatic colony/caravan groups. Disables automatic deletion of affected empty groups.</description>
+    <category>ColonyGroups</category>
+  </Def>
+</Defs>
