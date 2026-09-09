@@ -20,4 +20,9 @@
     <label>new job started</label>
     <description>Invoked when the pawn begins a new job.</description>
   </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.EventDef">
+    <defName>ScheduleChanged</defName>
+    <label>schedule changed</label>
+    <description>Invoked when a colonist's current timetable assignment changes, at an hour boundary or when SetAssignment edits the active schedule. Consecutive hours with the same assignment do not trigger it.</description>
+  </Def>
 </Defs>
