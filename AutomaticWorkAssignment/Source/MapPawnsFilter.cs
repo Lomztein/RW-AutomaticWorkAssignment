@@ -44,7 +44,7 @@ namespace Lomzie.AutomaticWorkAssignment.Source
         public IEnumerable<Pawn> GetEverAvailablePawns(IEnumerable<Pawn> allPawns, Map map)
         {
             // Purge any null pawns that might have appeared somehow.
-            ExcludedPawns = ExcludedPawns.Where(x => x.Pawn != null).ToList();
+            ExcludedPawns = ExcludedPawns.Where(x => x != null && x.Pawn != null).ToList();
 
             foreach (Pawn pawn in allPawns)
             {

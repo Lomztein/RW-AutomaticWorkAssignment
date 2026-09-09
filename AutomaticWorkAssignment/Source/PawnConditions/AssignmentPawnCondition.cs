@@ -1,4 +1,4 @@
-﻿using Verse;
+using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 {
@@ -6,6 +6,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
     {
         public WorkSpecification WorkSpec;
         private string _workSpecName;
+        private MapWorkManager _owningManager;
 
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
@@ -18,6 +19,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 
         public override void ExposeData()
         {
+            // Capture during LoadingVars: PostLoadInit runs after the manager's
+            // ExposeData scope, and LastInitialized can belong to another map.
+            if (Scribe.mode == LoadSaveMode.LoadingVars)
+                _owningManager = MapWorkManager.DeserializingManager;
+
             base.ExposeData();
             Scribe_References.Look(ref WorkSpec, "workSpec");
 
@@ -28,14 +34,14 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                if (!MapWorkManager.LastInitialized.WorkList.Contains(WorkSpec))
+                if (_owningManager == null || !_owningManager.WorkList.Contains(WorkSpec))
                 {
-                    // We loaded the wrong maps work spec, nullify it.
+                    // Never retain an assignment from another map or the pre-import list.
                     WorkSpec = null;
                 }
 
                 if (WorkSpec == null && _workSpecName != null)
-                    WorkSpec = MapWorkManager.LastInitialized.WorkList.Find(x => x.Name == _workSpecName);
+                    WorkSpec = _owningManager?.WorkList.Find(x => x.Name == _workSpecName);
             }
         }
     }

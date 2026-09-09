@@ -1,4 +1,4 @@
-﻿using Lomzie.AutomaticWorkAssignment.Defs;
+using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.Source;
 using RimWorld;
 using System;
@@ -17,6 +17,9 @@ namespace Lomzie.AutomaticWorkAssignment
         public Map ParentMap;
 
         public static MapWorkManager LastInitialized { get; private set; }
+
+        // Scoped to the manager whose nested settings are being deserialized.
+        internal static MapWorkManager DeserializingManager { get; private set; }
         public static Map LastInitializedMap => LastInitialized?.Map;
 
         private enum DefaultLoadType { Procedural, File, Gravship }
@@ -560,7 +563,16 @@ namespace Lomzie.AutomaticWorkAssignment
         public override void ExposeData()
         {
             Scribe_Defs.Look(ref ResolveFrequencyDef, "resolveFrequencyDef");
-            Scribe_Collections.Look(ref WorkList, "workSpecifications", LookMode.Deep);
+            var previousManager = DeserializingManager;
+            try
+            {
+                DeserializingManager = this;
+                Scribe_Collections.Look(ref WorkList, "workSpecifications", LookMode.Deep);
+            }
+            finally
+            {
+                DeserializingManager = previousManager;
+            }
             Scribe_Deep.Look(ref MapPawnFilter, "pawnFilter");
             Scribe_Deep.Look(ref Reservations, "reservations");
             Scribe_Deep.Look(ref Dedications, "dedications");
