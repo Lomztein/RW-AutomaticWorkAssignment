@@ -66,6 +66,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
         {
             base.ExposeData();
             Scribe_Values.Look(ref Format, "title", defaultValue: string.Empty);
+            Scribe_Values.Look(ref AllowOverwrite, "allowOverwrite", defaultValue: true);
         }
     }
 }

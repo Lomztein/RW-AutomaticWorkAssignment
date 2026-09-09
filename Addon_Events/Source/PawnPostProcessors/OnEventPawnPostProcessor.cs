@@ -1,6 +1,5 @@
 ﻿using Lomzie.AutomaticWorkAssignment.Defs;
 using Lomzie.AutomaticWorkAssignment.Events;
-using RimWorld;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors

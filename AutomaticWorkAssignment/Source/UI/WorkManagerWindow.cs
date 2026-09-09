@@ -48,6 +48,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
         private readonly float _listHeight;
 
         private string _search;
+        private int _currentSpecRenderIndex;
 
         // Main section layout
         private const float PriotityListElementWidth = 32;
@@ -178,13 +179,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         private Rect _RenderWorkSpecification(WorkSpecification work, Rect container, bool selected, int i)
         {
-            if (!ShouldDisplay(work))
-                return new Rect(container.x, container.y, container.width, 0);
-
             var row = new Rect(container.x, container.y, container.width, ListElementHeight);
             Widgets.DrawHighlightIfMouseover(row);
 
-            if (i++ % 2 == 1) Widgets.DrawAltRect(row);
             var jobRect = Utils.ShrinkByMargin(row, ListElementHeight * 0.1f);
 
             if (work == null) // row for new job.
@@ -203,9 +200,14 @@ namespace Lomzie.AutomaticWorkAssignment.UI
                 {
                     SetCurrentWorkSpecification(_workManager.CreateNewWorkSpecification());
                 }
+                if (_currentSpecRenderIndex++ % 2 == 1) Widgets.DrawAltRect(row);
                 return row;
             }
 
+            if (!ShouldDisplay(work))
+                return new Rect(container.x, container.y, container.width, 0);
+
+            if (_currentSpecRenderIndex++ % 2 == 1) Widgets.DrawAltRect(row);
             if (Mouse.IsOver(row))
                 HighlightAssignees(work);
 
@@ -280,6 +282,7 @@ namespace Lomzie.AutomaticWorkAssignment.UI
             if (height > listRect.height)
                 scrollView.width -= ListScrollbarWidth;
 
+            _currentSpecRenderIndex = 0;
             workSpecifications.Add(null); // For the "new work specification" button.
             workSpecificationContainer.Render(listRect, workSpecifications);
 
@@ -783,6 +786,9 @@ namespace Lomzie.AutomaticWorkAssignment.UI
 
         private bool ShouldDisplay(WorkSpecification workSpec)
         {
+            if (workSpec == null)
+                return false;
+
             if (!string.IsNullOrEmpty(_search))
             {
                 // Quick and simple search function. Might do a proper one later.

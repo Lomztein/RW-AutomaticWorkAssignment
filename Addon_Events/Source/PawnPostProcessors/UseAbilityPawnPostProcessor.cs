@@ -31,5 +31,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                 }
             }
         }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Defs.Look(ref AbilityDef, "ability");
+        }
     }
 }

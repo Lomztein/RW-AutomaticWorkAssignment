@@ -98,6 +98,14 @@
   </Def>
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_DoOnFitnessChangedPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.DoOnFitnessChangedPawnPostProcessor</settingClass>
+    <label>do on fitness changed</label>
+    <description>Perform the given action after the given fitness crosses the threshold.</description>
+    <category>Events</category>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_UseAbilityPostProcessor</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.UseAbilityPawnPostProcessor</settingClass>
     <label>use ability on self</label>

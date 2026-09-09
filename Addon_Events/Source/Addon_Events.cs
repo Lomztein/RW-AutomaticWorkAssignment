@@ -9,8 +9,6 @@ using Lomzie.AutomaticWorkAssignment.UI.Generic;
 using Lomzie.AutomaticWorkAssignment.UI.Modular;
 using Lomzie.AutomaticWorkAssignment.UI.Windows;
 using RimWorld;
-using System;
-using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -67,7 +65,15 @@ namespace Lomztein.AutomaticWorkAssignments
 
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<DoOnConditionChangedPawnPostProcessor>(
                 new Nested<DoOnConditionChangedPawnPostProcessor, IPawnCondition, PawnConditionDef>(x => x.Condition, (x, y) => x.Condition = y, "AWA.ConditionSelect".Translate()),
-                new Nested<DoOnConditionChangedPawnPostProcessor, IPawnPostProcessor, PawnConditionDef>(x => x.Action, (x, y) => x.Action = y, "AWA.TaskSelect".Translate())
+                new Nested<DoOnConditionChangedPawnPostProcessor, IPawnPostProcessor, PawnPostProcessorDef>(x => x.Action, (x, y) => x.Action = y, "AWA.TaskSelect".Translate())
+                ));
+
+            PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<DoOnFitnessChangedPawnPostProcessor>(
+                new Nested<DoOnFitnessChangedPawnPostProcessor, IPawnFitness, PawnFitnessDef>(x => x.Fitness, (x, y) => x.Fitness = y, "AWA.FunctionSelect".Translate()),
+                new Splitter<DoOnFitnessChangedPawnPostProcessor>(
+                    new Label<DoOnFitnessChangedPawnPostProcessor>(x => "AWA.Threshold".Translate(), TextAnchor.MiddleLeft)),
+                    new TextFieldNumeric<float, DoOnFitnessChangedPawnPostProcessor>(x => x.Threshold, (x, y) => x.Threshold = y),
+                new Nested<DoOnFitnessChangedPawnPostProcessor, IPawnPostProcessor, PawnPostProcessorDef>(x => x.Action, (x, y) => x.Action = y, "AWA.TaskSelect".Translate())
                 ));
 
             PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<EquipItemPawnPostProcessor>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));

@@ -16,5 +16,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
             if (pawn != null && pawn.drafter.Drafted != Value)
                 pawn.drafter.Drafted = Value;
         }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref Value, "value");
+        }
     }
 }
