@@ -1,4 +1,4 @@
-﻿<loadFolders>
+<loadFolders>
   <v1.5>
     <li>1.5</li>
     <li IfModActive="Ludeon.RimWorld.Royalty">1.5/Mods/Royalty</li>
@@ -24,5 +24,6 @@
     <li IfModActive="vanillaexpanded.skills" WorkshopUrl="https://steamcommunity.com/sharedfiles/filedetails/?id=3400246558">1.6/Mods/Patch_VanillaSkillsExpanded</li>
     <li IfModActive="taranchuk.performanceoptimizer" WorkshopUrl="https://steamcommunity.com/sharedfiles/filedetails/?id=2664723367">1.6/Mods/Patch_PerformanceOptimizer</li>
     <li IfModActive="wiri.compositableloadouts" WorkshopUrl="https://steamcommunity.com/sharedfiles/filedetails/?id=2679126859">1.6/Mods/Patch_CompositableLoadouts</li>
+    <li IfModActive="DerekBickley.LTOColonyGroupsFinal">1.6/Mods/Patch_ColonyGroups</li>
   </v1.6>
 </loadFolders>

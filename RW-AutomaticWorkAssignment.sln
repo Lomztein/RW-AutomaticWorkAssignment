@@ -32,12 +32,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomaticWorkAssignment.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addon_Events", "Addon_Events\Addon_Events.csproj", "{8FE70611-A081-07A0-60C7-8D733EF3B5E5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Patch_ColonyGroups", "Patch_ColonyGroups\Patch_ColonyGroups.csproj", "{2D45B73B-CCBC-49F2-B6C1-62338BF432EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D45B73B-CCBC-49F2-B6C1-62338BF432EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D45B73B-CCBC-49F2-B6C1-62338BF432EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D45B73B-CCBC-49F2-B6C1-62338BF432EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D45B73B-CCBC-49F2-B6C1-62338BF432EF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7D4F9C05-C7C3-4B99-90F4-9B0A6C477F42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7D4F9C05-C7C3-4B99-90F4-9B0A6C477F42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D4F9C05-C7C3-4B99-90F4-9B0A6C477F42}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -82,6 +88,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{2D45B73B-CCBC-49F2-B6C1-62338BF432EF} = {E91E7AA9-F920-4605-AB2D-FE5B42E0BC36}
 		{CBD10C5F-A3B4-4F5B-9A70-6DDDB4B870CF} = {E91E7AA9-F920-4605-AB2D-FE5B42E0BC36}
 		{D3162290-0333-498D-89CE-F16559AE62B2} = {E91E7AA9-F920-4605-AB2D-FE5B42E0BC36}
 		{6793AD49-96FA-4E44-B7D8-7EE61F1103D8} = {E91E7AA9-F920-4605-AB2D-FE5B42E0BC36}

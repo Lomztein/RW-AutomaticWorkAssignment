@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>Library</OutputType>
+    <RootNamespace>$(RootNamespace).Patches.ColonyGroups</RootNamespace>
+    <AutomaticWorkAssignmentPatchOf>AutomaticWorkAssignment</AutomaticWorkAssignmentPatchOf>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutomaticWorkAssignment\AutomaticWorkAssignment.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(SteamAppsPath)\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="TacticalGroups">
+      <HintPath>$(SteamAppsPath)\workshop\content\294100\2345493945\1.6\Assemblies\TacticalGroups.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(SteamAppsPath)\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(SteamAppsPath)\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
