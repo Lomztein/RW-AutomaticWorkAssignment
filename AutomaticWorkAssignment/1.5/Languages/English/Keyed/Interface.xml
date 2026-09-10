@@ -84,4 +84,10 @@
 
   <AWA.HeaderExcludedPawns>Excluded Pawns</AWA.HeaderExcludedPawns>
   <AWA.ExcludePawn>Exclude pawn</AWA.ExcludePawn>
+
+  <AWA.TimeComponent.Hour>Hour of day</AWA.TimeComponent.Hour>
+  <AWA.TimeComponent.DayOfMonth>Day of month</AWA.TimeComponent.DayOfMonth>
+  <AWA.TimeComponent.MonthOfYear>Month of year</AWA.TimeComponent.MonthOfYear>
+  <AWA.TimeComponent.DayOfYear>Day of year</AWA.TimeComponent.DayOfYear>
+  <AWA.TimeComponent.Year>Year</AWA.TimeComponent.Year>
 </LanguageData>

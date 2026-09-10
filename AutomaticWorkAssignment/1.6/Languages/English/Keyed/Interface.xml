@@ -193,5 +193,10 @@
   <AWA.SettingsManagerSettingsSectionWidth>Manager window settings section width: (Default: {0})</AWA.SettingsManagerSettingsSectionWidth>
   <AWA.SettingsResetWindowLayout>Reset window layout</AWA.SettingsResetWindowLayout>
 
-  <AWA.GetHelp>See help</AWA.GetHelp>
+  <AWA.GetHelp>See help</AWA.GetHelp>  <AWA.TimeComponent.Hour>Hour of day</AWA.TimeComponent.Hour>
+  <AWA.TimeComponent.DayOfMonth>Day of month</AWA.TimeComponent.DayOfMonth>
+  <AWA.TimeComponent.MonthOfYear>Month of year</AWA.TimeComponent.MonthOfYear>
+  <AWA.TimeComponent.DayOfYear>Day of year</AWA.TimeComponent.DayOfYear>
+  <AWA.TimeComponent.Year>Year</AWA.TimeComponent.Year>
+
 </LanguageData>
