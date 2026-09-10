@@ -90,7 +90,7 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<PainPawnFitness>());
             PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<StockpilePawnFitness>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<TimePawnFitness, TimePawnFitness.TimeComponent>(
-                (m) => (TimePawnFitness.TimeComponent[])Enum.GetValues(typeof(TimePawnFitness.TimeComponent)), x => TimePawnFitness.GetLabel(x).Translate(), x => TimePawnFitness.GetLabel(x.Component).Translate(), (pp, po) => pp.Component = po));
+                (m) => (TimePawnFitness.TimeComponent[])Enum.GetValues(typeof(TimePawnFitness.TimeComponent)), x => TimePawnFitness.GetLabelKey(x).Translate(), x => TimePawnFitness.GetLabelKey(x.Component).Translate(), (pp, po) => pp.Component = po));
 
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<StatPawnFitness, StatDef>(
                 (m) => DefDatabase<StatDef>.AllDefs.Where(x => x.showOnPawns), x => x.LabelCap, x => x?.StatDef?.LabelCap ?? "AWA.StatSelect".Translate(), (c, s) => c.StatDef = s));

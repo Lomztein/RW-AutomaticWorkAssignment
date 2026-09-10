@@ -37,7 +37,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
             return 0f;
         }
 
-        public static string GetLabel(TimeComponent component)
+        public static string GetLabelKey(TimeComponent component)
         {
             switch (component)
             {
