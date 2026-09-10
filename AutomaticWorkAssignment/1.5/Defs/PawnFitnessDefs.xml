@@ -108,4 +108,11 @@
     <label>count</label>
     <description>Count passed pawn conditions.</description>
   </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnFitnessDef">
+    <defName>Lomzie_TimePawnFitness</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnFitness.TimePawnFitness</settingClass>
+    <label>time</label>
+    <description>The current value of the selected time component.</description>
+    <category>Misc</category>
+  </Def>
 </Defs>
