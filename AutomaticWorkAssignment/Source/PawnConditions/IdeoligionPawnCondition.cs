@@ -9,6 +9,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         public Ideo Ideoligion;
         private string _ideoName;
 
+        public override bool IsConfigured() => Ideoligion != null;
+
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (pawn != null)

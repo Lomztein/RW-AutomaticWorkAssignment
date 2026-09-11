@@ -25,5 +25,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             Scribe_Values.Look(ref MinLevel, "minLevel", 0);
             Scribe_Values.Look(ref MaxLevel, "maxLevel", 20);
         }
+
+        public override bool IsConfigured() => SkillDef != null;
     }
 }

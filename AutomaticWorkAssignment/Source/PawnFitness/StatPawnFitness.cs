@@ -7,6 +7,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
     {
         public StatDef StatDef;
 
+        public override bool IsConfigured() => StatDef != null;
+
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
             => StatDef != null ? pawn.GetStatValue(StatDef) : 0f;
 

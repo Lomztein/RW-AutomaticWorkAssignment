@@ -8,6 +8,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         public IPawnFitness Fitness;
         public float Min, Max;
 
+        public override bool IsConfigured() => Fitness != null;
+
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (Fitness != null)

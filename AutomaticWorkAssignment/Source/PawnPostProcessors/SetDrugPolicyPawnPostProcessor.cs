@@ -22,6 +22,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                 Policy = Current.Game.drugPolicyDatabase.AllPolicies.Find(x => x.InspectLabel == _policyName);
         }
 
+        public override bool IsConfigured() => Policy != null;
+
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
             if (Policy != null)

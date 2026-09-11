@@ -10,6 +10,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
         public IPawnCondition FalseCondition;
         public IPawnCondition ElseCondition;
 
+        public override bool IsConfigured() => IfCondition != null;
+
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (IfCondition == null)
