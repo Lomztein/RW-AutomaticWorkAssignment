@@ -12,6 +12,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             base.ExposeData();
             Scribe_Defs.Look(ref TimeAssignmentDef, "timeAssignmentDef");
         }
+
         public override bool IsConfigured() => TimeAssignmentDef != null;
 
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
