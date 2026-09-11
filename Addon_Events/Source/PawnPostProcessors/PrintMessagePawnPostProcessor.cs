@@ -8,11 +8,12 @@ using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 {
-    public class PrintFormattedMessagePawnPostProcessor : PawnSetting, IPawnPostProcessor
+    public class PrintMessagePawnPostProcessor : PawnSetting, IPawnPostProcessor
     {
         private const string Placeholder = "{}";
 
         public string MessageTemplate = string.Empty;
+        public MessageTypeDef MessageSeverity = MessageTypeDefOf.NeutralEvent;
         public List<IPawnSetting> PawnSettings = new List<IPawnSetting>();
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
@@ -28,7 +29,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                 message = message.Remove(placeholderIndex, Placeholder.Length).Insert(placeholderIndex, value);
             }
 
-            Messages.Message($"{pawn.Name}: {message}", MessageTypeDefOf.NeutralEvent);
+            Messages.Message($"{pawn.Name}: {message}", MessageSeverity ?? MessageTypeDefOf.NeutralEvent);
         }
 
         private string GetValue(IPawnSetting setting, Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
@@ -48,10 +49,12 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
         {
             base.ExposeData();
             Scribe_Values.Look(ref MessageTemplate, "messageTemplate");
+            Scribe_Defs.Look(ref MessageSeverity, "severity");
             Scribe_Collections.Look(ref PawnSettings, "pawnSettings", LookMode.Deep);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
+                MessageSeverity ??= MessageTypeDefOf.NeutralEvent;
                 PawnSettings ??= new List<IPawnSetting>();
                 PawnSettings = PawnSettings.Where(x => x.IsValidAfterLoad()).ToList();
             }

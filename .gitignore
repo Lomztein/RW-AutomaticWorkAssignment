@@ -367,6 +367,5 @@ FodyWeavers.xsd
 **/Assemblies/*.dll
 
 .rw.pid
-/.github
 /.tmp_ilspy
 *.xcf

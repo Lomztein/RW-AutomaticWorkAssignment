@@ -18,11 +18,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
                 case TimeComponent.Hour:
                     return GenLocalDate.HourInteger(map);
                 case TimeComponent.DayOfMonth:
-                    return GenLocalDate.DayOfQuadrum(map);
+                    return GenLocalDate.DayOfQuadrum(map) + 1;
                 case TimeComponent.MonthOfYear:
-                    return (int)GenDate.Quadrum(GenTicks.TicksAbs, GetLongitude(map));
+                    return (int)GenDate.Quadrum(GenTicks.TicksAbs, GetLongitude(map)) + 1;
                 case TimeComponent.DayOfYear:
-                    return GenDate.DayOfYear(GenTicks.TicksAbs, GetLongitude(map));
+                    return GenDate.DayOfYear(GenTicks.TicksAbs, GetLongitude(map)) + 1;
                 case TimeComponent.Year:
                     return GenDate.Year(GenTicks.TicksAbs, GetLongitude(map));
                 default:
@@ -41,11 +41,11 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
         {
             switch (component)
             {
-                case TimeComponent.Hour: return "AWA.TimeComponent.Hour";
-                case TimeComponent.DayOfMonth: return "AWA.TimeComponent.DayOfMonth";
-                case TimeComponent.MonthOfYear: return "AWA.TimeComponent.MonthOfYear";
-                case TimeComponent.DayOfYear: return "AWA.TimeComponent.DayOfYear";
-                case TimeComponent.Year: return "AWA.TimeComponent.Year";
+                case TimeComponent.Hour: return "AWA.Hour";
+                case TimeComponent.DayOfMonth: return "AWA.DayOfMonth";
+                case TimeComponent.MonthOfYear: return "AWA.MonthOfYear";
+                case TimeComponent.DayOfYear: return "AWA.DayOfYear";
+                case TimeComponent.Year: return "AWA.Year";
                 default:
                     throw new ArgumentException($"Unknown time component {component}");
             }

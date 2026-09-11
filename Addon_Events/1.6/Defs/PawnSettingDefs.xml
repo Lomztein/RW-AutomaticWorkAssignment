@@ -33,6 +33,14 @@
   </Def>
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_SelectedCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.SelectedPawnCondition</settingClass>
+    <label>is selected</label>
+    <description>Assign to pawns that are currently selected by the player.</description>
+    <category>Misc</category>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_DoingWorkCondition</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.DoingWorkPawnCondition</settingClass>
     <label>is doing work</label>
@@ -139,7 +147,7 @@
 
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
     <defName>Lomzie_PrintFormattedMessagePostProcessor</defName>
-    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.PrintFormattedMessagePawnPostProcessor</settingClass>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnPostProcessors.PrintMessagePawnPostProcessor</settingClass>
     <label>print formatted message</label>
     <description>Print a message where each {} placeholder is replaced by values from configured pawn settings.</description>
     <category>Commands</category>

@@ -13,7 +13,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
 
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
-            if (pawn != null && pawn.drafter.Drafted != Value)
+            if (pawn != null && pawn.drafter != null && pawn.drafter.Drafted != Value)
                 pawn.drafter.Drafted = Value;
         }
 

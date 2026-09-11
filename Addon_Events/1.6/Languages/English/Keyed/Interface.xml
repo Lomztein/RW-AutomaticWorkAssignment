@@ -8,5 +8,7 @@
   <AWA.AbilitySelect>Select ability</AWA.AbilitySelect>
   <AWA.WorkTypeSelect>Select work</AWA.WorkTypeSelect>
   <AWA.MessageTemplate>Message template</AWA.MessageTemplate>
+  <AWA.MessageSeveritySelect>Select message severity</AWA.MessageSeveritySelect>
+  <AWA.LetterSeveritySelect>Select letter severity</AWA.LetterSeveritySelect>
   <AWA.PawnSettingAdd>Add pawn setting</AWA.PawnSettingAdd>
 </LanguageData>

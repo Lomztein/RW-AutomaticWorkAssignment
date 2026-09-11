@@ -23,8 +23,10 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
             {
                 IntVec3 moveTo = MoveToPosition.Value;
 
-                if (!pawn.drafter.Drafted)
+                if (pawn.drafter != null && !pawn.drafter.Drafted)
                     pawn.drafter.Drafted = true;
+                else
+                    return; // Pawn cannot be drafted, cancel action.
 
                 IntVec3 standableCell = CellFinder.StandableCellNear(moveTo, request.Map, 3);
                 if (standableCell.IsValid)
@@ -52,7 +54,7 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
                 bool arrived = false;
                 while (!arrived)
                 {
-                    arrived = Vector3.SqrMagnitude(pawn.CurJob.targetA.CenterVector3 - pawn.Position.ToVector3()) < 1;
+                    arrived = Vector3.SqrMagnitude(pawn.CurJob.targetA.CenterVector3 - pawn.Position.ToVector3()) < 2;
                     if (arrived)
                     {
                         action();

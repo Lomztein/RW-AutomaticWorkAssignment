@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.Events.Watchers
 {
@@ -16,8 +17,8 @@ namespace Lomzie.AutomaticWorkAssignment.Events.Watchers
             bool newValue = GetCurrentState(component);
             if (newValue != _value && _initialized)
             {
-                OnEventChanged(newValue, component);
                 _value = newValue;
+                OnEventChanged(newValue, component);
             }
             if (!_initialized)
                 _initialized = true;

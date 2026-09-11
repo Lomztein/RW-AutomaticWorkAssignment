@@ -26,6 +26,7 @@ namespace Lomztein.AutomaticWorkAssignments
         {
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<BleedingPawnCondition>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<DraftedPawnCondition>());
+            PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<SelectedPawnCondition>());
             PawnSettingUIHandlers.AddHandler(new EmptyPawnSettingUIHandler<StopWorkPawnPostProcessor>());
             PawnSettingUIHandlers.AddHandler(new PickerPawnSettingUIHandler<DoingWorkPawnCondition, WorkTypeDef>(x => DefDatabase<WorkTypeDef>.AllDefs, x => x.labelShort, x => x.WorkTypeDef?.labelShort ?? "AWA.WorkTypeSelect".Translate(), (s, w) => s.WorkTypeDef = w));
 
@@ -77,10 +78,10 @@ namespace Lomztein.AutomaticWorkAssignments
                 new Nested<DoOnFitnessChangedPawnPostProcessor, IPawnPostProcessor, PawnPostProcessorDef>(x => x.Action, (x, y) => x.Action = y, "AWA.TaskSelect".Translate())
                 ));
 
-            PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<PrintFormattedMessagePawnPostProcessor>(
-                new TextField<PrintFormattedMessagePawnPostProcessor>(x => x.MessageTemplate, (x, y) => x.MessageTemplate = y),
-                new Composite<PrintFormattedMessagePawnPostProcessor, IPawnSetting, PawnSettingDef>(x => x.PawnSettings, "AWA.PawnSettingAdd".Translate())));
-
+            PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<PrintMessagePawnPostProcessor>(
+                new TextField<PrintMessagePawnPostProcessor>(x => x.MessageTemplate, (x, y) => x.MessageTemplate = y),
+                new Picker<PrintMessagePawnPostProcessor, MessageTypeDef>(x => DefDatabase<MessageTypeDef>.AllDefs, x => x.defName, x => x.MessageSeverity?.defName ?? "AWA.MessageSeveritySelect".Translate(), (x, y) => x.MessageSeverity = y),
+                new Composite<PrintMessagePawnPostProcessor, IPawnSetting, PawnSettingDef>(x => x.PawnSettings, "AWA.PawnSettingAdd".Translate())));
 
             PawnSettingUIHandlers.AddHandler(new ClickablePawnSettingsUIHandler<EquipItemPawnPostProcessor>(x => Find.WindowStack.Add(new EditThingFilterWindow(x.ThingFilter)), "AWA.FilterEdit".Translate()));
         }

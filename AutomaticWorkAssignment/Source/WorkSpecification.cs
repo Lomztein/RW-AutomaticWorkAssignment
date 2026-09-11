@@ -53,7 +53,7 @@ namespace Lomzie.AutomaticWorkAssignment
 
         public void SetNewId(int id)
         {
-            Log.Warning($"[AWA] Set ID of work spec outside constructor or ExposeData. This should never happen during normal operation.");
+            Log.Warning($"[AWA] Set ID of work spec outside constructor or ExposeData. This may happen due to a bug or migration. If this happens frequently, it may indicate a problem.");
             Id = id;
         }
 

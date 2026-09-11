@@ -195,10 +195,10 @@
 
   <AWA.GetHelp>See help</AWA.GetHelp>
 
-  <AWA.TimeComponent.Hour>Hour of day</AWA.TimeComponent.Hour>
-  <AWA.TimeComponent.DayOfMonth>Day of month</AWA.TimeComponent.DayOfMonth>
-  <AWA.TimeComponent.MonthOfYear>Month of year</AWA.TimeComponent.MonthOfYear>
-  <AWA.TimeComponent.DayOfYear>Day of year</AWA.TimeComponent.DayOfYear>
-  <AWA.TimeComponent.Year>Year</AWA.TimeComponent.Year>
+  <AWA.Hour>Hour of day</AWA.Hour>
+  <AWA.DayOfMonth>Day of month</AWA.DayOfMonth>
+  <AWA.MonthOfYear>Month of year</AWA.MonthOfYear>
+  <AWA.DayOfYear>Day of year</AWA.DayOfYear>
+  <AWA.Year>Year</AWA.Year>
 
 </LanguageData>
