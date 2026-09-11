@@ -12,6 +12,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             Scribe_Defs.Look(ref WeaponClassDef, "weaponClassDef");
         }
 
+        public override bool IsConfigured() => WeaponClassDef != null;
+
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (WeaponClassDef != null)

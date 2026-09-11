@@ -9,6 +9,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
     {
         public PreceptDef PreceptDef;
 
+        public override bool IsConfigured() => PreceptDef != null;
+
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (pawn != null && pawn.Ideo != null)

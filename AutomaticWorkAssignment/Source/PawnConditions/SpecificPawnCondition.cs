@@ -22,6 +22,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
                 Pawn = Find.World.PlayerPawnsForStoryteller.FirstOrDefault(x => x.GetUniqueLoadID() == _uniqueId);
         }
 
+        public override bool IsConfigured() => Pawn != null;
+
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
             => pawn == Pawn;
     }

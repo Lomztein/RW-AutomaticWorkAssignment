@@ -10,6 +10,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
         public IPawnCondition Condition;
         public IPawnPostProcessor PostProcessor;
 
+        public override bool IsConfigured() => PostProcessor != null;
+
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
             if (Condition != null && Condition.IsValid(pawn, workSpecification, request))

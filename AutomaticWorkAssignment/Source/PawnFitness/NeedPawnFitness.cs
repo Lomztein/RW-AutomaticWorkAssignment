@@ -7,6 +7,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
     {
         public NeedDef NeedDef;
 
+        public override bool IsConfigured() => NeedDef != null;
+
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (pawn != null && NeedDef != null)

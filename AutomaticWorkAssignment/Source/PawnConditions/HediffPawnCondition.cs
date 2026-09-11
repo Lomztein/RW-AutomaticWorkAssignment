@@ -12,6 +12,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             Scribe_Defs.Look(ref HediffDef, "hediffDef");
         }
 
+        public override bool IsConfigured() => HediffDef != null;
+
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
             => pawn.health.hediffSet?.HasHediff(HediffDef) ?? false;
     }

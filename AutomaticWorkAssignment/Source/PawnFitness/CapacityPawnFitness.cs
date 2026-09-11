@@ -6,6 +6,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
     {
         public PawnCapacityDef CapacityDef;
 
+        public override bool IsConfigured() => CapacityDef != null;
+
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
             => CapacityDef != null ? (pawn?.health.capacities?.GetLevel(CapacityDef) ?? 0) : 0;
 

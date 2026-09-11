@@ -13,6 +13,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             Scribe_Defs.Look(ref TraitDef, "traitDef");
         }
 
+        public override bool IsConfigured() => TraitDef != null;
+
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
             => pawn.story?.traits?.HasTrait(TraitDef) ?? false;
     }

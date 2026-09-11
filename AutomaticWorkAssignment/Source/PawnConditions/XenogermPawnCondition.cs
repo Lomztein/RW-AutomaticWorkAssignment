@@ -13,6 +13,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             Scribe_Deep.Look(ref Xenogerm, "xenogerm");
         }
 
+        public override bool IsConfigured() => Xenogerm != null;
+
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (pawn != null && Xenogerm != null)

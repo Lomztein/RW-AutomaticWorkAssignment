@@ -10,6 +10,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
         public WorkTypeDef WorkType;
         public int Priority;
 
+        public override bool IsConfigured() => WorkType != null;
+
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
             if (WorkType != null && !Utils.WorkTypeIsDisabled(pawn, WorkType))

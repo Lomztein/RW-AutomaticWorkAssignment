@@ -10,6 +10,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
         public IPawnFitness LeftHandSide;
         public IPawnFitness RightHandSide = CreateFrom<IPawnFitness>(DefDatabase<PawnSettingDef>.GetNamed("Lomzie_ConstantPawnFitness"));
 
+        public override bool IsConfigured() => LeftHandSide != null;
+
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             return LeftHandSide?.CalcFitness(pawn, specification, request) % RightHandSide?.CalcFitness(pawn, specification, request) ?? 0;

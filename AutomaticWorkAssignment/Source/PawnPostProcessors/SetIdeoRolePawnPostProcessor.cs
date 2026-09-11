@@ -8,6 +8,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnPostProcessors
     {
         public PreceptDef RoleDef;
 
+        public override bool IsConfigured() => RoleDef != null;
+
         public void PostProcess(Pawn pawn, WorkSpecification workSpecification, ResolveWorkRequest request)
         {
             if (pawn != null && pawn.Ideo != null && pawn.guest != null && !IsGuest(pawn, request.Map) && IsRoleActive(pawn))

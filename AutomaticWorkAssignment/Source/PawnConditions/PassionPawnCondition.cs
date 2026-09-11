@@ -13,6 +13,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             Scribe_Defs.Look(ref SkillDef, "skillDef");
         }
 
+        public override bool IsConfigured() => SkillDef != null;
+
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             SkillRecord skillRecord = pawn.skills.skills.Find(x => SkillDef?.defName == x.def.defName);

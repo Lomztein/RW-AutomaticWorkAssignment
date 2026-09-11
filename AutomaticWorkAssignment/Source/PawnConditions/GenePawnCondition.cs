@@ -12,6 +12,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
             Scribe_Defs.Look(ref GeneDef, "geneDef");
         }
 
+        public override bool IsConfigured() => GeneDef != null;
+
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
             => pawn.genes.HasActiveGene(GeneDef);
     }

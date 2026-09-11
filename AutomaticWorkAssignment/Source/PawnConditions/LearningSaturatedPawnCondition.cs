@@ -7,6 +7,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnConditions
     {
         public SkillDef SkillDef;
 
+        public override bool IsConfigured() => SkillDef != null;
+
         public bool IsValid(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
             => SkillDef != null && ((pawn?.skills.GetSkill(SkillDef).LearningSaturatedToday) ?? false);
 

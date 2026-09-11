@@ -10,6 +10,8 @@ namespace Lomzie.AutomaticWorkAssignment.PawnFitness
         public IPawnFitness FalseFitness;
         public IPawnCondition ElseCondition;
 
+        public override bool IsConfigured() => IfCondition != null;
+
         public float CalcFitness(Pawn pawn, WorkSpecification specification, ResolveWorkRequest request)
         {
             if (IfCondition == null)
