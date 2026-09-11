@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>Library</OutputType>
+    <RootNamespace>$(RootNamespace).Patches.UsefulMarks</RootNamespace>
+    <AutomaticWorkAssignmentPatchOf>AutomaticWorkAssignment</AutomaticWorkAssignmentPatchOf>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutomaticWorkAssignment\AutomaticWorkAssignment.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(SteamAppsPath)\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="UsefulColonistBar">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\3506573327\1.6\Assemblies\UsefulColonistBar.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(SteamAppsPath)\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(SteamAppsPath)\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(SteamAppsPath)\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnSettingCategoryDef">
+    <defName>UsefulMarks</defName>
+    <label>Useful Marks</label>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_AddMarkPawnPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.Patches.UsefulMarks.AddMarkPawnPostProcessor</settingClass>
+    <label>add mark</label>
+    <description>Adds the selected Useful Marks mark to the pawn.</description>
+    <category>UsefulMarks</category>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_RemoveMarkPawnPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.Patches.UsefulMarks.RemoveMarkPawnPostProcessor</settingClass>
+    <label>remove mark</label>
+    <description>Removes the selected Useful Marks mark from the pawn.</description>
+    <category>UsefulMarks</category>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnPostProcessorDef">
+    <defName>Lomzie_ClearMarksPawnPostProcessor</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.Patches.UsefulMarks.ClearMarksPawnPostProcessor</settingClass>
+    <label>clear marks</label>
+    <description>Clears all Useful Marks marks from the pawn.</description>
+    <category>UsefulMarks</category>
+  </Def>
+
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_HasMarkPawnCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.Patches.UsefulMarks.HasMarkPawnCondition</settingClass>
+    <label>has mark</label>
+    <description>Assign to pawns with the selected Useful Marks mark.</description>
+    <category>UsefulMarks</category>
+  </Def>
+</Defs>

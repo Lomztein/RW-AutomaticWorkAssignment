@@ -2,9 +2,9 @@
 
 ## Repository Overview
 - This repository contains RimWorld mods and patches for AutomaticWorkAssignment.
-- The core project is `AutomaticWorkAssignment`, which contains the main mod logic, framework, data structures, ect.
-- Larger mod compatability pathes are contained in the `AutomaticWorkAssignment.Patches` project.
-- First-party addons are contained in the `AutomaticWorkAssignment.Addons` project.
+- The core project is `AutomaticWorkAssignment`, which contains the main mod logic, framework, data structures, etc.
+- Larger mod compatibility patches are contained in projects prefixed with 'Patch_'.
+- First-party addons are contained in projects prefixed with 'Addon_'.
 - The solution targets .NET Framework 4.8 projects; follow the target of the specific project you are editing.
 
 ## Design Principles
