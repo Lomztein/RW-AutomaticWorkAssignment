@@ -154,6 +154,13 @@
     <category>Map</category>
   </Def>
   <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
+    <defName>Lomzie_DangerPresentCondition</defName>
+    <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.DangerPresentPawnCondition</settingClass>
+    <label>danger present</label>
+    <description>Check if there are any dangers present on the map</description>
+    <category>Map</category>
+  </Def>
+  <Def Class="Lomzie.AutomaticWorkAssignment.Defs.PawnConditionDef">
     <defName>Lomzie_HasApparel</defName>
     <settingClass>Lomzie.AutomaticWorkAssignment.PawnConditions.ApparelPawnCondition</settingClass>
     <label>has apparel</label>

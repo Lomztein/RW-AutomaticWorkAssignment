@@ -124,6 +124,10 @@
   <AWA.No>No</AWA.No>
   <AWA.Left>Left</AWA.Left>
   <AWA.Right>Right</AWA.Right>
+  <AWA.None>None</AWA.None>
+  <AWA.Low>Low</AWA.Low>
+  <AWA.High>High</AWA.High>
+  <AWA.Unknown>Unknown</AWA.Unknown>
   <AWA.PriorityHigher>higher priority</AWA.PriorityHigher>
   <AWA.PriorityLower>lower priority</AWA.PriorityLower>
   <AWA.LabelNewPriorityTip>Add priority</AWA.LabelNewPriorityTip>

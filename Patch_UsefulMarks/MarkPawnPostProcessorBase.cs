@@ -1,10 +1,14 @@
-using AutomaticWorkAssignment;
-using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
+﻿using Lomzie.AutomaticWorkAssignment.PawnPostProcessors;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.Patches.UsefulMarks
 {
-    public abstract class UsefulMarksMarkerPawnPostProcessor : PawnSetting, IPawnPostProcessor
+    public abstract class MarkPawnPostProcessorBase : PawnSetting, IPawnPostProcessor
     {
         public int MarkerIndex = -1;
 

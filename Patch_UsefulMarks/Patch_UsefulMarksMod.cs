@@ -1,7 +1,14 @@
 using AutomaticWorkAssignment.UI.Generic;
+using HarmonyLib;
 using Lomzie.AutomaticWorkAssignment.UI;
 using Lomzie.AutomaticWorkAssignment.UI.Generic;
 using RimWorld;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using UsefulMarks;
 using Verse;
 
 namespace Lomzie.AutomaticWorkAssignment.Patches.UsefulMarks
@@ -32,6 +39,9 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.UsefulMarks
                 setting => UsefulMarksCompatibility.GetMarkerLabel(setting.MarkerIndex),
                 (setting, index) => setting.MarkerIndex = index,
                 index => UsefulMarksCompatibility.GetMarkerIcon(index)));
+
+            HarmonyPatch harmonyPatch = new HarmonyPatch();
+            harmonyPatch.DoPatch();
         }
     }
 }

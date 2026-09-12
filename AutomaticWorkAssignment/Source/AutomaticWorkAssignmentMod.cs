@@ -177,6 +177,7 @@ namespace Lomzie.AutomaticWorkAssignment
             PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<HourBetweenPawnCondition>(
                 new Splitter<HourBetweenPawnCondition>(new Label<HourBetweenPawnCondition>(x => "AWA.MinValue".Translate()), new Label<HourBetweenPawnCondition>(x => "AWA.MaxValue".Translate())),
                 new Splitter<HourBetweenPawnCondition>(new TextFieldNumeric<float, HourBetweenPawnCondition>(x => x.MinHour, (x, v) => x.MinHour = v), new TextFieldNumeric<float, HourBetweenPawnCondition>(x => x.MaxHour, (x, v) => x.MaxHour = v))));
+            PawnSettingUIHandlers.AddHandler(new ModularPawnSettingUIHandler<DangerPresentPawnCondition>(new Picker<DangerPresentPawnCondition, StoryDanger>(m => Enum.GetValues(typeof(StoryDanger)).Cast<StoryDanger>(), x => DangerPresentPawnCondition.GetDangerRatingLabel(x), x => DangerPresentPawnCondition.GetDangerRatingLabel(x.MinimumDangerRating), (pp, po) => pp.MinimumDangerRating = po)));
 
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<IPawnCondition, AnyPawnCondition, PawnConditionDef>("AWA.ConditionSelect".Translate()));
             PawnSettingUIHandlers.AddHandler(new CompositePawnSettingsUIHandler<IPawnCondition, AllPawnCondition, PawnConditionDef>("AWA.ConditionSelect".Translate()));

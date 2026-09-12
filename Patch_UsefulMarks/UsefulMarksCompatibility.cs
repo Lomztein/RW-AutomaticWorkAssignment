@@ -118,5 +118,11 @@ namespace Lomzie.AutomaticWorkAssignment.Patches.UsefulMarks
         {
             return markerIndex >= 0 && world.UserMarkers != null && markerIndex < world.UserMarkers.Count;
         }
+
+        public static bool IsValidMarkerIndex(int markerIndex)
+        {
+            var world = PawnLabelCustomColors_WorldComponent.instance;
+            return world != null && IsValidMarkerIndex(world, markerIndex);
+        }
     }
 }
